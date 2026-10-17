@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumos — Lummi IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --verde:#3ecf74;--ve:#1a9e50;--vc:#d4f5e2;--vu:#f0fdf6;
+  --am:#f59e0b;--amc:#fef3c7;--vm:#ef4444;--vmc:#fee2e2;
+  --br:#fff;--cl:#f7f9f8;--ct:#4a5568;--cb:#e2e8f0;--ps:#1a202c;
+  --fd:'Inter',sans-serif;--fb:'Inter',sans-serif;--flogo:'Syne',sans-serif;
+  --r:14px;--rl:22px;--sc:0 2px 16px rgba(0,0,0,.07);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--br);color:var(--ps);height:100vh;display:flex;flex-direction:column;overflow:hidden}
+
+/* NAV */
+nav#main-nav{position:relative;z-index:200;background:rgba(255,255,255,.94);backdrop-filter:blur(18px);border-bottom:1px solid var(--cb);padding:0 5vw;display:flex;align-items:center;justify-content:space-between;height:64px;gap:1rem;flex-shrink:0}
+.nav-logo{font-family:var(--flogo);font-weight:800;font-size:1.3rem;color:var(--ps);text-decoration:none}
+.nav-logo span{color:var(--ve)}
+.nav-links{display:flex;gap:1.8rem;list-style:none}
+.nav-links a{text-decoration:none;color:var(--ct);font-size:.9rem;font-weight:500;transition:color .2s;position:relative;padding-bottom:3px}
+.nav-links a.active{color:var(--ve)}
+.nav-links a.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--ve);border-radius:2px}
+.nav-links a:hover{color:var(--ve)}
+.nav-right{display:flex;align-items:center;gap:.8rem}
+.nav-user{display:flex;align-items:center;gap:.6rem;font-size:.88rem;font-weight:500}
+.nav-avatar{width:30px;height:30px;border-radius:50%;background:var(--ve);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700}
+.nav-logout{background:transparent;border:1px solid var(--cb);padding:5px 12px;border-radius:50px;font-family:var(--fb);font-size:.8rem;cursor:pointer;color:var(--ct);transition:all .2s}
+.nav-logout:hover{border-color:var(--vm);color:var(--vm)}
+.nav-corp-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(26,158,80,.1);
+  border:1.5px solid rgba(26,158,80,.3);
+  color:var(--ve);
+  padding:5px 13px;border-radius:50px;
+  font-family:var(--fb);font-size:.78rem;font-weight:700;
+  text-decoration:none;cursor:pointer;
+  transition:background .2s,border-color .2s,transform .15s;
+  letter-spacing:.02em;
+}
+.nav-corp-btn:hover{
+  background:rgba(26,158,80,.18);
+  border-color:rgba(26,158,80,.55);
+  transform:translateY(-1px);
+}
+.nav-corp-btn .corp-dot{
+  font-size:.55rem;letter-spacing:.06em;
+  background:var(--ve);color:#fff;
+  padding:1px 5px;border-radius:50px;
+  font-weight:800;
+}
+.nav-hamburger{display:none;background:none;border:none;font-size:1.4rem;cursor:pointer}
+
+/* CHAT LAYOUT */
+.chat-wrapper{
+  flex:1;display:flex;flex-direction:column;overflow:hidden;
+  background:linear-gradient(160deg,var(--vu) 0%,#fff 60%);
+}
+
+/* MESSAGES AREA */
+.chat-messages{
+  flex:1;overflow-y:auto;padding:2rem 5vw 1rem;
+  display:flex;flex-direction:column;gap:1.4rem;
+  scroll-behavior:smooth;
+}
+.chat-messages::-webkit-scrollbar{width:5px}
+.chat-messages::-webkit-scrollbar-track{background:transparent}
+.chat-messages::-webkit-scrollbar-thumb{background:var(--cb);border-radius:50px}
+
+/* MESSAGES */
+.msg{display:flex;gap:12px;align-items:flex-end;max-width:720px}
+.msg.bot{align-self:flex-start}
+.msg.user{align-self:flex-end;flex-direction:row-reverse}
+
+.msg-bubble{
+  padding:13px 18px;border-radius:20px;font-size:.93rem;line-height:1.65;
+  max-width:540px;
+}
+.msg.bot .msg-bubble{
+  background:#fff;border:1.5px solid var(--cb);border-bottom-left-radius:4px;
+  color:var(--ps);box-shadow:var(--sc);
+}
+.msg.user .msg-bubble{
+  background:var(--ve);color:#fff;border-bottom-right-radius:4px;
+}
+
+/* LUMMI AVATAR */
+.lummi-avatar{
+  width:38px;height:38px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.lummi-bulb{
+  width:38px;height:38px;
+  animation:lummiFloat 3s ease-in-out infinite;
+  filter:drop-shadow(0 4px 12px rgba(62,207,116,.4));
+}
+@keyframes lummiFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-5px)}
+}
+
+/* TYPING INDICATOR */
+.typing-indicator{
+  display:flex;align-items:center;gap:6px;padding:12px 18px;
+  background:#fff;border:1.5px solid var(--cb);border-radius:20px;border-bottom-left-radius:4px;
+  box-shadow:var(--sc);
+}
+.typing-indicator .lummi-thinking{
+  font-size:.8rem;color:var(--ve);font-weight:600;
+  animation:thinkPulse 1.5s ease infinite;
+}
+@keyframes thinkPulse{0%,100%{opacity:.5}50%{opacity:1}}
+.typing-dots{display:flex;gap:4px;align-items:center}
+.typing-dots span{
+  width:7px;height:7px;border-radius:50%;background:var(--verde);
+  animation:dotBounce 1.2s ease infinite;
+}
+.typing-dots span:nth-child(2){animation-delay:.2s}
+.typing-dots span:nth-child(3){animation-delay:.4s}
+@keyframes dotBounce{
+  0%,80%,100%{transform:scale(.6);background:var(--vc)}
+  40%{transform:scale(1);background:var(--ve)}
+}
+
+/* USER AVATAR */
+.user-avatar{
+  width:38px;height:38px;border-radius:50%;background:var(--ve);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:.72rem;font-weight:700;flex-shrink:0;
+}
+
+/* WELCOME CARD */
+.welcome-card{
+  background:#fff;border:1.5px solid var(--cb);border-radius:var(--rl);
+  padding:2rem;margin-bottom:.5rem;box-shadow:var(--sc);
+  display:flex;gap:1.5rem;align-items:center;max-width:620px;
+}
+.wc-lummi{font-size:3.5rem;line-height:1;animation:lummiFloat 3s ease-in-out infinite}
+.wc-text h2{font-family:var(--fd);font-size:1.25rem;font-weight:800;margin-bottom:.4rem}
+.wc-text p{font-size:.88rem;color:var(--ct);line-height:1.6}
+.lummi-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--vc);color:var(--ve);padding:4px 12px;border-radius:50px;
+  font-size:.74rem;font-weight:700;margin-bottom:.6rem;
+}
+.lummi-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--ve);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.4)}}
+
+/* QUICK SUGGESTIONS */
+.suggestions-bar{
+  padding:.8rem 5vw 0;flex-shrink:0;
+}
+.suggestions-label{font-size:.74rem;font-weight:600;color:var(--ct);margin-bottom:.6rem;letter-spacing:.05em;text-transform:uppercase}
+.suggestions-scroll{
+  display:flex;gap:.6rem;overflow-x:auto;padding-bottom:.5rem;
+}
+.suggestions-scroll::-webkit-scrollbar{height:3px}
+.suggestions-scroll::-webkit-scrollbar-thumb{background:var(--cb);border-radius:50px}
+.suggest-chip{
+  flex-shrink:0;padding:8px 16px;border:1.5px solid var(--cb);
+  border-radius:50px;background:#fff;font-family:var(--fb);font-size:.82rem;
+  font-weight:500;cursor:pointer;color:var(--ct);transition:all .2s;white-space:nowrap;
+}
+.suggest-chip:hover{border-color:var(--ve);color:var(--ve);background:var(--vu);transform:translateY(-1px)}
+
+/* INPUT BAR */
+.chat-input-wrap{
+  padding:1rem 5vw 1.4rem;flex-shrink:0;
+  border-top:1.5px solid var(--cb);background:#fff;
+}
+.chat-input-row{
+  display:flex;gap:.7rem;align-items:flex-end;
+  background:var(--cl);border:1.5px solid var(--cb);
+  border-radius:50px;padding:.5rem .5rem .5rem 1.2rem;
+  transition:border-color .2s,box-shadow .2s;
+}
+.chat-input-row:focus-within{border-color:var(--ve);box-shadow:0 0 0 3px rgba(62,207,116,.12)}
+#chat-input{
+  flex:1;background:transparent;border:none;outline:none;
+  font-family:var(--fb);font-size:.95rem;color:var(--ps);
+  resize:none;height:38px;line-height:1.4;padding-top:6px;
+  max-height:110px;overflow-y:auto;
+}
+#chat-input::placeholder{color:rgba(74,85,104,.45)}
+#send-btn{
+  width:40px;height:40px;border-radius:50%;background:var(--ve);
+  border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .2s,transform .2s;flex-shrink:0;
+}
+#send-btn:hover{background:var(--verde);transform:scale(1.07)}
+#send-btn:active{transform:scale(.94)}
+#send-btn svg{width:18px;height:18px;fill:#fff}
+
+/* Lummi SVG bulb animations  */
+.lummi-bulb-thinking{
+  animation:lummiSpin 1s linear infinite;
+  filter:drop-shadow(0 2px 8px rgba(62,207,116,.6));
+}
+@keyframes lummiSpin{
+  0%,100%{transform:rotate(-8deg) scale(1.05)}
+  50%{transform:rotate(8deg) scale(0.95)}
+}
+
+/* Fade in for new messages */
+@keyframes msgFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.msg-new{animation:msgFadeIn .35s ease both}
+
+/* Emoji in msg */
+.msg-bubble strong{font-weight:700;color:var(--ve)}
+.msg.user .msg-bubble strong{color:#d4f5e2}
+
+@media(max-width:760px){
+  .nav-links{display:none}
+  .welcome-card{flex-direction:column;text-align:center;padding:1.5rem}
+  .msg-bubble{max-width:90vw;font-size:.88rem}
+}
+</style>
+</head>
+<body>
+
+<nav id="main-nav">
+  <a class="nav-logo" href="home.html"><span>Lumos</span></a>
+  <ul class="nav-links">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="consumo.html">Consumo</a></li>
+    <li><a href="pagamento.html">Pagamento</a></li>
+    <li><a href="sustentabilidade.html">Sustentabilidade</a></li>
+    <li><a href="estacao.html">Estação</a></li>
+    <li><a href="lummi.html" class="active">Lummi IA</a></li>
+  </ul>
+  <div class="nav-right">
+    <a class="nav-corp-btn" href="corp.html"><span class="corp-dot">CORP</span> Lumos Corp</a>
+    <div class="nav-user">
+      <div class="nav-avatar" id="nav-av">?</div>
+      <span id="nav-nome">Usuário</span>
+      <button class="nav-logout" onclick="sair()">Sair</button>
+    </div>
+  </div>
+  <button class="nav-hamburger" onclick="document.getElementById('main-nav').classList.toggle('open')">☰</button>
+</nav>
+
+<div class="chat-wrapper">
+
+  <!-- MESSAGES -->
+  <div class="chat-messages" id="chat-messages">
+    <!-- Welcome card injected by JS -->
+  </div>
+
+  <!-- QUICK SUGGESTIONS -->
+  <div class="suggestions-bar" id="suggestions-bar">
+    <div class="suggestions-label">Perguntas rápidas</div>
+    <div class="suggestions-scroll" id="suggestions-scroll">
+      <!-- chips injected by JS -->
+    </div>
+  </div>
+
+  <!-- INPUT -->
+  <div class="chat-input-wrap">
+    <div class="chat-input-row">
+      <textarea id="chat-input" placeholder="Pergunte algo ao Lummi..." rows="1" onkeydown="handleKey(event)"></textarea>
+      <button id="send-btn" onclick="sendMessage()" aria-label="Enviar">
+        <svg viewBox="0 0 24 24"><path d="M2 21L23 12 2 3v7l15 2-15 2v7z"/></svg>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ---- AUTH ----
+var currentUser;
+try { currentUser = JSON.parse(localStorage.getItem('lm_user')); } catch(e) { currentUser = null; }
+if (!currentUser || !currentUser.nome) { window.location.href='index.html'; }
+
+document.getElementById('nav-av').textContent = currentUser.initials || '?';
+document.getElementById('nav-nome').textContent = currentUser.nome.split(' ')[0];
+
+function sair() {
+  localStorage.removeItem('lm_user');
+  localStorage.removeItem('lm_credits');
+  localStorage.removeItem('lm_sessions');
+  localStorage.removeItem('lm_pledged');
+  window.location.href='index.html';
+}
+
+// ---- LUMMI SVG (lâmpada amigável) ----
+function lummiSVG(thinking=false) {
+  const cls = thinking ? 'lummi-bulb lummi-bulb-thinking' : 'lummi-bulb';
+  return `<svg class="${cls}" viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg" width="38" height="48">
+    <!-- glow -->
+    <ellipse cx="40" cy="48" rx="26" ry="26" fill="rgba(62,207,116,0.13)"/>
+    <!-- bulb body -->
+    <path d="M26,48 Q24,36 28,28 Q33,18 40,16 Q47,18 52,28 Q56,36 54,48 Q52,56 48,60 L32,60 Q28,56 26,48Z" fill="#3ecf74"/>
+    <!-- shine -->
+    <ellipse cx="34" cy="30" rx="4" ry="7" fill="rgba(255,255,255,0.35)" transform="rotate(-15 34 30)"/>
+    <!-- face -->
+    <ellipse cx="35" cy="42" rx="3.5" ry="4" fill="#1a202c"/>
+    <ellipse cx="45" cy="42" rx="3.5" ry="4" fill="#1a202c"/>
+    <!-- smile -->
+    <path d="M34,52 Q40,58 46,52" stroke="#1a202c" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    ${thinking ? '<circle cx="40" cy="35" r="2.5" fill="#fff" opacity="0.7"><animate attributeName="opacity" values="0.3;1;0.3" dur="0.8s" repeatCount="indefinite"/></circle>' : ''}
+    <!-- base / threads -->
+    <rect x="33" y="60" width="14" height="5" rx="2" fill="#1a9e50"/>
+    <rect x="34" y="65" width="12" height="4" rx="2" fill="#0d6b40"/>
+    <rect x="35" y="69" width="10" height="4" rx="2" fill="#0d6b40"/>
+    <!-- rays -->
+    <line x1="40" y1="5" x2="40" y2="1" stroke="#3ecf74" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+    <line x1="58" y1="16" x2="61" y2="13" stroke="#3ecf74" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+    <line x1="22" y1="16" x2="19" y2="13" stroke="#3ecf74" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+    <line x1="64" y1="35" x2="68" y2="35" stroke="#3ecf74" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+    <line x1="16" y1="35" x2="12" y2="35" stroke="#3ecf74" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+  </svg>`;
+}
+
+// ---- Q&A KNOWLEDGE BASE ----
+const LUMMI_QA = [
+  {
+    id: 'onde_usar',
+    trigger: ['onde','totem','localização','encontrar','melhor','sistema lumos'],
+    pergunta: 'Aonde e por que devo usar o sistema Lumos para melhor carregamento?',
+    resposta: `<strong>Ótima pergunta!</strong> Para aproveitar ao máximo o sistema Lumos, recomendo usar os totens durante os seguintes horários e condições:<br><br>
+🌞 <strong>00h – 06h (tarifa noturna)</strong> — melhor custo-benefício. Energia excedente solar armazenada durante o dia custa até R$ 0,20/kWh a menos.<br>
+☀️ <strong>10h – 15h (pico solar)</strong> — bandeira verde ativa, energia 100% solar, R$ 0,85/kWh.<br><br>
+Os totens Lumos ficam disponíveis em <strong>shoppings, condomínios e estacionamentos parceiros</strong> em São Paulo. Use o mapa no app para encontrar o mais próximo com bandeira verde ativa.`
+  },
+  {
+    id: 'bandeiras',
+    trigger: ['bandeira','verde','amarela','vermelha','tarifa','preço','kwh'],
+    pergunta: 'Como funcionam as bandeiras de tarifa Lumos?',
+    resposta: `O sistema de bandeiras reflete a disponibilidade de energia solar e o nível da bateria Lynx:<br><br>
+🟢 <strong>Bandeira Verde — R$ 0,85/kWh</strong>: Solar acima de 70%, bateria Lynx cheia. Melhor momento para carregar!<br>
+🟡 <strong>Bandeira Amarela — R$ 1,20/kWh</strong>: Solar moderada, bateria 40–70%. Ainda predominantemente limpa.<br>
+🔴 <strong>Bandeira Vermelha — R$ 1,60/kWh</strong>: Pouca solar ou bateria abaixo de 40%. Rede de apoio em uso.<br><br>
+💡 <strong>Dica:</strong> Programe recargas para <strong>madrugada</strong> e economize R$ 0,20/kWh sobre qualquer bandeira!`
+  },
+  {
+    id: 'tempo_carga',
+    trigger: ['tempo','quanto tempo','demora','duração','hora','minuto','rápido','lento'],
+    pergunta: 'Quanto tempo leva uma recarga completa?',
+    resposta: `Depende do seu veículo e do totem utilizado. Veja os tempos médios:<br><br>
+⚡ <strong>Totem Lumos Standard (7,4 kW AC)</strong><br>
+• BYD Dolphin (44,9 kWh): ~6h para carga completa<br>
+• Renault Kwid E-Tech (26,8 kWh): ~3,6h<br><br>
+⚡⚡ <strong>Totem Lumos Fast (22 kW AC)</strong><br>
+• BYD Dolphin: ~2h para carga completa<br>
+• Tesla Model 3 (75 kWh): ~3,4h<br><br>
+⚡⚡⚡ <strong>Totem Lumos Ultra (50 kW DC)</strong><br>
+• Carga de 20% a 80% em apenas <strong>45–60 minutos</strong>!<br><br>
+Na maioria dos casos, <strong>uma sessão de 40–90 min</strong> já cobre a autonomia do dia.`
+  },
+  {
+    id: 'co2',
+    trigger: ['co2','carbono','emissão','sustentável','sustentabilidade','planeta','ambiental','impacto'],
+    pergunta: 'Qual o impacto ambiental ao usar a Lumos?',
+    resposta: `Cada kWh gerado por energia solar evita em média <strong>0,21 kg de CO₂</strong> em comparação com a rede convencional.<br><br>
+🌱 Uma sessão típica de <strong>24,5 kWh</strong> (BYD Dolphin completo) evita:<br>
+• <strong>~5,1 kg de CO₂</strong> vs. gasolina (o equivalente a não queimar 2,2 litros)<br>
+• <strong>~5,1 kg de CO₂</strong> vs. grid convencional<br><br>
+📊 <strong>Nosso impacto coletivo até hoje:</strong><br>
+• 4,2 toneladas de CO₂ evitadas<br>
+• Equivalente a <strong>312 árvores</strong> plantadas<br>
+• 87% de energia renovável em todas as sessões<br><br>
+Um motorista que usa Lumos como principal fonte economiza em média <strong>1,5t de CO₂/ano</strong> vs. carro a gasolina.`
+  },
+  {
+    id: 'creditos',
+    trigger: ['crédito','saldo','pagamento','pagar','pix','cartão','recarga','recarregar conta'],
+    pergunta: 'Como funcionam os créditos e pagamentos?',
+    resposta: `O sistema Lumos usa créditos pré-pagos para agilizar cada sessão. Veja como funciona:<br><br>
+💳 <strong>Formas de adição de créditos:</strong><br>
+• PIX instantâneo (qualquer valor a partir de R$ 20)<br>
+• Cartão de crédito/débito<br>
+• Transferência bancária<br><br>
+⚡ <strong>Ao iniciar uma sessão</strong>, o saldo é debitado automaticamente conforme o consumo real em kWh × tarifa da bandeira vigente.<br><br>
+📦 <strong>Pacotes disponíveis:</strong><br>
+• Starter: R$ 50 + R$ 5 bônus<br>
+• Plus: R$ 100 + R$ 15 bônus<br>
+• Pro: R$ 200 + R$ 40 bônus<br><br>
+Saldo nunca expira! Veja seu histórico completo em <strong>Pagamentos</strong>.`
+  },
+  {
+    id: 'veiculos',
+    trigger: ['veículo','carro','compatível','compatibilidade','modelo','conectar','plugar','tomada','conector'],
+    pergunta: 'Quais veículos são compatíveis com os totens Lumos?',
+    resposta: `Os totens Lumos suportam os padrões mais comuns do mercado brasileiro:<br><br>
+🔌 <strong>Conectores disponíveis:</strong><br>
+• <strong>Tipo 2 (Mennekes)</strong> — padrão AC, aceito por BYD, Volvo, BMW, Renault e maioria dos elétricos<br>
+• <strong>CCS Combo 2</strong> — carga rápida DC, Tesla Model 3 LR, BMW iX3, Peugeot e-208<br>
+• <strong>CHAdeMO</strong> — Nissan Leaf, algumas versões Mitsubishi<br><br>
+✅ <strong>Totalmente compatíveis:</strong> BYD Dolphin, BYD Seal, Tesla Model 3, Volvo XC40 Recharge, BMW iX3, Renault Kwid E-Tech, GWM Ora, Fiat 500e<br><br>
+⚠️ Veículos com conector proprietário (Tesla Supercharger exclusivo) podem necessitar adaptador.`
+  },
+  {
+    id: 'bateria_lynx',
+    trigger: ['lynx','bateria','armazenamento','solar','painel','como funciona','tecnologia'],
+    pergunta: 'Como funciona o sistema de bateria Lynx?',
+    resposta: `A <strong>Bateria Lynx</strong> é o coração do totem Lumos — um sistema de armazenamento estacionário que garante energia limpa mesmo à noite ou em dias nublados.<br><br>
+☀️ <strong>Ciclo diário:</strong><br>
+1. Painéis solares carregam a bateria Lynx durante o dia (pico: 10h–15h)<br>
+2. Excedente é armazenado para uso noturno e em dias de baixa irradiação<br>
+3. Rede elétrica convencional entra apenas como apoio emergencial<br><br>
+🔋 <strong>Capacidade por totem:</strong><br>
+• Bateria Lynx Standard: 48 kWh úteis<br>
+• Suficiente para <strong>2 cargas completas de BYD Dolphin</strong> ou <strong>6–8 cargas parciais</strong> sem usar a rede<br><br>
+🌿 Quando a bateria está acima de 70%, você carrega com <strong>bandeira verde</strong> e menor pegada de carbono.`
+  },
+  {
+    id: 'economia',
+    trigger: ['economizar','economia','gasolina','custo','dinheiro','comparação','quanto custa','gasto'],
+    pergunta: 'Quanto economizo comparado à gasolina?',
+    resposta: `A economia real depende do seu veículo e km rodados, mas veja um exemplo concreto:<br><br>
+🚗 <strong>Carro a gasolina (12 km/L, R$ 6,00/L):</strong><br>
+• 1.000 km/mês = 83,3 L = <strong>R$ 500,00/mês</strong><br><br>
+⚡ <strong>Elétrico com Lumos (bandeira verde):</strong><br>
+• 1.000 km × ~0,18 kWh/km = 180 kWh × R$ 0,85 = <strong>R$ 153,00/mês</strong><br><br>
+💰 <strong>Economia: R$ 347/mês → R$ 4.164/ano!</strong><br><br>
+Além da economia financeira, você evita troca de óleo, filtros, correias e muito da manutenção do motor a combustão. <strong>Veículos elétricos têm até 70% menos peças móveis.</strong><br><br>
+Use a calculadora em <strong>Sustentabilidade</strong> para simular com os seus dados reais!`
+  },
+  {
+    id: 'autonomia',
+    trigger: ['autonomia','alcance','km','kilômetro','quantos km','range','bateria fraca'],
+    pergunta: 'Quantos km consigo com uma carga completa?',
+    resposta: `A autonomia varia por modelo. Veja os dados reais dos veículos disponíveis na plataforma:<br><br>
+🚗 <strong>BYD Dolphin</strong> — 44,9 kWh → até <strong>340 km</strong> (ciclo WLTP)<br>
+🚗 <strong>Tesla Model 3 SR+</strong> — 60 kWh → até <strong>430 km</strong><br>
+🚗 <strong>Volvo XC40 Recharge</strong> — 78 kWh → até <strong>418 km</strong><br>
+🚗 <strong>BMW iX3</strong> — 74 kWh → até <strong>458 km</strong><br>
+🚗 <strong>Renault Kwid E-Tech</strong> — 26,8 kWh → até <strong>298 km</strong><br><br>
+⚠️ Na prática, com ar-condicionado ligado e tráfego urbano, considere <strong>~80% do valor WLTP</strong>.<br><br>
+💡 Para viagens longas, planeje paradas de 30–45 min nos totens Lumos Ultra ao longo da rota.`
+  },
+  {
+    id: 'dicas_carga',
+    trigger: ['dica','otimizar','cuidado','vida útil','bateria','melhor horário','quando','recomendação'],
+    pergunta: 'Dicas para prolongar a vida da bateria do meu elétrico?',
+    resposta: `Boas práticas para maximizar a longevidade da bateria do seu EV:<br><br>
+✅ <strong>Mantenha entre 20% e 80% do SoC</strong> no dia a dia — carregar a 100% regularmente acelera a degradação.<br>
+✅ <strong>Carga completa (100%) apenas</strong> antes de viagens longas, não toda semana.<br>
+✅ <strong>Prefira carga AC lenta</strong> (7–22 kW) para uso cotidiano — é mais suave que a DC rápida.<br>
+✅ <strong>Evite descarregar abaixo de 10%</strong> — tensão muito baixa degrada as células.<br>
+✅ <strong>Use a carga agendada</strong> no app Lumos para carregar nos horários mais frescos (noite/madrugada).<br><br>
+🌡️ <strong>Calor é inimigo da bateria</strong>: em dias muito quentes, evite deixar o carro com bateria acima de 80% exposto ao sol por horas.<br><br>
+Seguindo essas dicas, sua bateria mantém <strong>90%+ da capacidade original após 200.000 km</strong> de acordo com estudos da Tesla e BYD.`
+  },
+];
+
+// ---- SUGGESTIONS (pre-defined quick-access questions) ----
+const SUGGESTIONS = LUMMI_QA.map(q => ({id: q.id, label: q.pergunta}));
+
+// ---- RENDER WELCOME ----
+function renderWelcome() {
+  const msgs = document.getElementById('chat-messages');
+  const nome = currentUser.nome.split(' ')[0];
+  const card = document.createElement('div');
+  card.className = 'welcome-card msg-new';
+  card.innerHTML = `
+    <div class="wc-lummi">${lummiSVG()}</div>
+    <div class="wc-text">
+      <div class="lummi-badge"><div class="dot"></div> Online agora</div>
+      <h2>Oi, ${nome}! Eu sou o <strong style="color:var(--ve)">Lummi</strong> ⚡</h2>
+      <p>Sou a inteligência da Lumos. Posso te ajudar com dúvidas sobre carregamento, tarifas, sustentabilidade, veículos compatíveis e muito mais. Selecione uma pergunta abaixo ou me escreva!</p>
+    </div>
+  `;
+  msgs.appendChild(card);
+  renderSuggestions();
+}
+
+// ---- RENDER SUGGESTION CHIPS ----
+function renderSuggestions() {
+  const scroll = document.getElementById('suggestions-scroll');
+  scroll.innerHTML = '';
+  SUGGESTIONS.forEach(s => {
+    const chip = document.createElement('button');
+    chip.className = 'suggest-chip';
+    chip.textContent = s.label;
+    chip.onclick = () => sendQuestion(s.label, s.id);
+    scroll.appendChild(chip);
+  });
+}
+
+// ---- ADD MESSAGE ----
+function addMessage(role, html, isNew=true) {
+  const msgs = document.getElementById('chat-messages');
+  const msg = document.createElement('div');
+  msg.className = `msg ${role}${isNew?' msg-new':''}`;
+
+  if (role === 'bot') {
+    msg.innerHTML = `
+      <div class="lummi-avatar">${lummiSVG()}</div>
+      <div class="msg-bubble">${html}</div>
+    `;
+  } else {
+    const initials = currentUser.initials || '?';
+    msg.innerHTML = `
+      <div class="user-avatar">${initials}</div>
+      <div class="msg-bubble">${html}</div>
+    `;
+  }
+
+  msgs.appendChild(msg);
+  msgs.scrollTop = msgs.scrollHeight;
+  return msg;
+}
+
+// ---- TYPING INDICATOR ----
+function showTyping() {
+  const msgs = document.getElementById('chat-messages');
+  const wrap = document.createElement('div');
+  wrap.className = 'msg bot msg-new';
+  wrap.id = 'typing-wrap';
+  wrap.innerHTML = `
+    <div class="lummi-avatar">${lummiSVG(true)}</div>
+    <div class="typing-indicator">
+      <span class="lummi-thinking">Pensando...</span>
+      <div class="typing-dots"><span></span><span></span><span></span></div>
+    </div>
+  `;
+  msgs.appendChild(wrap);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function hideTyping() {
+  const el = document.getElementById('typing-wrap');
+  if (el) el.remove();
+}
+
+// ---- FIND ANSWER ----
+function findAnswer(text) {
+  const t = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  for (const qa of LUMMI_QA) {
+    for (const kw of qa.trigger) {
+      const kn = kw.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+      if (t.includes(kn)) return qa.resposta;
+    }
+  }
+  // Fallback
+  return `Boa pergunta! Ainda estou aprendendo sobre esse tópico. Por enquanto, posso te ajudar com:<br><br>
+⚡ Tarifas e bandeiras · ⏱️ Tempo de carga · 🌱 Impacto ambiental<br>
+🚗 Veículos compatíveis · 💰 Economia vs. gasolina · 🔋 Dicas de bateria<br><br>
+Experimente uma das perguntas rápidas abaixo ou entre em contato pelo <strong>0800 123 4567</strong>!`;
+}
+
+// ---- SEND ----
+let isTyping = false;
+
+function sendQuestion(text, id) {
+  if (isTyping) return;
+  addMessage('user', escapeHtml(text));
+  triggerAnswer(id ? LUMMI_QA.find(q=>q.id===id)?.resposta || findAnswer(text) : findAnswer(text));
+}
+
+function sendMessage() {
+  const inp = document.getElementById('chat-input');
+  const text = inp.value.trim();
+  if (!text || isTyping) return;
+  inp.value = '';
+  inp.style.height = '38px';
+  addMessage('user', escapeHtml(text));
+  triggerAnswer(findAnswer(text));
+}
+
+function triggerAnswer(answer) {
+  if (isTyping) return;
+  isTyping = true;
+  showTyping();
+  // 4-5 seconds thinking delay
+  const delay = 4200 + Math.random() * 800;
+  setTimeout(() => {
+    hideTyping();
+    addMessage('bot', answer);
+    isTyping = false;
+  }, delay);
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+  // Auto-resize textarea
+  setTimeout(() => {
+    const t = e.target;
+    t.style.height = '38px';
+    t.style.height = Math.min(t.scrollHeight, 110) + 'px';
+  }, 0);
+}
+
+// ---- INIT ----
+renderWelcome();
+</script>
+</body>
+</html>

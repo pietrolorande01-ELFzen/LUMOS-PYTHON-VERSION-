@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumos — Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --verde:#3ecf74;--ve:#1a9e50;--vc:#d4f5e2;--vu:#f0fdf6;
+  --am:#f59e0b;--amc:#fef3c7;--vm:#ef4444;--vmc:#fee2e2;
+  --br:#fff;--cl:#f7f9f8;--ct:#4a5568;--cb:#e2e8f0;--ps:#1a202c;
+  --fd:'Inter',sans-serif;--fb:'Inter',sans-serif;--flogo:'Syne',sans-serif;
+  --r:14px;--rl:22px;--sc:0 2px 16px rgba(0,0,0,.07);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--br);color:var(--ps)}
+/* NAV */
+nav#main-nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,.94);backdrop-filter:blur(18px);border-bottom:1px solid var(--cb);padding:0 5vw;display:flex;align-items:center;justify-content:space-between;height:64px;gap:1rem}
+.nav-logo{font-family:var(--flogo);font-weight:800;font-size:1.3rem;color:var(--ps);text-decoration:none}
+.nav-logo span{color:var(--ve)}
+.nav-links{display:flex;gap:1.8rem;list-style:none}
+.nav-links a{text-decoration:none;color:var(--ct);font-size:.9rem;font-weight:500;transition:color .2s;position:relative;padding-bottom:3px}
+.nav-links a.active{color:var(--ve)}
+.nav-links a.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--ve);border-radius:2px}
+.nav-links a:hover{color:var(--ve)}
+.nav-right{display:flex;align-items:center;gap:.8rem}
+.nav-user{display:flex;align-items:center;gap:.6rem;font-size:.88rem;font-weight:500}
+.nav-avatar{width:30px;height:30px;border-radius:50%;background:var(--ve);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700}
+.nav-logout{background:transparent;border:1px solid var(--cb);padding:5px 12px;border-radius:50px;font-family:var(--fb);font-size:.8rem;cursor:pointer;color:var(--ct);transition:all .2s}
+.nav-logout:hover{border-color:var(--vm);color:var(--vm)}
+.nav-corp-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(26,158,80,.1);
+  border:1.5px solid rgba(26,158,80,.3);
+  color:var(--ve);
+  padding:5px 13px;border-radius:50px;
+  font-family:var(--fb);font-size:.78rem;font-weight:700;
+  text-decoration:none;cursor:pointer;
+  transition:background .2s,border-color .2s,transform .15s;
+  letter-spacing:.02em;
+}
+.nav-corp-btn:hover{
+  background:rgba(26,158,80,.18);
+  border-color:rgba(26,158,80,.55);
+  transform:translateY(-1px);
+}
+.nav-corp-btn .corp-dot{
+  font-size:.55rem;letter-spacing:.06em;
+  background:var(--ve);color:#fff;
+  padding:1px 5px;border-radius:50px;
+  font-weight:800;
+}
+.nav-hamburger{display:none;background:none;border:none;font-size:1.4rem;cursor:pointer}
+
+/* HERO */
+.hero{padding:100px 5vw 60px;background:linear-gradient(135deg,#f0fdf6 0%,#fff 55%,#e8f9f0 100%);min-height:90vh;display:flex;align-items:center;gap:4rem;flex-wrap:wrap}
+.hero-text{flex:1;min-width:280px}
+.welcome-pill{display:inline-flex;align-items:center;gap:8px;background:var(--vc);color:var(--ve);padding:7px 18px;border-radius:50px;font-size:.85rem;font-weight:700;margin-bottom:1.2rem;animation:fadeDown .6s ease both}
+.welcome-pill .dot{width:9px;height:9px;border-radius:50%;background:var(--ve);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.4)}}
+.hero h1{font-family:var(--fd);font-size:clamp(2.2rem,4.5vw,3.6rem);font-weight:800;line-height:1.1}
+.hero h1 em{color:var(--ve);font-style:normal}
+.hero p{margin-top:1rem;font-size:1.05rem;color:var(--ct);line-height:1.75;max-width:480px}
+.hero-btns{margin-top:1.8rem;display:flex;gap:1rem;flex-wrap:wrap}
+.btn-p{background:var(--ve);color:#fff;border:none;padding:13px 28px;border-radius:50px;font-family:var(--fb);font-size:.95rem;font-weight:600;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:0 6px 20px rgba(26,158,80,.22)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(26,158,80,.32)}
+.btn-s{background:transparent;color:var(--ve);border:2px solid var(--ve);padding:11px 26px;border-radius:50px;font-family:var(--fb);font-size:.95rem;font-weight:600;cursor:pointer;transition:background .2s,transform .2s}
+.btn-s:hover{background:var(--vc);transform:translateY(-2px)}
+/* Hero visual card */
+.hero-visual{flex:1;min-width:280px;display:flex;justify-content:center}
+.hv-card{background:#fff;border-radius:var(--rl);border:1.5px solid var(--cb);padding:1.8rem;width:320px;box-shadow:var(--sc)}
+.hv-header{display:flex;align-items:center;gap:12px;margin-bottom:1.4rem}
+.hv-icon{width:46px;height:46px;border-radius:12px;background:var(--vc);display:flex;align-items:center;justify-content:center;font-size:1.4rem}
+.hv-info h3{font-family:var(--fd);font-weight:700;font-size:.98rem}
+.hv-info p{font-size:.8rem;color:var(--ct)}
+.charge-row{margin-bottom:1.1rem}
+.charge-lbl{display:flex;justify-content:space-between;font-size:.8rem;color:var(--ct);margin-bottom:5px}
+.charge-lbl strong{font-size:1.05rem;color:var(--ps)}
+.charge-track{height:11px;background:var(--cb);border-radius:50px;overflow:hidden}
+.charge-fill{height:100%;background:linear-gradient(90deg,var(--ve),var(--verde));border-radius:50px;animation:growBar 2s ease forwards}
+@keyframes growBar{from{width:0%}}
+.hv-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:.9rem}
+.hv-stat{background:var(--cl);border-radius:10px;padding:9px;text-align:center}
+.hv-stat .v{font-weight:700;font-size:.95rem}
+.hv-stat .l{font-size:.68rem;color:var(--ct);margin-top:2px}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:50px;font-size:.76rem;font-weight:600;margin-top:10px}
+.pill.verde{background:var(--vc);color:var(--ve)}
+.pill.amarela{background:var(--amc);color:#92400e}
+.pill.vermelha{background:var(--vmc);color:#991b1b}
+
+/* STATS STRIP */
+.stats-strip{background:var(--ve);color:#fff;padding:1.8rem 5vw;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem}
+.strip-item{text-align:center}
+.strip-item .big{font-family:var(--fd);font-size:2rem;font-weight:800;color:var(--vc)}
+.strip-item .desc{font-size:.82rem;opacity:.82;margin-top:3px}
+
+/* HISTORY */
+#historico{padding:70px 5vw;background:var(--cl)}
+.section-label{font-size:.78rem;font-weight:700;letter-spacing:.12em;color:var(--ve);text-transform:uppercase;margin-bottom:.4rem}
+.section-title{font-family:var(--fd);font-size:clamp(1.6rem,3vw,2.3rem);font-weight:800;line-height:1.15;margin-bottom:.7rem}
+.section-sub{color:var(--ct);font-size:.98rem;line-height:1.7;max-width:560px}
+.hist-controls{display:flex;gap:.5rem;margin:1.5rem 0;flex-wrap:wrap}
+.hc-btn{padding:7px 18px;border:1.5px solid var(--cb);border-radius:50px;background:transparent;font-family:var(--fb);font-size:.84rem;font-weight:600;cursor:pointer;color:var(--ct);transition:all .2s}
+.hc-btn.act{background:var(--ve);color:#fff;border-color:var(--ve)}
+.hc-btn:hover:not(.act){border-color:var(--ve);color:var(--ve)}
+.hist-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+.hs-card{background:#fff;border-radius:var(--r);border:1.5px solid var(--cb);padding:1.1rem 1.3rem}
+.hs-card .lab{font-size:.75rem;color:var(--ct);margin-bottom:4px}
+.hs-card .val{font-family:var(--fd);font-size:1.5rem;font-weight:800;color:var(--ve)}
+.hs-card .sub2{font-size:.72rem;color:var(--ct);margin-top:2px}
+/* Table */
+.table-wrap{background:#fff;border-radius:var(--rl);border:1.5px solid var(--cb);overflow:hidden;box-shadow:var(--sc)}
+table{width:100%;border-collapse:collapse}
+th{padding:11px 14px;text-align:left;font-size:.76rem;font-weight:700;color:var(--ct);background:var(--cl);border-bottom:1.5px solid var(--cb);letter-spacing:.04em;text-transform:uppercase}
+td{padding:13px 14px;font-size:.86rem;border-bottom:1px solid var(--cb);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f9fdf9}
+.badge{display:inline-flex;padding:3px 10px;border-radius:50px;font-size:.73rem;font-weight:700}
+.badge-ok{background:var(--vc);color:var(--ve)}
+.badge-pend{background:var(--amc);color:#92400e}
+.badge-cancel{background:var(--vmc);color:#991b1b}
+.band-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}
+.band-verde{background:var(--ve)}
+.band-amarela{background:var(--am)}
+.band-vermelha{background:#ef4444}
+.pag-btns{display:flex;gap:.5rem;justify-content:flex-end;margin-top:1rem}
+.pag-btn{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--cb);background:transparent;cursor:pointer;font-size:.88rem;font-weight:600;transition:all .2s}
+.pag-btn.cur{background:var(--ve);color:#fff;border-color:var(--ve)}
+.pag-btn:hover:not(.cur){border-color:var(--ve);color:var(--ve)}
+
+/* QUICK ACTIONS */
+#acoes{padding:60px 5vw;background:#fff}
+.actions-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:2rem}
+.action-card{background:var(--cl);border-radius:var(--rl);border:1.5px solid var(--cb);padding:1.8rem;transition:transform .25s,box-shadow .25s;cursor:pointer;text-decoration:none;display:block;color:inherit}
+.action-card:hover{transform:translateY(-5px);box-shadow:0 8px 28px rgba(62,207,116,.14)}
+.ac-icon{font-size:2rem;margin-bottom:.9rem;display:block}
+.action-card h3{font-family:var(--fd);font-size:1.05rem;font-weight:700;margin-bottom:.4rem}
+.action-card p{font-size:.85rem;color:var(--ct);line-height:1.6}
+.ac-arrow{margin-top:1rem;font-size:.8rem;font-weight:700;color:var(--ve)}
+
+/* FOOTER */
+footer{background:var(--ps);color:rgba(255,255,255,.8)}
+.footer-top{padding:3rem 5vw;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:2rem}
+.ft-brand .logo{font-family:var(--flogo);font-size:1.4rem;font-weight:800;color:#fff;margin-bottom:.6rem}
+.ft-brand .logo span{color:var(--verde)}
+.ft-brand p{font-size:.84rem;line-height:1.65;color:rgba(255,255,255,.5);max-width:240px}
+.ft-col h4{font-family:var(--fd);font-size:.9rem;font-weight:700;color:#fff;margin-bottom:1rem}
+.ft-col ul{list-style:none;display:flex;flex-direction:column;gap:.5rem}
+.ft-col ul li a{font-size:.83rem;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s}
+.ft-col ul li a:hover{color:var(--verde)}
+.ft-contact-item{display:flex;gap:8px;align-items:flex-start;font-size:.83rem;color:rgba(255,255,255,.55);margin-bottom:.7rem}
+.ft-contact-item strong{color:rgba(255,255,255,.8);display:block}
+.footer-bot{border-top:1px solid rgba(255,255,255,.08);padding:1.2rem 5vw;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
+.footer-bot p{font-size:.78rem;color:rgba(255,255,255,.35)}
+.footer-eco{font-size:.8rem;color:var(--verde)}
+
+/* animations */
+@keyframes fadeDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{opacity:0;transform:translateY(22px);transition:opacity .55s ease,transform .55s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+@media(max-width:860px){
+  .nav-links,.nav-hamburger+.nav-links{display:none}
+  .nav-hamburger{display:block}
+  .hero{flex-direction:column;padding-top:90px;min-height:auto}
+  .stats-strip{grid-template-columns:1fr 1fr}
+  .hist-summary{grid-template-columns:1fr 1fr}
+  .actions-grid{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<nav id="main-nav">
+  <a class="nav-logo" href="home.html"><span>Lumos</span></a>
+  <ul class="nav-links">
+    <li><a href="home.html" class="active">Home</a></li>
+    <li><a href="consumo.html">Consumo</a></li>
+    <li><a href="pagamento.html">Pagamento</a></li>
+    <li><a href="sustentabilidade.html">Sustentabilidade</a></li>
+    <li><a href="localidade.html">Localidade</a></li>
+    <li><a href="estacao.html">Estação</a></li>
+    <li><a href="lummi.html">Lummi IA</a></li>
+  </ul>
+  <div class="nav-right">
+    <a class="nav-corp-btn" href="corp.html"><span class="corp-dot">CORP</span> Lumos Corp</a>
+    <div class="nav-user">
+      <div class="nav-avatar" id="nav-av">?</div>
+      <span id="nav-nome">Usuário</span>
+      <button class="nav-logout" onclick="sair()">Sair</button>
+    </div>
+  </div>
+  <button class="nav-hamburger" onclick="document.getElementById('main-nav').classList.toggle('open')">☰</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <div class="welcome-pill"><div class="dot"></div> <span id="welcome-msg">Bem-vindo(a)!</span></div>
+    <h1 id="hero-title">Olá, <em id="hero-name">Visitante</em>.<br>Pronto para<br>recarregar?</h1>
+    <p>Seu painel inteligente de recarga sustentável. Monitore, recarregue e contribua com o planeta a cada sessão.</p>
+    <div class="hero-btns">
+      <button class="btn-p" onclick="window.location.href='carregamento.html'">⚡ Iniciar Recarga</button>
+      <button class="btn-s" onclick="document.getElementById('contato').scrollIntoView({behavior:'smooth'})">Saiba mais</button>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hv-card" id="live-card">
+      <div class="hv-header">
+        <div class="hv-icon">⚡</div>
+        <div class="hv-info">
+          <h3 id="lc-veiculo">BYD Dolphin</h3>
+          <p id="lc-token">Token: —</p>
+        </div>
+      </div>
+      <div class="charge-row">
+        <div class="charge-lbl"><span>Última sessão</span><strong id="lc-pct">—%</strong></div>
+        <div class="charge-track"><div class="charge-fill" id="lc-bar" style="width:0%"></div></div>
+      </div>
+      <div class="hv-stats">
+        <div class="hv-stat"><div class="v" id="lc-kwh">—</div><div class="l">kWh</div></div>
+        <div class="hv-stat"><div class="v" id="lc-min">—</div><div class="l">min</div></div>
+        <div class="hv-stat"><div class="v" id="lc-val">—</div><div class="l">gasto</div></div>
+      </div>
+      <div id="lc-pill" class="pill verde">🌱 Carregando dados...</div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip" id="stats-strip">
+  <div class="strip-item"><div class="big" id="st-sessoes">0</div><div class="desc">Sessões realizadas</div></div>
+  <div class="strip-item"><div class="big" id="st-kwh">0 kWh</div><div class="desc">Energia carregada</div></div>
+  <div class="strip-item"><div class="big" id="st-co2">0 kg</div><div class="desc">CO₂ evitado</div></div>
+  <div class="strip-item"><div class="big" id="st-arvores">0</div><div class="desc">Árvores equivalentes</div></div>
+</div>
+
+<!-- HISTÓRICO -->
+<section id="historico">
+  <div class="section-label">Histórico completo</div>
+  <div class="section-title">Suas sessões de recarga</div>
+  <p class="section-sub">Todas as sessões registradas na sua conta, com detalhes técnicos completos.</p>
+
+  <div class="hist-summary" id="hist-summary"></div>
+
+  <div class="hist-controls">
+    <button class="hc-btn act" onclick="filterSessions('todas',this)">Todas</button>
+    <button class="hc-btn" onclick="filterSessions('solar',this)">Solar</button>
+    <button class="hc-btn" onclick="filterSessions('parcial',this)">Bateria Parcial</button>
+    <button class="hc-btn" onclick="filterSessions('rede',this)">Rede de Apoio</button>
+    <button class="hc-btn" onclick="filterSessions('ok',this)">Concluídas</button>
+    <button class="hc-btn" onclick="filterSessions('pendente',this)">Pendentes</button>
+  </div>
+
+  <div class="table-wrap fade-in">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Data / Hora</th><th>Veículo</th><th>Fonte</th>
+          <th>Bandeira</th><th>kWh</th><th>Duração</th><th>Valor</th><th>CO₂ evitado</th><th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="sessions-body"></tbody>
+    </table>
+  </div>
+  <div class="pag-btns" id="pag-btns"></div>
+</section>
+
+<!-- AÇÕES RÁPIDAS -->
+<section id="acoes">
+  <div class="section-label">Atalhos</div>
+  <div class="section-title">O que você quer fazer?</div>
+  <div class="actions-grid fade-in">
+    <a class="action-card" href="carregamento.html">
+      <span class="ac-icon">⚡</span>
+      <h3>Iniciar recarga</h3>
+      <p>Conecte seu veículo a um totem Lumos e inicie uma nova sessão de carregamento.</p>
+      <div class="ac-arrow">Começar →</div>
+    </a>
+    <a class="action-card" href="pagamento.html">
+      <span class="ac-icon">💳</span>
+      <h3>Gerenciar pagamentos</h3>
+      <p>Adicione créditos à conta, escolha formas de pagamento e visualize transações.</p>
+      <div class="ac-arrow">Ir para Pagamentos →</div>
+    </a>
+    <a class="action-card" href="estacao.html">
+      <span class="ac-icon">🗄️</span>
+      <h3>Painel da Estação</h3>
+      <p>Busque, ordene e veja as estatísticas de todas as sessões, processadas no backend Python.</p>
+      <div class="ac-arrow">Abrir painel →</div>
+    </a>
+    <a class="action-card" href="consumo.html">
+      <span class="ac-icon">📊</span>
+      <h3>Ver consumo</h3>
+      <p>Analise gráficos detalhados de energia, emissões e custo ao longo do tempo.</p>
+      <div class="ac-arrow">Ver Consumo →</div>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER / CONTATO -->
+<footer id="contato">
+  <div class="footer-top">
+    <div class="ft-brand">
+      <div class="logo"><span>Lumos</span></div>
+      <p>Sistema inteligente de recarga para veículos elétricos movido por energia solar e comprometido com um futuro sustentável.</p>
+    </div>
+    <div class="ft-col">
+      <h4>Navegação</h4>
+      <ul>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="consumo.html">Consumo</a></li>
+        <li><a href="pagamento.html">Pagamento</a></li>
+        <li><a href="sustentabilidade.html">Sustentabilidade</a></li>
+        <li><a href="localidade.html">Localidade</a></li>
+        <li><a href="carregamento.html">Iniciar Recarga</a></li>
+      </ul>
+    </div>
+    <div class="ft-col">
+      <h4>Suporte</h4>
+      <ul>
+        <li><a href="#">Central de Ajuda</a></li>
+        <li><a href="#">Como funciona</a></li>
+        <li><a href="#">Encontrar totens</a></li>
+        <li><a href="#">Política de privacidade</a></li>
+      </ul>
+    </div>
+    <div class="ft-col">
+      <h4>Contato</h4>
+      <div class="ft-contact-item">
+        <span>📧</span>
+        <div><strong>E-mail</strong>contato@lumosmaxima.com.br</div>
+      </div>
+      <div class="ft-contact-item">
+        <span>📞</span>
+        <div><strong>Telefone</strong>0800 123 4567 (gratuito)</div>
+      </div>
+      <div class="ft-contact-item">
+        <span>📍</span>
+        <div><strong>Sede</strong>São Paulo, SP — Brasil</div>
+      </div>
+      <div class="ft-contact-item">
+        <span>🕐</span>
+        <div><strong>Atendimento</strong>Seg–Sex, 8h–20h</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bot">
+    <p>© 2026 Lumos · Desenvolvido por FIAP / GoodWe</p>
+    <div class="footer-eco">🌱 Cada recarga é uma escolha pelo planeta</div>
+  </div>
+</footer>
+
+<script src="api.js"></script>
+<script>
+(function() {
+// ---- AUTH CHECK ----
+var user;
+try { user = JSON.parse(localStorage.getItem('lm_user')); } catch(e) { user = null; }
+if (!user || !user.nome) { window.location.href='index.html'; return; }
+
+function sair() {
+  localStorage.removeItem('lm_user');
+  localStorage.removeItem('lm_credits');
+  localStorage.removeItem('lm_sessions');
+  localStorage.removeItem('lm_pledged');
+  window.location.href='index.html';
+}
+window.sair = sair;
+
+// ---- POPULATE NAV + HERO ----
+document.getElementById('nav-av').textContent = user.initials || '?';
+document.getElementById('nav-nome').textContent = user.nome.split(' ')[0];
+document.getElementById('welcome-msg').textContent = 'Bem-vindo(a), ' + user.nome.split(' ')[0] + '!';
+document.getElementById('hero-name').textContent = user.nome.split(' ')[0];
+
+// ---- SESSIONS DATA (vindas do backend Python: GET /api/sessoes) ----
+let allSessions = [];
+
+// Converte o dicionário de sessão do Python para o formato da tabela
+function mapear(s) {
+  return {
+    id: s.id, data: s.data || '—', hora: (s.inicio || '').slice(0,5),
+    veiculo: s.marca_carro, fonte: s.fonte, kwh: Number(s.energia_kwh).toFixed(1),
+    durMin: s.duracao_min, valor: s.valor_total, bandeira: s.bandeira, status: 'ok',
+    co2: s.co2_evitado_kg != null ? s.co2_evitado_kg : s.energia_kwh * 0.21
+  };
+}
+
+function renderResumo() {
+  const last = allSessions[0];
+  if (last) {
+    document.getElementById('lc-veiculo').textContent = last.veiculo;
+    document.getElementById('lc-token').textContent = 'Sessão ' + last.id + ' · ' + last.data;
+    document.getElementById('lc-pct').textContent = last.kwh + ' kWh';
+    document.getElementById('lc-bar').style.width = Math.min(100, Math.round(parseFloat(last.kwh))) + '%';
+    document.getElementById('lc-kwh').textContent = last.kwh;
+    document.getElementById('lc-min').textContent = last.durMin;
+    document.getElementById('lc-val').textContent = 'R$' + last.valor.toFixed(0);
+    const pill = document.getElementById('lc-pill');
+    pill.className = 'pill ' + last.bandeira.toLowerCase();
+    pill.textContent = (last.bandeira==='Verde'?'🌱':last.bandeira==='Amarela'?'⚠️':'🔴') + ' Bandeira ' + last.bandeira + ' · ' + last.fonte;
+  } else {
+    document.getElementById('lc-pill').textContent = 'Nenhuma sessão ainda — inicie uma recarga ⚡';
+  }
+
+  const totKwh  = allSessions.reduce((a,s)=>a+parseFloat(s.kwh),0);
+  const totCo2  = allSessions.reduce((a,s)=>a+(s.co2||0),0);
+  const totVal  = allSessions.reduce((a,s)=>a+s.valor,0);
+  document.getElementById('st-sessoes').textContent = allSessions.length;
+  document.getElementById('st-kwh').textContent = totKwh.toFixed(1)+' kWh';
+  document.getElementById('st-co2').textContent = totCo2.toFixed(1)+' kg';
+  document.getElementById('st-arvores').textContent = Math.floor(totCo2/4.8);
+
+  document.getElementById('hist-summary').innerHTML = `
+    <div class="hs-card"><div class="lab">Total de sessões</div><div class="val">${allSessions.length}</div><div class="sub2">Armazenadas no backend Python</div></div>
+    <div class="hs-card"><div class="lab">Energia total</div><div class="val">${totKwh.toFixed(1)} kWh</div><div class="sub2">Carregada</div></div>
+    <div class="hs-card"><div class="lab">CO₂ evitado</div><div class="val">${totCo2.toFixed(1)} kg</div><div class="sub2">Equivalente a ${Math.floor(totCo2/4.8)} árvores</div></div>
+    <div class="hs-card"><div class="lab">Gasto total</div><div class="val">R$ ${totVal.toFixed(2)}</div><div class="sub2">Todas as sessões</div></div>
+  `;
+}
+
+// ---- TABLE + PAGINATION ----
+const PER_PAGE = 6;
+let currentFilter = 'todas';
+let currentPage = 1;
+
+window.filterSessions = filterSessions;
+function filterSessions(f, btn) {
+  currentFilter = f; currentPage = 1;
+  document.querySelectorAll('.hc-btn').forEach(b=>b.classList.remove('act'));
+  btn.classList.add('act');
+  renderTable();
+}
+
+function getFiltered() {
+  if (currentFilter==='todas') return allSessions;
+  if (currentFilter==='solar') return allSessions.filter(s=>s.fonte.includes('Solar'));
+  if (currentFilter==='parcial') return allSessions.filter(s=>s.fonte.includes('Parcial'));
+  if (currentFilter==='rede') return allSessions.filter(s=>s.fonte.includes('Rede'));
+  if (currentFilter==='ok') return allSessions.filter(s=>s.status==='ok');
+  if (currentFilter==='pendente') return allSessions.filter(s=>s.status==='pendente');
+  return allSessions;
+}
+
+function renderTable() {
+  const filtered = getFiltered();
+  const total = filtered.length;
+  const pages = Math.ceil(total/PER_PAGE);
+  const slice = filtered.slice((currentPage-1)*PER_PAGE, currentPage*PER_PAGE);
+
+  const colorBand = b => b==='Verde'?'band-verde':b==='Amarela'?'band-amarela':'band-vermelha';
+  const colorBadge = s => s==='ok'?'badge-ok':s==='pendente'?'badge-pend':'badge-cancel';
+  const labelStatus = s => s==='ok'?'Concluída':s==='pendente'?'Pendente':'Cancelada';
+
+  document.getElementById('sessions-body').innerHTML = slice.map(s=>`
+    <tr>
+      <td style="color:var(--ct);font-size:.75rem">${s.id}</td>
+      <td><strong>${s.data}</strong><br><span style="font-size:.75rem;color:var(--ct)">${s.hora}</span></td>
+      <td>${s.veiculo}</td>
+      <td><span style="font-size:.82rem">${s.fonte}</span></td>
+      <td><span class="band-dot ${colorBand(s.bandeira)}"></span>${s.bandeira}</td>
+      <td><strong>${s.kwh}</strong></td>
+      <td>${s.durMin} min</td>
+      <td>R$ ${s.valor.toFixed(2)}</td>
+      <td>${(s.co2||0).toFixed(1)} kg</td>
+      <td><span class="badge ${colorBadge(s.status)}">${labelStatus(s.status)}</span></td>
+    </tr>
+  `).join('');
+
+  // Pagination
+  const pb = document.getElementById('pag-btns');
+  pb.innerHTML = '';
+  for (let p=1; p<=pages; p++) {
+    const btn = document.createElement('button');
+    btn.className = 'pag-btn' + (p===currentPage?' cur':'');
+    btn.textContent = p;
+    btn.onclick = ()=>{ currentPage=p; renderTable(); document.getElementById('historico').scrollIntoView({behavior:'smooth'}); };
+    pb.appendChild(btn);
+  }
+}
+lumosGet('/api/sessoes')
+  .then(lista => { allSessions = lista.slice().reverse().map(mapear); renderResumo(); renderTable(); })
+  .catch(e => { document.getElementById('lc-pill').textContent = '⚠️ ' + e.message; renderResumo(); renderTable(); });
+
+// ---- SCROLL FADE ----
+const obs = new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:.1});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+})(); // end auth guard
+</script>
+</body>
+</html>

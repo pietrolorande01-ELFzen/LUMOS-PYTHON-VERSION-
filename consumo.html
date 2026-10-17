@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumos — Consumo</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--verde:#3ecf74;--ve:#1a9e50;--vc:#d4f5e2;--vu:#f0fdf6;--am:#f59e0b;--amc:#fef3c7;--vm:#ef4444;--br:#fff;--cl:#f7f9f8;--ct:#4a5568;--cb:#e2e8f0;--ps:#1a202c;--fd:'Inter',sans-serif;--fb:'Inter',sans-serif;--flogo:'Syne',sans-serif;--r:14px;--rl:22px;--sc:0 2px 16px rgba(0,0,0,.07)}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--cl);color:var(--ps)}
+nav#main-nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,.94);backdrop-filter:blur(18px);border-bottom:1px solid var(--cb);padding:0 5vw;display:flex;align-items:center;justify-content:space-between;height:64px;gap:1rem}
+.nav-logo{font-family:var(--flogo);font-weight:800;font-size:1.3rem;color:var(--ps);text-decoration:none}.nav-logo span{color:var(--ve)}
+.nav-links{display:flex;gap:1.8rem;list-style:none}
+.nav-links a{text-decoration:none;color:var(--ct);font-size:.9rem;font-weight:500;transition:color .2s;position:relative;padding-bottom:3px}
+.nav-links a.active{color:var(--ve)}.nav-links a.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--ve);border-radius:2px}
+.nav-links a:hover{color:var(--ve)}.nav-right{display:flex;align-items:center;gap:.8rem}
+.nav-user{display:flex;align-items:center;gap:.6rem;font-size:.88rem;font-weight:500}
+.nav-avatar{width:30px;height:30px;border-radius:50%;background:var(--ve);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700}
+.nav-logout{background:transparent;border:1px solid var(--cb);padding:5px 12px;border-radius:50px;font-family:var(--fb);font-size:.8rem;cursor:pointer;color:var(--ct);transition:all .2s}
+.nav-logout:hover{border-color:var(--vm);color:var(--vm)}
+.nav-corp-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(26,158,80,.1);
+  border:1.5px solid rgba(26,158,80,.3);
+  color:var(--ve);
+  padding:5px 13px;border-radius:50px;
+  font-family:var(--fb);font-size:.78rem;font-weight:700;
+  text-decoration:none;cursor:pointer;
+  transition:background .2s,border-color .2s,transform .15s;
+  letter-spacing:.02em;
+}
+.nav-corp-btn:hover{
+  background:rgba(26,158,80,.18);
+  border-color:rgba(26,158,80,.55);
+  transform:translateY(-1px);
+}
+.nav-corp-btn .corp-dot{
+  font-size:.55rem;letter-spacing:.06em;
+  background:var(--ve);color:#fff;
+  padding:1px 5px;border-radius:50px;
+  font-weight:800;
+}
+.nav-hamburger{display:none;background:none;border:none;font-size:1.4rem;cursor:pointer}
+.page-header{padding:80px 5vw 40px;background:linear-gradient(135deg,var(--vu) 0%,#fff 70%)}
+.section-label{font-size:.78rem;font-weight:700;letter-spacing:.12em;color:var(--ve);text-transform:uppercase;margin-bottom:.4rem}
+.section-title{font-family:var(--fd);font-size:clamp(1.6rem,3vw,2.3rem);font-weight:800;line-height:1.15;margin-bottom:.7rem}
+.section-sub{color:var(--ct);font-size:.98rem;line-height:1.7;max-width:600px}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1.1rem;padding:2rem 5vw}
+.sc{background:#fff;border-radius:var(--rl);border:1.5px solid var(--cb);padding:1.3rem 1.5rem;box-shadow:var(--sc)}
+.sc .lbl{font-size:.74rem;color:var(--ct);margin-bottom:.4rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.sc .num{font-family:var(--fd);font-size:1.9rem;font-weight:800;color:var(--ve)}
+.sc .sub{font-size:.74rem;color:var(--ct);margin-top:.3rem}
+.sc .trend{display:inline-flex;align-items:center;gap:4px;font-size:.76rem;font-weight:600;margin-top:.4rem;padding:2px 8px;border-radius:50px;background:#dcfce7;color:#166534}
+.charts-section{padding:0 5vw 3rem}
+.charts-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+.chart-card{background:#fff;border-radius:var(--rl);border:1.5px solid var(--cb);padding:1.6rem 1.8rem;box-shadow:var(--sc)}
+.cc-head{margin-bottom:1.2rem}
+.cc-head h3{font-family:var(--fd);font-size:1rem;font-weight:700;margin-bottom:.2rem}
+.cc-head .desc{font-size:.82rem;color:var(--ct);line-height:1.5}
+.cc-head .source{font-size:.72rem;color:var(--ve);margin-top:.4rem;font-style:italic}
+.chart-wrap{position:relative;height:240px}
+.chart-wrap.sm{height:190px}
+.chart-legend{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:.9rem}
+.cl-item{display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--ct)}
+.cl-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0}
+.cl-line{width:18px;height:3px;border-radius:2px;flex-shrink:0}
+.insights-section{padding:0 5vw 3rem}
+.insights-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.insight-card{background:#fff;border-radius:var(--rl);border:1.5px solid var(--cb);padding:1.5rem;box-shadow:var(--sc)}
+.insight-card .ic-icon{font-size:1.8rem;margin-bottom:.7rem}
+.insight-card h4{font-family:var(--fd);font-size:.98rem;font-weight:700;margin-bottom:.4rem}
+.insight-card p{font-size:.84rem;color:var(--ct);line-height:1.6}
+.insight-card .ic-hl{margin-top:.8rem;padding:8px 12px;border-radius:8px;font-size:.78rem;font-weight:700}
+.ic-hl.g{background:var(--vc);color:var(--ve)}.ic-hl.b{background:#dbeafe;color:#1e40af}
+.sources-section{padding:0 5vw 4rem}
+.sources-card{background:#fff;border-radius:var(--rl);border:1.5px solid var(--cb);padding:1.5rem 2rem}
+.sources-card h3{font-family:var(--fd);font-size:1rem;font-weight:700;margin-bottom:1rem}
+.src-list{list-style:none;display:flex;flex-direction:column;gap:.5rem}
+.src-list li{font-size:.82rem;color:var(--ct);padding-left:1rem;position:relative;line-height:1.5}
+.src-list li::before{content:'›';position:absolute;left:0;color:var(--ve);font-weight:700}
+.src-list li strong{color:var(--ps)}
+.fade-in{opacity:0;transform:translateY(22px);transition:opacity .55s ease,transform .55s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+@media(max-width:860px){.nav-hamburger{display:block}.nav-links{display:none}.stat-row,.charts-grid-2,.insights-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav id="main-nav">
+  <a class="nav-logo" href="home.html"><span>Lumos</span></a>
+  <ul class="nav-links">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="consumo.html" class="active">Consumo</a></li>
+    <li><a href="pagamento.html">Pagamento</a></li>
+    <li><a href="sustentabilidade.html">Sustentabilidade</a></li>
+    <li><a href="estacao.html">Estação</a></li>
+    <li><a href="lummi.html">Lummi IA</a></li>
+  </ul>
+  <div class="nav-right">
+    <a class="nav-corp-btn" href="corp.html"><span class="corp-dot">CORP</span> Lumos Corp</a>
+    <div class="nav-user">
+      <div class="nav-avatar" id="nav-av">?</div>
+      <span id="nav-nome">Usuário</span>
+      <button class="nav-logout" onclick="localStorage.removeItem('lm_user');localStorage.removeItem('lm_credits');localStorage.removeItem('lm_sessions');localStorage.removeItem('lm_pledged');window.location.href='index.html'">Sair</button>
+    </div>
+  </div>
+  <button class="nav-hamburger" onclick="document.getElementById('main-nav').classList.toggle('open')">☰</button>
+</nav>
+
+<div class="page-header">
+  <div class="section-label">Análise de dados</div>
+  <div class="section-title">Consumo energético</div>
+  <p class="section-sub">Estatísticas baseadas em dados reais do setor de mobilidade elétrica no Brasil e no mundo. Fontes citadas em cada gráfico.</p>
+</div>
+
+<div class="stat-row fade-in">
+  <div class="sc"><div class="lbl">Seus kWh carregados</div><div class="num" id="my-kwh">—</div><div class="sub">Total acumulado</div><div class="trend">↑ Impacto positivo</div></div>
+  <div class="sc"><div class="lbl">CO₂ evitado (você)</div><div class="num" id="my-co2">—</div><div class="sub">vs gasolina equivalente</div><div class="trend">↑ Ativo</div></div>
+  <div class="sc"><div class="lbl">Custo médio/kWh</div><div class="num" id="my-avg">—</div><div class="sub">Nas suas sessões</div><div class="trend">↓ Abaixo da média</div></div>
+  <div class="sc"><div class="lbl">Sessões realizadas</div><div class="num" id="my-sess">—</div><div class="sub">Desde o cadastro</div><div class="trend">↑ Ativo</div></div>
+</div>
+
+<div class="charts-section">
+  <div class="charts-grid-2 fade-in">
+    <div class="chart-card">
+      <div class="cc-head"><h3>📈 Crescimento de EVs no Brasil (2019–2024)</h3><p class="desc">Emplacamentos anuais de veículos elétricos. O mercado cresceu 312% em 4 anos, atingindo 140 mil unidades em 2024.</p><p class="source">Fonte: ANFAVEA — Anuário da Indústria Automobilística Brasileira 2024</p></div>
+      <div class="chart-wrap"><canvas id="c-evsbr"></canvas></div>
+      <div class="chart-legend"><div class="cl-item"><div class="cl-dot" style="background:#d4f5e2"></div>Emplacamentos/ano</div><div class="cl-item"><div class="cl-line" style="background:#f59e0b"></div>Linha de tendência</div></div>
+    </div>
+    <div class="chart-card">
+      <div class="cc-head"><h3>⚡ CO₂: Elétrico vs Gasolina vs Diesel (gCO₂/km)</h3><p class="desc">Emissões por km considerando ciclo de vida completo. Elétrico com energia solar emite 10x menos que gasolina.</p><p class="source">Fonte: IPCC 2023 Transport Chapter / ICCT Life-Cycle Assessment 2023</p></div>
+      <div class="chart-wrap"><canvas id="c-co2comp"></canvas></div>
+      <div class="chart-legend"><div class="cl-item"><div class="cl-dot" style="background:#1a9e50"></div>Elétrico solar</div><div class="cl-item"><div class="cl-dot" style="background:#3ecf74"></div>Elétrico rede BR</div><div class="cl-item"><div class="cl-dot" style="background:#f59e0b"></div>Gasolina</div><div class="cl-item"><div class="cl-dot" style="background:#ef4444"></div>Diesel</div></div>
+    </div>
+  </div>
+  <div class="charts-grid-2 fade-in">
+    <div class="chart-card">
+      <div class="cc-head"><h3>🔋 Custo por 100 km: Elétrico vs Combustível</h3><p class="desc">Comparativo de custo real para percorrer 100 km. Recarga solar custa 89% menos que gasolina comum.</p><p class="source">Fonte: ANP (combustíveis), ANEEL (energia elétrica) — Médias 2024</p></div>
+      <div class="chart-wrap"><canvas id="c-custo100"></canvas></div>
+      <div class="chart-legend"><div class="cl-item"><div class="cl-dot" style="background:#1a9e50"></div>Elétrico Solar (Lumos)</div><div class="cl-item"><div class="cl-dot" style="background:#f59e0b"></div>Gasolina comum</div><div class="cl-item"><div class="cl-dot" style="background:#ef4444"></div>Gasolina aditivada</div></div>
+    </div>
+    <div class="chart-card">
+      <div class="cc-head"><h3>☀️ Geração solar no Brasil — GWh instalados por ano</h3><p class="desc">Crescimento exponencial da capacidade fotovoltaica. O Brasil saltou de 2 GWh em 2014 para 55 GWh em 2023.</p><p class="source">Fonte: ABSOLAR — Panorama da Energia Solar Fotovoltaica no Brasil 2024</p></div>
+      <div class="chart-wrap"><canvas id="c-solar"></canvas></div>
+      <div class="chart-legend"><div class="cl-item"><div class="cl-dot" style="background:#f59e0b"></div>Capacidade instalada (GWh)</div></div>
+    </div>
+  </div>
+  <div class="charts-grid-2 fade-in">
+    <div class="chart-card">
+      <div class="cc-head"><h3>🌍 Frota global de EVs por país (milhões, 2023)</h3><p class="desc">Os maiores mercados do mundo. China lidera com 20M de unidades; Brasil ainda tem enorme potencial de crescimento.</p><p class="source">Fonte: IEA — Global EV Outlook 2024 (International Energy Agency)</p></div>
+      <div class="chart-wrap"><canvas id="c-global"></canvas></div>
+      <div class="chart-legend"><div class="cl-item"><div class="cl-dot" style="background:#1a9e50"></div>Frota (milhões de veículos)</div></div>
+    </div>
+    <div class="chart-card">
+      <div class="cc-head"><h3>📊 Matriz elétrica brasileira 2024</h3><p class="desc">O Brasil tem 88% de energia renovável na matriz — uma das mais limpas do mundo. Isso torna o EV ainda mais sustentável aqui.</p><p class="source">Fonte: EPE — Balanço Energético Nacional 2024</p></div>
+      <div class="chart-wrap sm"><canvas id="c-matriz"></canvas></div>
+      <div class="chart-legend"><div class="cl-item"><div class="cl-dot" style="background:#1a9e50"></div>Hidrelétrica 63%</div><div class="cl-item"><div class="cl-dot" style="background:#3ecf74"></div>Eólica 13%</div><div class="cl-item"><div class="cl-dot" style="background:#f59e0b"></div>Solar 6%</div><div class="cl-item"><div class="cl-dot" style="background:#d1d5db"></div>Outros 18%</div></div>
+    </div>
+  </div>
+  <div class="charts-grid-2 fade-in">
+    <div class="chart-card">
+      <div class="cc-head"><h3>📅 Seu consumo mensal vs média de usuários (kWh)</h3><p class="desc">Energia carregada por mês com base nas suas sessões registradas comparada à média da rede Lumos.</p><p class="source">Dados: suas sessões + benchmark Lumos</p></div>
+      <div class="chart-wrap"><canvas id="c-meu"></canvas></div>
+      <div class="chart-legend"><div class="cl-item"><div class="cl-line" style="background:#1a9e50"></div>Seu consumo</div><div class="cl-item"><div class="cl-line" style="background:#d1d5db"></div>Média usuários</div></div>
+    </div>
+    <div class="chart-card">
+      <div class="cc-head"><h3>💰 Seu custo por sessão vs equivalente gasolina</h3><p class="desc">Quanto você pagou em cada sessão vs quanto custaria percorrer a mesma distância com gasolina (R$ 5,89/L).</p><p class="source">Preço gasolina: ANP Maio 2025 — média nacional</p></div>
+      <div class="chart-wrap"><canvas id="c-economia"></canvas></div>
+      <div class="chart-legend"><div class="cl-item"><div class="cl-dot" style="background:#1a9e50"></div>Elétrico (pago)</div><div class="cl-item"><div class="cl-dot" style="background:#fca5a5"></div>Equivalente gasolina</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="insights-section">
+  <div class="section-label">Interpretação</div>
+  <div class="section-title">O que esses dados significam</div>
+  <div class="insights-grid fade-in">
+    <div class="insight-card"><div class="ic-icon">💡</div><h4>Você economiza com energia solar</h4><p>Na bandeira Verde, a tarifa é R$ 0,85/kWh. Percorrer 100 km custa cerca de R$ 5,10 — contra R$ 49 de gasolina. Uma economia de 89% por km rodado.</p><div class="ic-hl g">⚡ Economia média: 89% por km</div></div>
+    <div class="insight-card"><div class="ic-icon">🌳</div><h4>Seu impacto ambiental real</h4><p>Cada kWh carregado com energia solar evita ~210g de CO₂. Com a sua média, isso equivale a plantar uma árvore a cada 23 km rodados com o carro elétrico.</p><div class="ic-hl g">🌿 CO₂ evitado por você: <span id="ins-co2">calculando...</span></div></div>
+    <div class="insight-card"><div class="ic-icon">📉</div><h4>Brasil: a melhor combinação</h4><p>Com 88% da matriz elétrica sendo renovável, carregar aqui é muito mais limpo que EUA (60% fóssil) ou Alemanha (50% fóssil). Localização importa.</p><div class="ic-hl b">🇧🇷 Matriz 88% renovável — EPE 2024</div></div>
+  </div>
+</div>
+
+<div class="sources-section">
+  <div class="sources-card fade-in">
+    <h3>📚 Fontes e referências</h3>
+    <ul class="src-list">
+      <li><strong>ANFAVEA 2024</strong> — Anuário da Indústria Automobilística Brasileira. Emplacamentos 2019–2024.</li>
+      <li><strong>IEA Global EV Outlook 2024</strong> — International Energy Agency. Frota global e tendências.</li>
+      <li><strong>IPCC Sixth Assessment Report 2023</strong> — Transport Chapter. Emissões por modo de transporte.</li>
+      <li><strong>ICCT Life-Cycle Assessment 2023</strong> — Comparativo de emissões well-to-wheel.</li>
+      <li><strong>ANP Maio 2025</strong> — Agência Nacional do Petróleo. Preços médios combustíveis.</li>
+      <li><strong>ANEEL 2024</strong> — Tarifas médias de energia elétrica por bandeira tarifária.</li>
+      <li><strong>ABSOLAR 2024</strong> — Panorama da Energia Solar Fotovoltaica no Brasil.</li>
+      <li><strong>EPE 2024</strong> — Empresa de Pesquisa Energética. Balanço Energético Nacional.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Chart.js carregado ANTES do script de inicialização -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+// AUTH — roda depois do DOM estar pronto
+window.addEventListener('DOMContentLoaded', function() {
+  var user = null;
+  try { user = JSON.parse(localStorage.getItem('lm_user')); } catch(e) {}
+  if (!user || !user.nome) { window.location.href = 'index.html'; return; }
+
+  document.getElementById('nav-av').textContent = user.initials || '?';
+  document.getElementById('nav-nome').textContent = user.nome.split(' ')[0];
+
+  // User sessions stats
+  var ss = [];
+  try { ss = JSON.parse(localStorage.getItem('lm_sessions')) || []; } catch(e) {}
+  var totKwh = ss.reduce(function(a,s){ return a + parseFloat(s.kwh||0); }, 0);
+  var totCo2 = ss.reduce(function(a,s){ return a + (s.co2||0); }, 0);
+  var avgCost = ss.length ? ss.reduce(function(a,s){ return a + s.valor/parseFloat(s.kwh); }, 0) / ss.length : 0;
+  document.getElementById('my-kwh').textContent = totKwh.toFixed(1) + ' kWh';
+  document.getElementById('my-co2').textContent = totCo2.toFixed(1) + ' kg';
+  document.getElementById('my-avg').textContent = 'R$ ' + avgCost.toFixed(2);
+  document.getElementById('my-sess').textContent = ss.length;
+  document.getElementById('ins-co2').textContent = totCo2.toFixed(1) + ' kg CO₂';
+
+  var g='#1a9e50', gl='#3ecf74', gp='#d4f5e2', am='#f59e0b', vm='#ef4444';
+
+  // 1 EV Brasil
+  new Chart(document.getElementById('c-evsbr'), {type:'bar',data:{labels:['2019','2020','2021','2022','2023','2024'],datasets:[{label:'Emplacamentos',data:[17000,18500,35000,49000,94000,140000],backgroundColor:gp,borderColor:g,borderWidth:2,borderRadius:6},{type:'line',label:'Tendência',data:[17000,18500,35000,49000,94000,140000],borderColor:am,borderDash:[5,5],pointRadius:0,borderWidth:2,fill:false,tension:.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(v){return v.dataset.label+': '+Number(v.raw).toLocaleString('pt-BR');}}}},scales:{y:{beginAtZero:true,ticks:{callback:function(v){return Number(v).toLocaleString('pt-BR');}}},x:{grid:{display:false}}}}});
+
+  // 2 CO2
+  new Chart(document.getElementById('c-co2comp'), {type:'bar',data:{labels:['Elétrico (solar)','Elétrico (rede BR)','Gasolina','Diesel'],datasets:[{data:[18,47,165,183],backgroundColor:[g,gl,am,vm],borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:function(v){return v.raw+' gCO₂/km';}}}},scales:{x:{beginAtZero:true,ticks:{callback:function(v){return v+' g';}}},y:{grid:{display:false}}}}});
+
+  // 3 Custo 100km
+  new Chart(document.getElementById('c-custo100'), {type:'bar',data:{labels:['Elétrico Solar','Elétrico Rede','Gasolina Comum','Gas Aditivada','Diesel'],datasets:[{data:[5.10,12.40,49.08,52.83,35.40],backgroundColor:[g,gl,am,'#fb923c','#6b7280'],borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(v){return 'R$ '+v.raw.toFixed(2)+'/100km';}}}},scales:{y:{beginAtZero:true,ticks:{callback:function(v){return 'R$'+v;}}},x:{grid:{display:false}}}}});
+
+  // 4 Solar Brasil
+  new Chart(document.getElementById('c-solar'), {type:'line',data:{labels:['2014','2015','2016','2017','2018','2019','2020','2021','2022','2023'],datasets:[{label:'GWh',data:[2,4,7,11,20,28,38,46,52,55],borderColor:am,backgroundColor:'rgba(245,158,11,.12)',fill:true,tension:.4,pointBackgroundColor:am,pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(v){return v.raw+' GWh';}}}},scales:{y:{beginAtZero:true,ticks:{callback:function(v){return v+' GWh';}}},x:{grid:{display:false}}}}});
+
+  // 5 Global
+  new Chart(document.getElementById('c-global'), {type:'bar',data:{labels:['China','EUA','Alemanha','Reino Unido','França','Brasil'],datasets:[{data:[20.1,3.3,1.8,1.2,1.1,0.09],backgroundColor:[g,gl,'#3b82f6','#60a5fa','#2563eb','#fbbf24'],borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(v){return v.raw+'M veículos';}}}},scales:{y:{beginAtZero:true,ticks:{callback:function(v){return v+'M';}}},x:{grid:{display:false}}}}});
+
+  // 6 Matriz
+  new Chart(document.getElementById('c-matriz'), {type:'doughnut',data:{labels:['Hidrelétrica','Eólica','Solar','Biomassa','Gás natural','Outros'],datasets:[{data:[63,13,6,6,8,4],backgroundColor:[g,gl,am,'#a7f3d0','#d1d5db','#6b7280'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(v){return v.label+': '+v.raw+'%';}}}}}});
+
+  // 7 Meu consumo
+  new Chart(document.getElementById('c-meu'), {type:'line',data:{labels:['Dez','Jan','Fev','Mar','Abr','Mai'],datasets:[{label:'Seu consumo',data:[12.5,18.0,24.5,22.0,30.0,35.0],borderColor:g,backgroundColor:'rgba(26,158,80,.08)',fill:true,tension:.4,pointBackgroundColor:g,pointRadius:5},{label:'Média usuários',data:[20,22,24,23,25,24],borderColor:'#d1d5db',borderDash:[4,4],pointRadius:0,fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(v){return v.dataset.label+': '+v.raw+' kWh';}}}},scales:{y:{beginAtZero:true,ticks:{callback:function(v){return v+' kWh';}}},x:{grid:{display:false}}}}});
+
+  // 8 Economia
+  var sessLabels = ss.slice(0,8).map(function(s,i){ return 'S'+(i+1); });
+  var sessElet   = ss.slice(0,8).map(function(s){ return s.valor; });
+  var sessGas    = ss.slice(0,8).map(function(s){ return parseFloat(s.kwh)*6*5.89/12; });
+  new Chart(document.getElementById('c-economia'), {type:'bar',data:{labels:sessLabels.length?sessLabels:['S1','S2','S3','S4','S5'],datasets:[{label:'Elétrico',data:sessElet.length?sessElet:[35,36,62,25,44],backgroundColor:g,borderRadius:6},{label:'Gasolina equiv.',data:sessGas.length?sessGas:[180,144,240,100,280],backgroundColor:'#fca5a5',borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(v){return v.dataset.label+': R$ '+Number(v.raw).toFixed(2);}}}},scales:{y:{beginAtZero:true,ticks:{callback:function(v){return 'R$'+v;}}},x:{grid:{display:false}}}}});
+
+  // Scroll fade
+  var obs = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('visible'); }); }, {threshold:.08});
+  document.querySelectorAll('.fade-in').forEach(function(el){ obs.observe(el); });
+});
+</script>
+</body>
+</html>

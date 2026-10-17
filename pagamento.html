@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumos — Pagamento</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--verde:#3ecf74;--ve:#1a9e50;--vc:#d4f5e2;--vu:#f0fdf6;--am:#f59e0b;--amc:#fef3c7;--vm:#ef4444;--vmc:#fee2e2;--br:#fff;--cl:#f7f9f8;--ct:#4a5568;--cb:#e2e8f0;--ps:#1a202c;--fd:'Inter',sans-serif;--fb:'Inter',sans-serif;--flogo:'Syne',sans-serif;--r:14px;--rl:22px;--sc:0 2px 16px rgba(0,0,0,.07)}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--cl);color:var(--ps)}
+nav#main-nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,.94);backdrop-filter:blur(18px);border-bottom:1px solid var(--cb);padding:0 5vw;display:flex;align-items:center;justify-content:space-between;height:64px;gap:1rem}
+.nav-logo{font-family:var(--flogo);font-weight:800;font-size:1.3rem;color:var(--ps);text-decoration:none}.nav-logo span{color:var(--ve)}
+.nav-links{display:flex;gap:1.8rem;list-style:none}
+.nav-links a{text-decoration:none;color:var(--ct);font-size:.9rem;font-weight:500;transition:color .2s;position:relative;padding-bottom:3px}
+.nav-links a.active{color:var(--ve)}.nav-links a.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--ve);border-radius:2px}
+.nav-links a:hover{color:var(--ve)}.nav-right{display:flex;align-items:center;gap:.8rem}
+.nav-user{display:flex;align-items:center;gap:.6rem;font-size:.88rem;font-weight:500}
+.nav-avatar{width:30px;height:30px;border-radius:50%;background:var(--ve);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700}
+.nav-logout{background:transparent;border:1px solid var(--cb);padding:5px 12px;border-radius:50px;font-family:var(--fb);font-size:.8rem;cursor:pointer;color:var(--ct);transition:all .2s}
+.nav-logout:hover{border-color:var(--vm);color:var(--vm)}
+.nav-corp-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(26,158,80,.1);
+  border:1.5px solid rgba(26,158,80,.3);
+  color:var(--ve);
+  padding:5px 13px;border-radius:50px;
+  font-family:var(--fb);font-size:.78rem;font-weight:700;
+  text-decoration:none;cursor:pointer;
+  transition:background .2s,border-color .2s,transform .15s;
+  letter-spacing:.02em;
+}
+.nav-corp-btn:hover{
+  background:rgba(26,158,80,.18);
+  border-color:rgba(26,158,80,.55);
+  transform:translateY(-1px);
+}
+.nav-corp-btn .corp-dot{
+  font-size:.55rem;letter-spacing:.06em;
+  background:var(--ve);color:#fff;
+  padding:1px 5px;border-radius:50px;
+  font-weight:800;
+}
+.nav-hamburger{display:none;background:none;border:none;font-size:1.4rem;cursor:pointer}
+.page-header{padding:80px 5vw 40px;background:linear-gradient(135deg,var(--vu) 0%,#fff 70%)}
+.section-label{font-size:.78rem;font-weight:700;letter-spacing:.12em;color:var(--ve);text-transform:uppercase;margin-bottom:.4rem}
+.section-title{font-family:var(--fd);font-size:clamp(1.6rem,3vw,2.3rem);font-weight:800;line-height:1.15;margin-bottom:.7rem}
+.section-sub{color:var(--ct);font-size:.98rem;line-height:1.7;max-width:600px}
+
+/* CREDITS PANEL */
+.credits-section{padding:2rem 5vw;display:grid;grid-template-columns:1fr 1.4fr;gap:1.5rem;align-items:start}
+.credits-card{background:#fff;border-radius:var(--rl);border:1.5px solid var(--cb);padding:2rem;box-shadow:var(--sc)}
+.credits-card h3{font-family:var(--fd);font-size:1.05rem;font-weight:700;margin-bottom:.3rem}
+.credits-balance{font-family:var(--fd);font-size:2.8rem;font-weight:800;color:var(--ve);margin:.5rem 0}
+.credits-sub{font-size:.82rem;color:var(--ct);margin-bottom:1.5rem}
+.credit-amounts{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1rem}
+.ca-btn{border:1.5px solid var(--cb);background:#fff;border-radius:10px;padding:.9rem .5rem;text-align:center;cursor:pointer;transition:all .2s;font-family:var(--fb)}
+.ca-btn:hover{border-color:var(--ve);background:var(--vc)}
+.ca-btn .amount{font-family:var(--fd);font-weight:700;font-size:1.05rem;color:var(--ps)}
+.ca-btn .bonus{font-size:.7rem;color:var(--ve);font-weight:600;margin-top:2px}
+.ca-btn.selected{border-color:var(--ve);background:var(--vc)}
+.custom-input-wrap{display:flex;gap:.6rem;margin-bottom:1rem}
+.custom-input-wrap input{flex:1;padding:10px 13px;border:1.5px solid var(--cb);border-radius:10px;font-family:var(--fb);font-size:.93rem;outline:none;transition:border-color .2s}
+.custom-input-wrap input:focus{border-color:var(--ve)}
+.btn-add-credit{width:100%;padding:12px;background:var(--ve);color:#fff;border:none;border-radius:50px;font-family:var(--fb);font-size:.95rem;font-weight:700;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:0 6px 20px rgba(26,158,80,.22)}
+.btn-add-credit:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(26,158,80,.32)}
+.credit-history-card{background:#fff;border-radius:var(--rl);border:1.5px solid var(--cb);padding:2rem;box-shadow:var(--sc)}
+.credit-history-card h3{font-family:var(--fd);font-size:1.05rem;font-weight:700;margin-bottom:1rem}
+.ch-row{display:flex;justify-content:space-between;align-items:center;padding:.8rem 0;border-bottom:1px solid var(--cb)}
+.ch-row:last-child{border-bottom:none}
+.ch-left{display:flex;flex-direction:column;gap:2px}
+.ch-label{font-size:.88rem;font-weight:500}
+.ch-date{font-size:.74rem;color:var(--ct)}
+.ch-amount{font-family:var(--fd);font-weight:700;font-size:.98rem}
+.ch-amount.in{color:var(--ve)}
+.ch-amount.out{color:var(--vm)}
+
+/* PAYMENT METHODS */
+.pay-section{padding:0 5vw 2rem}
+.pay-section .section-title{margin-bottom:.5rem}
+.pay-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:1.5rem}
+.pay-card{border:1.5px solid var(--cb);border-radius:var(--rl);padding:1.6rem;text-align:center;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;background:#fff;box-shadow:var(--sc)}
+.pay-card:hover{border-color:var(--ve);box-shadow:0 8px 28px rgba(62,207,116,.15);transform:translateY(-4px)}
+.pay-icon{font-size:2.2rem;display:block;margin-bottom:.8rem}
+.pay-card h4{font-family:var(--fd);font-weight:700;font-size:1rem;margin-bottom:.3rem}
+.pay-card p{font-size:.8rem;color:var(--ct);line-height:1.5}
+.pay-card .delay-tag{display:inline-block;margin-top:.7rem;background:var(--cl);color:var(--ct);padding:3px 10px;border-radius:50px;font-size:.72rem;font-weight:600}
+.pay-shine{position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);transform:skewX(-20deg);transition:left .5s;pointer-events:none}
+.pay-card:hover .pay-shine{left:130%}
+
+/* MODALS */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.52);z-index:1000;align-items:center;justify-content:center}
+.modal-bg.open{display:flex;animation:fIn .2s ease}
+@keyframes fIn{from{opacity:0}}
+.modal-box{background:#fff;border-radius:var(--rl);padding:2.5rem;width:500px;max-width:94vw;position:relative;animation:sUp .25s ease;max-height:90vh;overflow-y:auto}
+@keyframes sUp{from{transform:translateY(24px);opacity:0}}
+.modal-close{position:absolute;top:1rem;right:1rem;background:var(--cl);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;font-size:.9rem}
+.modal-close:hover{background:var(--cb)}
+.modal-box h3{font-family:var(--fd);font-size:1.4rem;font-weight:800;margin-bottom:.3rem}
+.modal-sub{color:var(--ct);font-size:.88rem;margin-bottom:1.5rem}
+.m-steps{display:flex;flex-direction:column;gap:.7rem}
+.m-step{display:flex;gap:12px;align-items:flex-start;padding:12px;background:var(--cl);border-radius:10px}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--ve);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0}
+.step-c h5{font-size:.88rem;font-weight:600;margin-bottom:2px}
+.step-c p{font-size:.78rem;color:var(--ct)}
+.btn-confirm{width:100%;padding:14px;margin-top:1.4rem;background:var(--ve);color:#fff;border:none;border-radius:50px;font-family:var(--fb);font-size:1rem;font-weight:700;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:0 6px 20px rgba(26,158,80,.22)}
+.btn-confirm:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(26,158,80,.32)}
+.btn-confirm:disabled{background:var(--cb);box-shadow:none;cursor:not-allowed;transform:none}
+
+/* PIX QR */
+.pix-wrap{text-align:center;margin:1.3rem 0}
+.pix-qr{width:130px;height:130px;border-radius:12px;background:var(--cl);display:inline-flex;align-items:center;justify-content:center;font-size:3.5rem;border:2px dashed var(--cb);animation:qPulse 1.5s ease-in-out infinite}
+@keyframes qPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+.pix-scan{width:130px;height:3px;background:var(--ve);border-radius:2px;margin:6px auto 0;animation:scanLine 1.8s ease-in-out infinite}
+@keyframes scanLine{0%{margin-top:0}50%{margin-top:110px}100%{margin-top:0}}
+/* BOLETO */
+.boleto-wrap{background:var(--cl);border-radius:12px;padding:1.2rem;margin:1.2rem 0;text-align:center}
+.boleto-bars{display:flex;gap:2px;justify-content:center;align-items:flex-end;height:55px;margin-bottom:.7rem}
+.bol-bar{background:var(--ps);border-radius:2px;animation:bGrow .7s ease both}
+@keyframes bGrow{from{height:0}}
+.boleto-code{font-family:monospace;font-size:.75rem;color:var(--ct);letter-spacing:.03em;word-break:break-all}
+/* TAG */
+.tag-wrap{text-align:center;padding:1.5rem;background:var(--cl);border-radius:12px;margin:1.2rem 0;position:relative}
+.tag-waves-box{display:inline-block;position:relative;margin-bottom:.6rem}
+.tw{position:absolute;inset:-20px;border-radius:50%;border:2px solid var(--ve);opacity:0;animation:twAnim 1.8s ease-out infinite}
+.tw:nth-child(2){animation-delay:.4s}.tw:nth-child(3){animation-delay:.8s}
+@keyframes twAnim{0%{transform:scale(.5);opacity:.8}100%{transform:scale(2);opacity:0}}
+/* CARD 3D */
+.card3d-scene{perspective:700px;margin:1.2rem auto;width:290px}
+.card3d{width:290px;height:170px;border-radius:18px;position:relative;transform-style:preserve-3d;animation:c3d 3s ease-in-out infinite}
+@keyframes c3d{0%{transform:rotateY(-14deg) rotateX(4deg)}50%{transform:rotateY(14deg) rotateX(-4deg)}100%{transform:rotateY(-14deg) rotateX(4deg)}}
+.cf{position:absolute;inset:0;border-radius:18px;backface-visibility:hidden;padding:1.4rem;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(135deg,var(--ve) 0%,#0d6b40 70%,#1a9e50 100%);color:#fff}
+.chip-grid{width:38px;height:28px;background:#fbbf24;border-radius:5px;display:grid;grid-template-columns:1fr 1fr;gap:2px;padding:3px}
+.chip-cell{background:#e89a0a;border-radius:2px}
+.cn{font-size:.82rem;letter-spacing:.2em;opacity:.8;font-family:monospace}
+.ch{font-size:.72rem;opacity:.65}
+.nfc-ping{position:absolute;top:12px;right:16px}
+.np{position:absolute;width:30px;height:30px;border-radius:50%;border:2px solid rgba(255,255,255,.7);animation:nfcPing 1.3s ease-out infinite}
+.np:nth-child(2){animation-delay:.35s}
+@keyframes nfcPing{0%{transform:scale(.4);opacity:1}100%{transform:scale(1.9);opacity:0}}
+/* PROCESSING */
+.processing-screen{display:none;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;min-height:200px}
+.processing-screen.show{display:flex}
+.proc-spinner{width:56px;height:56px;border-radius:50%;border:4px solid var(--vc);border-top-color:var(--ve);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.proc-msg{font-family:var(--fd);font-size:1.05rem;font-weight:700;color:var(--ps)}
+.proc-sub{font-size:.85rem;color:var(--ct)}
+.proc-bar-wrap{width:260px}
+.proc-bar-track{height:5px;background:var(--cl);border-radius:50px;overflow:hidden}
+.proc-bar-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--ve),var(--verde));width:0;transition:width var(--pdur,2s) linear}
+/* SUCCESS */
+.success-screen{display:none;flex-direction:column;align-items:center;gap:1rem;text-align:center;padding:1rem 0}
+.success-screen.show{display:flex}
+.check-circle{width:80px;height:80px;border-radius:50%;background:var(--ve);display:flex;align-items:center;justify-content:center;animation:checkPop .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes checkPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.check-svg{animation:drawCheck .4s .3s ease both}
+@keyframes drawCheck{from{stroke-dashoffset:60}to{stroke-dashoffset:0}}
+.success-title{font-family:var(--fd);font-size:1.4rem;font-weight:800}
+.success-detail{font-size:.88rem;color:var(--ct);max-width:300px;line-height:1.6}
+.confetti-wrap{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.conf{position:absolute;width:8px;height:8px;border-radius:2px;animation:confFall 2s var(--cd,0s) ease both}
+@keyframes confFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(300px) rotate(720deg);opacity:0}}
+
+.fade-in{opacity:0;transform:translateY(22px);transition:opacity .55s ease,transform .55s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+@media(max-width:860px){
+  .nav-hamburger{display:block}.nav-links{display:none}
+  .credits-section{grid-template-columns:1fr}
+  .pay-cards{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<nav id="main-nav">
+  <a class="nav-logo" href="home.html"><span>Lumos</span></a>
+  <ul class="nav-links">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="consumo.html">Consumo</a></li>
+    <li><a href="pagamento.html" class="active">Pagamento</a></li>
+    <li><a href="sustentabilidade.html">Sustentabilidade</a></li>
+    <li><a href="estacao.html">Estação</a></li>
+    <li><a href="lummi.html">Lummi IA</a></li>
+  </ul>
+  <div class="nav-right">
+    <a class="nav-corp-btn" href="corp.html"><span class="corp-dot">CORP</span> Lumos Corp</a>
+    <div class="nav-user">
+      <div class="nav-avatar" id="nav-av">?</div>
+      <span id="nav-nome">Usuário</span>
+      <button class="nav-logout" onclick="localStorage.removeItem('lm_user');localStorage.removeItem('lm_credits');localStorage.removeItem('lm_sessions');localStorage.removeItem('lm_pledged');window.location.href='index.html'">Sair</button>
+    </div>
+  </div>
+  <button class="nav-hamburger" onclick="document.getElementById('main-nav').classList.toggle('open')">☰</button>
+</nav>
+
+<div class="page-header">
+  <div class="section-label">Financeiro</div>
+  <div class="section-title">Pagamentos e créditos</div>
+  <p class="section-sub">Gerencie seus créditos Lumos, adicione saldo e escolha como pagar sua próxima recarga.</p>
+</div>
+
+<!-- CREDITS -->
+<div class="credits-section fade-in">
+  <div class="credits-card">
+    <h3>💰 Meus Créditos Lumos</h3>
+    <div class="credits-balance" id="credits-display">R$ 0,00</div>
+    <p class="credits-sub">Use seus créditos para pagar recargas sem precisar de cartão a cada sessão.</p>
+    <div class="credit-amounts" id="credit-amounts">
+      <div class="ca-btn" onclick="selectAmount(20,this)"><div class="amount">R$ 20</div><div class="bonus">+0 bônus</div></div>
+      <div class="ca-btn" onclick="selectAmount(50,this)"><div class="amount">R$ 50</div><div class="bonus">+R$5 bônus</div></div>
+      <div class="ca-btn" onclick="selectAmount(100,this)"><div class="amount">R$ 100</div><div class="bonus">+R$15 bônus</div></div>
+      <div class="ca-btn" onclick="selectAmount(150,this)"><div class="amount">R$ 150</div><div class="bonus">+R$25 bônus</div></div>
+      <div class="ca-btn" onclick="selectAmount(200,this)"><div class="amount">R$ 200</div><div class="bonus">+R$40 bônus</div></div>
+      <div class="ca-btn" onclick="selectAmount(0,this)" id="ca-custom"><div class="amount">Outro</div><div class="bonus">Personalizado</div></div>
+    </div>
+    <div class="custom-input-wrap" id="custom-wrap" style="display:none">
+      <input type="number" id="custom-val" min="10" placeholder="Ex: 75" step="5">
+    </div>
+    <button class="btn-add-credit" onclick="addCredits()">Adicionar créditos ⚡</button>
+  </div>
+  <div class="credit-history-card">
+    <h3>📋 Histórico de créditos</h3>
+    <div id="credit-history-list"></div>
+  </div>
+</div>
+
+<!-- PAYMENT METHODS -->
+<div class="pay-section fade-in">
+  <div class="section-label">Métodos de pagamento</div>
+  <div class="section-title">Como você quer pagar?</div>
+  <p class="section-sub">Cada forma de pagamento tem um tempo de processamento diferente. Veja a animação ao clicar.</p>
+  <div class="pay-cards">
+    <div class="pay-card" onclick="openModal('creditos')">
+      <div class="pay-shine"></div>
+      <span class="pay-icon">⚡</span>
+      <h4>Créditos Lumos</h4>
+      <p>Use o saldo da sua conta. Débito instantâneo e sem taxas.</p>
+      <span class="delay-tag">⚡ Instantâneo</span>
+    </div>
+    <div class="pay-card" onclick="openModal('pix')">
+      <div class="pay-shine"></div>
+      <span class="pay-icon">🏦</span>
+      <h4>PIX</h4>
+      <p>QR Code gerado na hora. Banco confirma em segundos.</p>
+      <span class="delay-tag">⏱ ~5 segundos</span>
+    </div>
+    <div class="pay-card" onclick="openModal('boleto')">
+      <div class="pay-shine"></div>
+      <span class="pay-icon">📄</span>
+      <h4>Boleto</h4>
+      <p>Gerado e enviado por e-mail. Vencimento em 1 dia útil.</p>
+      <span class="delay-tag">⏱ 1–2 dias úteis</span>
+    </div>
+    <div class="pay-card" onclick="openModal('tag')">
+      <div class="pay-shine"></div>
+      <span class="pay-icon">📡</span>
+      <h4>TAG Sem Parar</h4>
+      <p>Leitura RFID automática. Débito direto na conta.</p>
+      <span class="delay-tag">⏱ ~3 segundos</span>
+    </div>
+    <div class="pay-card" onclick="openModal('cartao')">
+      <div class="pay-shine"></div>
+      <span class="pay-icon">💳</span>
+      <h4>Cartão NFC</h4>
+      <p>Débito ou crédito por aproximação. Contato seguro.</p>
+      <span class="delay-tag">⏱ ~4 segundos</span>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MODALS ==================== -->
+
+<!-- CRÉDITOS -->
+<div class="modal-bg" id="modal-creditos">
+  <div class="modal-box" style="position:relative">
+    <div class="confetti-wrap" id="conf-creditos"></div>
+    <button class="modal-close" onclick="closeModal('creditos')">✕</button>
+    <div id="mc-content">
+      <h3>⚡ Pagar com Créditos Lumos</h3>
+      <p class="modal-sub">Débito instantâneo do seu saldo. Sem delay, sem taxas.</p>
+      <div style="background:var(--vc);border-radius:12px;padding:1.2rem;margin-bottom:1.2rem;text-align:center">
+        <p style="font-size:.82rem;color:var(--ct)">Saldo disponível</p>
+        <p style="font-family:var(--fd);font-size:2rem;font-weight:800;color:var(--ve)" id="mc-saldo">R$ 0,00</p>
+      </div>
+      <div class="m-steps">
+        <div class="m-step"><div class="step-num">1</div><div class="step-c"><h5>Verificar saldo</h5><p>Sistema confirma créditos disponíveis</p></div></div>
+        <div class="m-step"><div class="step-num">2</div><div class="step-c"><h5>Débito automático</h5><p>Valor debitado da conta instantaneamente</p></div></div>
+      </div>
+      <button class="btn-confirm" onclick="processPay('creditos',500,'R$ 45,00')">Pagar com Créditos ⚡</button>
+    </div>
+    <div class="processing-screen" id="proc-creditos">
+      <div class="proc-spinner"></div>
+      <div class="proc-msg">Verificando saldo...</div>
+      <div class="proc-sub">Aguarde um momento</div>
+    </div>
+    <div class="success-screen" id="succ-creditos">
+      <div class="check-circle">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <path d="M8 18l7 7 13-13" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="60" class="check-svg"/>
+        </svg>
+      </div>
+      <div class="success-title">Pagamento confirmado!</div>
+      <p class="success-detail" id="sd-creditos">Créditos debitados com sucesso. Sua recarga foi liberada.</p>
+      <button class="btn-confirm" style="width:auto;padding:12px 32px;margin-top:.5rem" onclick="closeModal('creditos')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- PIX -->
+<div class="modal-bg" id="modal-pix">
+  <div class="modal-box" style="position:relative">
+    <div class="confetti-wrap" id="conf-pix"></div>
+    <button class="modal-close" onclick="closeModal('pix')">✕</button>
+    <div id="mp-content">
+      <h3>🏦 Pagamento via PIX</h3>
+      <p class="modal-sub">Escaneie o QR Code com o aplicativo do seu banco.</p>
+      <div class="pix-wrap">
+        <div class="pix-qr">📱</div>
+        <div class="pix-scan"></div>
+        <p style="font-size:.75rem;color:var(--ct);margin-top:.6rem">Aguardando leitura...</p>
+      </div>
+      <div class="m-steps">
+        <div class="m-step"><div class="step-num">1</div><div class="step-c"><h5>Abra o app do banco</h5><p>Área de pagamentos PIX</p></div></div>
+        <div class="m-step"><div class="step-num">2</div><div class="step-c"><h5>Escaneie o QR Code</h5><p>Aponte a câmera para o código acima</p></div></div>
+        <div class="m-step"><div class="step-num">3</div><div class="step-c"><h5>Confirme o valor</h5><p>R$ 45,00 — Lumos Recarga</p></div></div>
+      </div>
+      <button class="btn-confirm" onclick="processPay('pix',5000,'R$ 45,00')">Simular confirmação PIX</button>
+    </div>
+    <div class="processing-screen" id="proc-pix">
+      <div class="proc-spinner"></div>
+      <div class="proc-msg" id="pm-pix">Aguardando confirmação...</div>
+      <div class="proc-sub">Verificando junto ao banco</div>
+      <div class="proc-bar-wrap"><div class="proc-bar-track"><div class="proc-bar-fill" id="pb-pix" style="--pdur:5s"></div></div></div>
+    </div>
+    <div class="success-screen" id="succ-pix">
+      <div class="check-circle">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <path d="M8 18l7 7 13-13" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="60" class="check-svg"/>
+        </svg>
+      </div>
+      <div class="success-title">PIX confirmado!</div>
+      <p class="success-detail">Pagamento de R$ 45,00 aprovado. Sua recarga foi liberada com sucesso.</p>
+      <button class="btn-confirm" style="width:auto;padding:12px 32px;margin-top:.5rem" onclick="closeModal('pix')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- BOLETO -->
+<div class="modal-bg" id="modal-boleto">
+  <div class="modal-box" style="position:relative">
+    <div class="confetti-wrap" id="conf-boleto"></div>
+    <button class="modal-close" onclick="closeModal('boleto')">✕</button>
+    <div id="mb-content">
+      <h3>📄 Pagamento via Boleto</h3>
+      <p class="modal-sub">Boleto bancário gerado instantaneamente e enviado ao seu e-mail.</p>
+      <div class="boleto-wrap">
+        <div class="boleto-bars" id="bol-bars"></div>
+        <p class="boleto-code">1234.56789 01234.567890 12345.678901 2 45000000004500</p>
+      </div>
+      <div class="m-steps">
+        <div class="m-step"><div class="step-num">1</div><div class="step-c"><h5>Boleto gerado</h5><p>Código de barras válido por 1 dia útil</p></div></div>
+        <div class="m-step"><div class="step-num">2</div><div class="step-c"><h5>Pague em qualquer banco</h5><p>Internet banking, app ou lotérica</p></div></div>
+        <div class="m-step"><div class="step-num">3</div><div class="step-c"><h5>Confirmação automática</h5><p>Recarga liberada após compensação</p></div></div>
+      </div>
+      <button class="btn-confirm" onclick="processPay('boleto',8000,'R$ 45,00')">Gerar e simular pagamento</button>
+    </div>
+    <div class="processing-screen" id="proc-boleto">
+      <div class="proc-spinner"></div>
+      <div class="proc-msg" id="pm-bol">Gerando boleto...</div>
+      <div class="proc-sub">Aguardando compensação bancária</div>
+      <div class="proc-bar-wrap"><div class="proc-bar-track"><div class="proc-bar-fill" id="pb-bol" style="--pdur:8s"></div></div></div>
+    </div>
+    <div class="success-screen" id="succ-boleto">
+      <div class="check-circle">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <path d="M8 18l7 7 13-13" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="60" class="check-svg"/>
+        </svg>
+      </div>
+      <div class="success-title">Boleto compensado!</div>
+      <p class="success-detail">Pagamento de R$ 45,00 confirmado. Sessão de recarga liberada.</p>
+      <button class="btn-confirm" style="width:auto;padding:12px 32px;margin-top:.5rem" onclick="closeModal('boleto')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TAG -->
+<div class="modal-bg" id="modal-tag">
+  <div class="modal-box" style="position:relative">
+    <div class="confetti-wrap" id="conf-tag"></div>
+    <button class="modal-close" onclick="closeModal('tag')">✕</button>
+    <div id="mt-content">
+      <h3>📡 Pagamento via TAG Sem Parar</h3>
+      <p class="modal-sub">Aproxime o veículo ao leitor RFID do totem.</p>
+      <div class="tag-wrap">
+        <div class="tag-waves-box">
+          <div class="tw"></div><div class="tw"></div><div class="tw"></div>
+          <svg width="90" height="52" viewBox="0 0 90 52" style="position:relative;z-index:1">
+            <rect x="5" y="14" width="80" height="22" rx="6" fill="var(--ve)"/>
+            <rect x="18" y="6" width="46" height="18" rx="6" fill="#0d6b40"/>
+            <rect x="22" y="8" width="19" height="11" rx="3" fill="#d4f5e2" opacity=".7"/>
+            <rect x="46" y="8" width="14" height="11" rx="3" fill="#d4f5e2" opacity=".7"/>
+            <circle cx="22" cy="36" r="7" fill="#111"/><circle cx="22" cy="36" r="3" fill="#444"/>
+            <circle cx="68" cy="36" r="7" fill="#111"/><circle cx="68" cy="36" r="3" fill="#444"/>
+          </svg>
+        </div>
+        <p style="font-size:.82rem;color:var(--ve);font-weight:600;margin-top:.6rem">📡 Lendo TAG RFID...</p>
+      </div>
+      <div class="m-steps">
+        <div class="m-step"><div class="step-num">1</div><div class="step-c"><h5>TAG detectada</h5><p>Leitura automática a até 30 cm</p></div></div>
+        <div class="m-step"><div class="step-num">2</div><div class="step-c"><h5>Débito na conta Sem Parar</h5><p>Aprovação em 3 segundos</p></div></div>
+      </div>
+      <button class="btn-confirm" onclick="processPay('tag',3000,'R$ 45,00')">Simular leitura TAG</button>
+    </div>
+    <div class="processing-screen" id="proc-tag">
+      <div class="proc-spinner"></div>
+      <div class="proc-msg">Lendo TAG...</div>
+      <div class="proc-sub">Verificando conta Sem Parar</div>
+      <div class="proc-bar-wrap"><div class="proc-bar-track"><div class="proc-bar-fill" id="pb-tag" style="--pdur:3s"></div></div></div>
+    </div>
+    <div class="success-screen" id="succ-tag">
+      <div class="check-circle">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <path d="M8 18l7 7 13-13" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="60" class="check-svg"/>
+        </svg>
+      </div>
+      <div class="success-title">TAG aprovada!</div>
+      <p class="success-detail">Pagamento de R$ 45,00 debitado da conta Sem Parar. Recarga liberada.</p>
+      <button class="btn-confirm" style="width:auto;padding:12px 32px;margin-top:.5rem" onclick="closeModal('tag')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- CARTÃO -->
+<div class="modal-bg" id="modal-cartao">
+  <div class="modal-box" style="position:relative">
+    <div class="confetti-wrap" id="conf-cartao"></div>
+    <button class="modal-close" onclick="closeModal('cartao')">✕</button>
+    <div id="mca-content">
+      <h3>💳 Pagamento por Aproximação NFC</h3>
+      <p class="modal-sub">Aproxime seu cartão ou celular ao terminal.</p>
+      <div class="card3d-scene">
+        <div class="card3d">
+          <div class="cf">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <div class="chip-grid"><div class="chip-cell"></div><div class="chip-cell"></div><div class="chip-cell"></div><div class="chip-cell"></div></div>
+              <span style="font-size:.9rem;opacity:.7">🏦</span>
+            </div>
+            <div class="cn">**** **** **** 4521</div>
+            <div class="ch" id="card-holder-name">Nome Sobrenome · 12/28</div>
+          </div>
+        </div>
+        <div class="nfc-ping" style="position:relative;margin:1rem auto 0;width:50px;height:50px;display:flex;align-items:center;justify-content:center">
+          <div class="np"></div><div class="np"></div>
+          <span style="font-size:1.2rem;position:relative;z-index:1">📶</span>
+        </div>
+        <p style="text-align:center;font-size:.8rem;color:var(--ve);font-weight:600;margin-top:.4rem">Aguardando aproximação NFC...</p>
+      </div>
+      <div class="m-steps">
+        <div class="m-step"><div class="step-num">1</div><div class="step-c"><h5>Aproxime o cartão</h5><p>Até 4 cm do terminal NFC</p></div></div>
+        <div class="m-step"><div class="step-num">2</div><div class="step-c"><h5>Aprovação em 4 segundos</h5><p>Processamento seguro e criptografado</p></div></div>
+      </div>
+      <button class="btn-confirm" onclick="processPay('cartao',4000,'R$ 45,00')">Simular pagamento NFC</button>
+    </div>
+    <div class="processing-screen" id="proc-cartao">
+      <div class="proc-spinner"></div>
+      <div class="proc-msg">Processando NFC...</div>
+      <div class="proc-sub">Comunicando com a operadora</div>
+      <div class="proc-bar-wrap"><div class="proc-bar-track"><div class="proc-bar-fill" id="pb-cartao" style="--pdur:4s"></div></div></div>
+    </div>
+    <div class="success-screen" id="succ-cartao">
+      <div class="check-circle">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <path d="M8 18l7 7 13-13" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="60" class="check-svg"/>
+        </svg>
+      </div>
+      <div class="success-title">Cartão aprovado!</div>
+      <p class="success-detail">Pagamento de R$ 45,00 autorizado. Recarga liberada com sucesso.</p>
+      <button class="btn-confirm" style="width:auto;padding:12px 32px;margin-top:.5rem" onclick="closeModal('cartao')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+var user;
+try { user = JSON.parse(localStorage.getItem('lm_user')); } catch(e) { user = null; }
+if (!user || !user.nome) { window.location.href='index.html'; return; }
+document.getElementById('nav-av').textContent=user.initials||'?';
+document.getElementById('nav-nome').textContent=user.nome.split(' ')[0];
+var cardHolder=document.getElementById('card-holder-name');
+if(cardHolder) cardHolder.textContent=user.nome.toUpperCase()+' · 12/28';
+
+// ---- CREDITS ----
+let credits = parseFloat(localStorage.getItem('lm_credits')||'150');
+let selectedAmt = 0;
+let creditHistory = (()=>{try{return JSON.parse(localStorage.getItem('lm_credit_hist'))||[{label:'Bônus de boas-vindas',date:'01/05/2025',amount:150,type:'in'},{label:'Recarga S001',date:'12/05/2025',amount:-35.83,type:'out'}];}catch{return [];}})();
+
+function renderCredits() {
+  document.getElementById('credits-display').textContent='R$ '+credits.toFixed(2).replace('.',',');
+  if(document.getElementById('mc-saldo')) document.getElementById('mc-saldo').textContent='R$ '+credits.toFixed(2).replace('.',',');
+  const list=document.getElementById('credit-history-list');
+  list.innerHTML=creditHistory.slice(0,8).map(h=>`
+    <div class="ch-row">
+      <div class="ch-left"><span class="ch-label">${h.label}</span><span class="ch-date">${h.date}</span></div>
+      <span class="ch-amount ${h.type}">${h.type==='in'?'+':''}R$ ${Math.abs(h.amount).toFixed(2)}</span>
+    </div>`).join('');
+}
+renderCredits();
+
+function selectAmount(v, btn) {
+  document.querySelectorAll('.ca-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedAmt = v;
+  const cw = document.getElementById('custom-wrap');
+  if (v===0) cw.style.display='flex'; else cw.style.display='none';
+}
+
+function addCredits() {
+  let val = selectedAmt;
+  if (val===0) val = parseFloat(document.getElementById('custom-val').value)||0;
+  if (val<10) { alert('Valor mínimo: R$ 10'); return; }
+  const bonus = val>=200?40:val>=150?25:val>=100?15:val>=50?5:0;
+  const total = val + bonus;
+  credits += total;
+  localStorage.setItem('lm_credits',credits.toFixed(2));
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('pt-BR');
+  creditHistory.unshift({label:`Recarga de créditos${bonus>0?' (+R$'+bonus+' bônus)':''}`,date:dateStr,amount:total,type:'in'});
+  localStorage.setItem('lm_credit_hist',JSON.stringify(creditHistory));
+  renderCredits();
+  // toast
+  showToast(`✅ R$ ${total.toFixed(2)} adicionados!${bonus>0?' (bônus incluído)':''}`);
+}
+
+// ---- MODALS ----
+function openModal(type) {
+  document.getElementById('modal-'+type).classList.add('open');
+  if (type==='boleto') setTimeout(buildBoleto,100);
+  if (type==='creditos') document.getElementById('mc-saldo').textContent='R$ '+credits.toFixed(2).replace('.',',');
+  resetModal(type);
+}
+function closeModal(type) {
+  document.getElementById('modal-'+type).classList.remove('open');
+  resetModal(type);
+}
+function resetModal(type) {
+  const contents={pix:'mp-content',boleto:'mb-content',tag:'mt-content',cartao:'mca-content',creditos:'mc-content'};
+  const procs={pix:'proc-pix',boleto:'proc-boleto',tag:'proc-tag',cartao:'proc-cartao',creditos:'proc-creditos'};
+  const succs={pix:'succ-pix',boleto:'succ-boleto',tag:'succ-tag',cartao:'succ-cartao',creditos:'succ-creditos'};
+  if(contents[type]){
+    const c=document.getElementById(contents[type]);
+    const p=document.getElementById(procs[type]);
+    const s=document.getElementById(succs[type]);
+    if(c)c.style.display='block';
+    if(p)p.classList.remove('show');
+    if(s)s.classList.remove('show');
+  }
+  const pbs={pix:'pb-pix',boleto:'pb-bol',tag:'pb-tag',cartao:'pb-cartao'};
+  if(pbs[type]){const pb=document.getElementById(pbs[type]);if(pb)pb.style.width='0';}
+}
+document.querySelectorAll('.modal-bg').forEach(m=>m.addEventListener('click',function(e){if(e.target===m){const id=m.id.replace('modal-','');closeModal(id);}}));
+
+function processPay(type, delayMs, amount) {
+  const contents={pix:'mp-content',boleto:'mb-content',tag:'mt-content',cartao:'mca-content',creditos:'mc-content'};
+  const procs={pix:'proc-pix',boleto:'proc-boleto',tag:'proc-tag',cartao:'proc-cartao',creditos:'proc-creditos'};
+  const succs={pix:'succ-pix',boleto:'succ-boleto',tag:'succ-tag',cartao:'succ-cartao',creditos:'succ-creditos'};
+  // Show processing
+  document.getElementById(contents[type]).style.display='none';
+  document.getElementById(procs[type]).classList.add('show');
+  // start bar
+  const pbs={pix:'pb-pix',boleto:'pb-bol',tag:'pb-tag',cartao:'pb-cartao'};
+  if(pbs[type]){setTimeout(()=>{const pb=document.getElementById(pbs[type]);if(pb)pb.style.width='100%';},50);}
+  // Boleto message cycle
+  if(type==='boleto'){
+    const msgs=['Gerando código de barras...','Enviando ao banco...','Aguardando compensação...','Confirmando pagamento...'];
+    let mi=0;const iv=setInterval(()=>{mi++;if(mi<msgs.length)document.getElementById('pm-bol').textContent=msgs[mi];else clearInterval(iv);},delayMs/msgs.length);
+  }
+  if(type==='pix'){
+    const msgs=['Aguardando confirmação...','QR Code escaneado!','Verificando pagamento...','Confirmando...'];
+    let mi=0;const iv=setInterval(()=>{mi++;if(mi<msgs.length)document.getElementById('pm-pix').textContent=msgs[mi];else clearInterval(iv);},delayMs/msgs.length);
+  }
+  // After delay: success
+  setTimeout(()=>{
+    document.getElementById(procs[type]).classList.remove('show');
+    document.getElementById(succs[type]).classList.add('show');
+    // Deduct credits if using credits
+    if(type==='creditos'){
+      const deduct=45;
+      if(credits>=deduct){credits-=deduct;localStorage.setItem('lm_credits',credits.toFixed(2));const now=new Date();creditHistory.unshift({label:'Recarga - Débito de créditos',date:now.toLocaleDateString('pt-BR'),amount:-deduct,type:'out'});localStorage.setItem('lm_credit_hist',JSON.stringify(creditHistory));renderCredits();}
+    }
+    buildConfetti(type);
+  }, delayMs);
+}
+
+function buildConfetti(type) {
+  const w=document.getElementById('conf-'+type);
+  if(!w)return;
+  const colors=['#3ecf74','#1a9e50','#d4f5e2','#fbbf24','#fff'];
+  for(let i=0;i<30;i++){
+    const d=document.createElement('div');
+    d.className='conf';
+    const c=colors[Math.floor(Math.random()*colors.length)];
+    d.style.cssText=`background:${c};left:${Math.random()*100}%;top:0;--cd:${Math.random()*1.2}s;transform:rotate(${Math.random()*360}deg);width:${6+Math.random()*6}px;height:${6+Math.random()*6}px;border-radius:${Math.random()>0.5?'50%':'2px'}`;
+    w.appendChild(d);
+    setTimeout(()=>d.remove(),2500);
+  }
+}
+
+function buildBoleto() {
+  const c=document.getElementById('bol-bars');if(!c)return;c.innerHTML='';
+  const p=[14,8,22,6,16,8,12,20,6,18,10,14,8,22,12,6,16,10,20,8,14,18,6,12,10,20,8,16];
+  p.forEach((h,i)=>{const b=document.createElement('div');b.className='bol-bar';b.style.cssText=`width:${i%3===0?4:2}px;height:${h}px;animation-delay:${i*.035}s`;c.appendChild(b);});
+}
+
+function showToast(msg) {
+  let t=document.getElementById('lm-toast');
+  if(!t){t=document.createElement('div');t.id='lm-toast';document.body.appendChild(t);}
+  t.style.cssText='position:fixed;bottom:2rem;right:2rem;z-index:9999;background:#1a202c;color:#fff;padding:14px 24px;border-radius:50px;font-family:"Inter",sans-serif;font-size:.9rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:all .35s ease;transform:translateY(80px);opacity:0;';
+  t.innerHTML=msg;
+  setTimeout(()=>{t.style.transform='translateY(0)';t.style.opacity='1';},10);
+  setTimeout(()=>{t.style.transform='translateY(80px)';t.style.opacity='0';},3800);
+}
+
+const obs=new IntersectionObserver(e=>e.forEach(ei=>{if(ei.isIntersecting)ei.target.classList.add('visible');}),{threshold:.08});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+})(); // end IIFE
+</script>
+</body>
+</html>

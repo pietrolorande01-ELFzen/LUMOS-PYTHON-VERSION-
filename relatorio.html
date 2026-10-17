@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumos Corp — Relatório de Desempenho & Sustentabilidade</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --verde:#3ecf74;--ve:#1a9e50;--vc:#d4f5e2;--vu:#f0fdf6;
+  --am:#f59e0b;--vm:#ef4444;
+  --corp:#0f172a;--corp2:#1e293b;
+  --paper:#ffffff;--ink:#1a202c;--ink2:#4a5568;--ink3:#94a3b8;--line:#e2e8f0;
+  --fd:'Inter',sans-serif;--fb:'Inter',sans-serif;--flogo:'Syne',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--corp);color:var(--ink);min-height:100vh}
+
+/* ===== TOOLBAR (não imprime) ===== */
+.toolbar{
+  position:sticky;top:0;z-index:500;
+  background:rgba(15,23,42,.96);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  padding:0 5vw;height:62px;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+}
+.tb-left{display:flex;align-items:center;gap:14px}
+.tb-back{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.65);padding:7px 15px;border-radius:50px;
+  font-family:var(--fb);font-size:.8rem;font-weight:600;text-decoration:none;transition:all .2s;
+}
+.tb-back:hover{border-color:var(--verde);color:var(--verde);background:rgba(62,207,116,.08)}
+.tb-logo{font-family:var(--flogo);font-size:1.05rem;font-weight:800;color:#fff}
+.tb-logo span{color:var(--verde)}
+.tb-doc-tag{
+  background:rgba(62,207,116,.12);border:1px solid rgba(62,207,116,.25);
+  color:var(--verde);font-size:.68rem;font-weight:700;letter-spacing:.08em;
+  padding:3px 10px;border-radius:50px;text-transform:uppercase;
+}
+.tb-right{display:flex;align-items:center;gap:.7rem}
+.btn-pdf{
+  display:flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,var(--ve),var(--verde));color:#fff;border:none;
+  padding:10px 20px;border-radius:50px;font-family:var(--fb);font-size:.84rem;font-weight:700;
+  cursor:pointer;box-shadow:0 6px 20px rgba(26,158,80,.35);transition:transform .2s,box-shadow .2s;
+}
+.btn-pdf:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(26,158,80,.45)}
+.btn-share{
+  background:transparent;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);
+  padding:10px 16px;border-radius:50px;font-family:var(--fb);font-size:.8rem;cursor:pointer;transition:all .2s;
+}
+.btn-share:hover{border-color:rgba(255,255,255,.35);color:#fff}
+
+/* ===== PAGE WRAP ===== */
+.page-wrap{padding:3rem 0 5rem;display:flex;justify-content:center}
+.sheet{
+  width:100%;max-width:860px;background:var(--paper);color:var(--ink);
+  border-radius:6px;box-shadow:0 30px 80px rgba(0,0,0,.45);
+  padding:0 0 3rem;overflow:hidden;
+}
+
+/* COVER */
+.cover{
+  background:linear-gradient(155deg,var(--corp) 0%,#123a26 100%);
+  color:#fff;padding:3.2rem 3.2rem 2.6rem;position:relative;overflow:hidden;
+}
+.cover::before{
+  content:'';position:absolute;top:-40%;right:-10%;width:420px;height:420px;border-radius:50%;
+  background:radial-gradient(circle,rgba(62,207,116,.25) 0%,transparent 70%);
+}
+.cover-top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}
+.cover-logo{font-family:var(--flogo);font-size:1.5rem;font-weight:800}
+.cover-logo span{color:var(--verde)}
+.cover-conf{
+  font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  padding:4px 11px;border-radius:50px;
+}
+.cover-title{margin-top:2.6rem;position:relative;z-index:1}
+.cover-eyebrow{font-size:.76rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--verde);margin-bottom:.6rem}
+.cover-title h1{font-family:var(--flogo);font-size:clamp(1.7rem,4vw,2.5rem);font-weight:800;line-height:1.2;max-width:600px}
+.cover-title p{font-size:.92rem;color:rgba(255,255,255,.6);margin-top:.8rem;max-width:520px;line-height:1.6}
+.cover-meta{
+  margin-top:2.2rem;display:flex;gap:2.2rem;flex-wrap:wrap;position:relative;z-index:1;
+  border-top:1px solid rgba(255,255,255,.12);padding-top:1.4rem;
+}
+.cm-item .cm-lab{font-size:.68rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.cm-item .cm-val{font-size:.92rem;font-weight:700}
+
+/* SECTIONS */
+.rsec{padding:2.2rem 3.2rem}
+.rsec + .rsec{border-top:1px solid var(--line)}
+.rsec-head{display:flex;align-items:center;gap:10px;margin-bottom:1.1rem}
+.rsec-num{
+  width:26px;height:26px;border-radius:8px;background:var(--vc);color:var(--ve);
+  display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:800;flex-shrink:0;
+}
+.rsec-head h2{font-family:var(--fd);font-size:1.15rem;font-weight:800;color:var(--ink)}
+.rsec p.body-text{font-size:.88rem;line-height:1.85;color:var(--ink2);margin-bottom:.9rem}
+.rsec p.body-text strong{color:var(--ink)}
+
+/* KPI grid (infográfico) */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin-top:.6rem}
+.kpi-box{
+  background:var(--vu);border:1px solid var(--vc);border-radius:14px;padding:1.1rem 1rem;
+}
+.kpi-box .kb-icon{font-size:1.15rem;margin-bottom:.4rem}
+.kpi-box .kb-val{font-family:var(--fd);font-size:1.35rem;font-weight:800;color:var(--ve)}
+.kpi-box .kb-lab{font-size:.72rem;color:var(--ink2);margin-top:2px;line-height:1.4}
+
+/* Bar chart (SVG, print-friendly) */
+.chart-card{background:#fafcfb;border:1px solid var(--line);border-radius:14px;padding:1.3rem 1.4rem;margin-top:.6rem}
+.chart-card .cc-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.9rem}
+.chart-card .cc-head h4{font-size:.85rem;font-weight:700;color:var(--ink)}
+.chart-card .cc-head span{font-size:.72rem;color:var(--ink3)}
+.legend-row{display:flex;gap:1.2rem;margin-top:.7rem;flex-wrap:wrap}
+.legend-row .li{display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(--ink2)}
+.legend-row .dot{width:9px;height:9px;border-radius:3px}
+
+/* Timeline (sustentabilidade) */
+.rtimeline{position:relative;padding-left:4px;margin-top:.4rem}
+.rtimeline::before{content:'';position:absolute;left:15px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.rt2-item{position:relative;padding:0 0 1.1rem 40px}
+.rt2-item:last-child{padding-bottom:0}
+.rt2-dot{position:absolute;left:8px;top:2px;width:15px;height:15px;border-radius:50%;background:var(--verde);border:3px solid var(--vu);z-index:1}
+.rt2-item .rt2-date{font-size:.7rem;font-weight:700;color:var(--ve);letter-spacing:.04em;text-transform:uppercase}
+.rt2-item .rt2-title{font-size:.86rem;font-weight:700;color:var(--ink);margin-top:2px}
+.rt2-item .rt2-desc{font-size:.78rem;color:var(--ink2);margin-top:2px;line-height:1.55}
+
+/* Infográfico de fluxo */
+.flow-grid{display:flex;align-items:center;justify-content:space-between;gap:.4rem;margin-top:1rem;flex-wrap:wrap}
+.flow-step{flex:1;min-width:130px;text-align:center;background:var(--vu);border:1px solid var(--vc);border-radius:14px;padding:1rem .7rem}
+.flow-step .fs-icon{font-size:1.4rem;margin-bottom:.4rem}
+.flow-step .fs-title{font-size:.78rem;font-weight:700;color:var(--ink)}
+.flow-step .fs-sub{font-size:.68rem;color:var(--ink2);margin-top:2px;line-height:1.4}
+.flow-arrow{font-size:1.1rem;color:var(--verde);flex-shrink:0}
+
+/* Créditos de carbono destaque */
+.carbon-box{
+  background:linear-gradient(135deg,rgba(62,207,116,.08) 0%,rgba(62,207,116,.02) 100%);
+  border:1px solid var(--vc);border-radius:16px;padding:1.4rem 1.5rem;margin-top:.6rem;
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2rem;
+}
+.carbon-box .cb-item .cb-lab{font-size:.68rem;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.06em}
+.carbon-box .cb-item .cb-val{font-family:var(--fd);font-size:1.4rem;font-weight:800;color:var(--ve);margin-top:.3rem}
+.carbon-box .cb-item .cb-note{font-size:.7rem;color:var(--ink3);margin-top:.25rem;line-height:1.4}
+
+table.data-table{width:100%;border-collapse:collapse;margin-top:.8rem;font-size:.8rem}
+table.data-table th{
+  text-align:left;padding:8px 10px;background:var(--vu);color:var(--ve);
+  font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  border-bottom:2px solid var(--vc);
+}
+table.data-table td{padding:9px 10px;border-bottom:1px solid var(--line);color:var(--ink2)}
+table.data-table tr:last-child td{border-bottom:none}
+
+/* Signature / footer */
+.rfooter{padding:2rem 3.2rem;background:var(--vu);border-top:1px solid var(--line)}
+.rfooter .rf-row{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1.5rem}
+.rfooter .rf-sign{border-top:1px solid var(--ink3);padding-top:.4rem;font-size:.74rem;color:var(--ink2);min-width:220px}
+.rfooter .rf-note{font-size:.7rem;color:var(--ink3);max-width:420px;line-height:1.6}
+.rfooter .rf-brand{font-family:var(--flogo);font-weight:800;color:var(--ve);font-size:.9rem;margin-top:1.4rem}
+
+@media(max-width:760px){
+  .kpi-grid{grid-template-columns:1fr 1fr}
+  .carbon-box{grid-template-columns:1fr}
+  .flow-grid{flex-direction:column}
+  .flow-arrow{transform:rotate(90deg)}
+  .rsec,.cover,.rfooter{padding-left:1.4rem;padding-right:1.4rem}
+}
+
+/* PRINT */
+@media print{
+  body{background:#fff}
+  .toolbar{display:none}
+  .page-wrap{padding:0}
+  .sheet{box-shadow:none;max-width:100%;border-radius:0}
+  .rsec{padding:1.2rem 1.6rem}
+  .cover{padding:1.8rem 1.6rem}
+}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="tb-left">
+    <a class="tb-back" href="corp.html">← Voltar ao painel</a>
+    <span class="tb-logo"><span>Lumos</span> Corp</span>
+    <span class="tb-doc-tag">Documento simulado</span>
+  </div>
+  <div class="tb-right">
+    <button class="btn-share" onclick="alert('Link do relatório copiado (simulação).')">🔗 Compartilhar</button>
+    <button class="btn-pdf" onclick="window.print()">⬇️ Baixar como PDF</button>
+  </div>
+</div>
+
+<div class="page-wrap">
+  <div class="sheet">
+
+    <!-- CAPA -->
+    <div class="cover">
+      <div class="cover-top">
+        <div class="cover-logo"><span>Lumos</span> Corp</div>
+        <div class="cover-conf">Confidencial · Uso interno</div>
+      </div>
+      <div class="cover-title">
+        <div class="cover-eyebrow">Relatório de Desempenho & Sustentabilidade</div>
+        <h1 id="cv-titulo">Frota elétrica · <span id="cv-periodo">Junho / 2026</span></h1>
+        <p>Consolidado de consumo energético, economia financeira, impacto ambiental e créditos de carbono da frota corporativa conectada à rede Lumos.</p>
+      </div>
+      <div class="cover-meta">
+        <div class="cm-item"><div class="cm-lab">Empresa</div><div class="cm-val">Dash Entregas LTDA</div></div>
+        <div class="cm-item"><div class="cm-lab">CNPJ</div><div class="cm-val">42.981.705/0001-33</div></div>
+        <div class="cm-item"><div class="cm-lab">Período</div><div class="cm-val" id="cv-periodo2">Junho / 2026</div></div>
+        <div class="cm-item"><div class="cm-lab">Emitido em</div><div class="cm-val" id="cv-emitido">24/06/2026</div></div>
+        <div class="cm-item"><div class="cm-lab">Nº do documento</div><div class="cm-val" id="cv-doc">LM-CORP-2026-06</div></div>
+      </div>
+    </div>
+
+    <!-- 1. RESUMO EXECUTIVO -->
+    <div class="rsec">
+      <div class="rsec-head"><div class="rsec-num">1</div><h2>Resumo executivo</h2></div>
+      <p class="body-text">No período analisado, a frota corporativa da <strong>Dash Entregas</strong> operou com <strong id="tx-veiculos">34 veículos elétricos</strong> ativos na rede Lumos, abastecidos majoritariamente por energia solar captada nos totens de recarga parceiros. A operação evitou o equivalente a <strong id="tx-co2">8.940 kg de CO₂</strong> em comparação a uma frota similar movida a combustão, e gerou uma economia direta de <strong id="tx-economia">R$ 38.420</strong> frente ao custo estimado com combustíveis fósseis.</p>
+      <p class="body-text">Este documento consolida os indicadores operacionais, financeiros e ambientais do mês, além de detalhar o cálculo de créditos de carbono potenciais associados à operação da frota — informação relevante para relatórios de sustentabilidade (ESG), auditorias internas e formação de inventário de Gases de Efeito Estufa (GEE).</p>
+
+      <div class="kpi-grid">
+        <div class="kpi-box"><div class="kb-icon">🚗</div><div class="kb-val" id="kp-veic">34</div><div class="kb-lab">Veículos ativos na frota</div></div>
+        <div class="kpi-box"><div class="kb-icon">⚡</div><div class="kb-val" id="kp-kwh">2.847 kWh</div><div class="kb-lab">Consumo energético total</div></div>
+        <div class="kpi-box"><div class="kb-icon">💰</div><div class="kb-val" id="kp-econ">R$ 38,4k</div><div class="kb-lab">Economia vs. gasolina</div></div>
+        <div class="kpi-box"><div class="kb-icon">🌍</div><div class="kb-val" id="kp-co2">1.802 kg</div><div class="kb-lab">CO₂ evitado no mês</div></div>
+      </div>
+    </div>
+
+    <!-- 2. CONSUMO E DESEMPENHO -->
+    <div class="rsec">
+      <div class="rsec-head"><div class="rsec-num">2</div><h2>Consumo energético e desempenho da frota</h2></div>
+      <p class="body-text">O gráfico abaixo apresenta a evolução da quilometragem total percorrida pela frota nos últimos seis meses, frente à meta mensal estabelecida em 42.000 km. Os meses de maio e junho superaram a meta, refletindo a expansão da frota e maior disponibilidade de pontos de recarga na região da Grande São Paulo.</p>
+
+      <div class="chart-card">
+        <div class="cc-head"><h4>Km percorridos por mês — frota completa</h4><span>Fonte: telemetria Lumos Fleet</span></div>
+        <svg viewBox="0 0 640 190" width="100%" height="190" id="svg-bars"></svg>
+        <div class="legend-row">
+          <div class="li"><span class="dot" style="background:var(--verde)"></span>km percorridos</div>
+          <div class="li"><span class="dot" style="background:#cbd5e1"></span>meta mensal (42.000 km)</div>
+        </div>
+      </div>
+
+      <table class="data-table">
+        <thead><tr><th>Mês</th><th>Km rodados</th><th>Consumo (kWh)</th><th>% energia solar</th><th>Veículos ativos</th></tr></thead>
+        <tbody id="tbl-consumo"></tbody>
+      </table>
+    </div>
+
+    <!-- 3. IMPACTO AMBIENTAL -->
+    <div class="rsec">
+      <div class="rsec-head"><div class="rsec-num">3</div><h2>Impacto ambiental</h2></div>
+      <p class="body-text">Considerando a matriz energética utilizada nos totens Lumos (87% de origem solar) e o fator de emissão médio de veículos a combustão equivalentes, estima-se que a operação da frota tenha evitado <strong id="tx-co2b">8.940 kg de CO₂e</strong> acumulados em 2026 — o equivalente ao sequestro anual de aproximadamente <strong>312 árvores adultas</strong>.</p>
+
+      <div class="chart-card">
+        <div class="cc-head"><h4>Balanço de emissões — CO₂ evitado vs. emitido pela rede</h4><span>Acumulado 2026</span></div>
+        <div style="display:flex;align-items:center;gap:2rem;flex-wrap:wrap">
+          <svg width="140" height="140" viewBox="0 0 140 140">
+            <circle cx="70" cy="70" r="54" fill="none" stroke="#eef2f0" stroke-width="16"/>
+            <circle cx="70" cy="70" r="54" fill="none" stroke="var(--verde)" stroke-width="16"
+              stroke-dasharray="270 339" stroke-dashoffset="85" stroke-linecap="round"/>
+            <circle cx="70" cy="70" r="54" fill="none" stroke="#fca5a5" stroke-width="16"
+              stroke-dasharray="69 339" stroke-dashoffset="-185" stroke-linecap="round"/>
+            <text x="70" y="66" text-anchor="middle" fill="var(--ink)" font-family="Inter" font-size="16" font-weight="800">80%</text>
+            <text x="70" y="82" text-anchor="middle" fill="var(--ink3)" font-family="Inter" font-size="9">economia</text>
+          </svg>
+          <div style="flex:1;min-width:220px;display:flex;flex-direction:column;gap:.5rem">
+            <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--ink2)"><span class="dot" style="display:inline-block;background:var(--verde);width:8px;height:8px;border-radius:50%;margin-right:6px"></span>CO₂ evitado</span><strong>8.940 kg</strong></div>
+            <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--ink2)"><span class="dot" style="display:inline-block;background:#fca5a5;width:8px;height:8px;border-radius:50%;margin-right:6px"></span>CO₂ emitido (rede residual)</span><strong>2.260 kg</strong></div>
+            <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--ink2)"><span class="dot" style="display:inline-block;background:var(--am);width:8px;height:8px;border-radius:50%;margin-right:6px"></span>Saldo líquido</span><strong style="color:var(--ve)">+6.680 kg</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rsec-head" style="margin-top:1.8rem"><div class="rsec-num" style="background:transparent;color:var(--ve)">↳</div><h2 style="font-size:1rem">Como a energia chega até a frota</h2></div>
+      <div class="flow-grid">
+        <div class="flow-step"><div class="fs-icon">☀️</div><div class="fs-title">Geração solar</div><div class="fs-sub">Placas GoodWe nos totens parceiros</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="fs-icon">🔌</div><div class="fs-title">Totem de recarga</div><div class="fs-sub">Protocolo OCPP/ChargeGrid</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="fs-icon">🚗</div><div class="fs-title">Veículo elétrico</div><div class="fs-sub">Frota Dash Entregas</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="fs-icon">🌍</div><div class="fs-title">CO₂ evitado</div><div class="fs-sub">Registrado no painel Corp</div></div>
+      </div>
+    </div>
+
+    <!-- 4. TIMELINE DE SUSTENTABILIDADE -->
+    <div class="rsec">
+      <div class="rsec-head"><div class="rsec-num">4</div><h2>Linha do tempo da operação</h2></div>
+      <p class="body-text">Principais marcos da frota Dash Entregas na rede Lumos ao longo do semestre.</p>
+      <div class="rtimeline">
+        <div class="rt2-item">
+          <div class="rt2-dot"></div>
+          <div class="rt2-date">Janeiro 2026</div>
+          <div class="rt2-title">Adesão ao plano Corporativo Lumos</div>
+          <div class="rt2-desc">Frota inicial de 22 veículos conectada à rede de totens Lumos na Grande São Paulo.</div>
+        </div>
+        <div class="rt2-item">
+          <div class="rt2-dot"></div>
+          <div class="rt2-date">Março 2026</div>
+          <div class="rt2-title">Expansão para o ABC Paulista</div>
+          <div class="rt2-desc">Inclusão de rotas em Santo André, São Bernardo e São Caetano, com 6 novos veículos.</div>
+        </div>
+        <div class="rt2-item">
+          <div class="rt2-dot"></div>
+          <div class="rt2-date">Maio 2026</div>
+          <div class="rt2-title">Frota ultrapassa 42.000 km/mês</div>
+          <div class="rt2-desc">Meta mensal de quilometragem superada pela primeira vez, com 31 veículos ativos.</div>
+        </div>
+        <div class="rt2-item">
+          <div class="rt2-dot"></div>
+          <div class="rt2-date" id="tl-mes-atual">Junho 2026</div>
+          <div class="rt2-title">8,94 toneladas de CO₂ evitadas no acumulado do ano</div>
+          <div class="rt2-desc">Marco simbólico de sustentabilidade, equivalente ao plantio de mais de 300 árvores.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. CRÉDITOS DE CARBONO -->
+    <div class="rsec">
+      <div class="rsec-head"><div class="rsec-num">5</div><h2>Créditos de carbono da operação</h2></div>
+      <p class="body-text">Com base no CO₂ evitado pela substituição de veículos a combustão por elétricos carregados via Lumos, a operação da Dash Entregas tem potencial para gerar os seguintes créditos de carbono, caso submetida a um padrão certificador (Verra/VCS, Gold Standard) ou, futuramente, ao SBCE (Sistema Brasileiro de Comércio de Emissões, Lei 15.042/2024):</p>
+
+      <div class="carbon-box">
+        <div class="cb-item"><div class="cb-lab">CO₂e evitado (acumulado)</div><div class="cb-val">8,94 t</div><div class="cb-note">≈ 8,94 créditos potenciais de 1 tCO₂e cada</div></div>
+        <div class="cb-item"><div class="cb-lab">Valor de mercado estimado</div><div class="cb-val">US$ 45–180</div><div class="cb-note">Faixa referencial (voluntário), ~US$5–20/tCO₂e</div></div>
+        <div class="cb-item"><div class="cb-lab">Projeção anualizada</div><div class="cb-val">~21,5 t</div><div class="cb-note">Mantido o ritmo atual de operação até dez/2026</div></div>
+      </div>
+
+      <p class="body-text" style="margin-top:1.1rem">Estes números são <strong>estimativas simuladas</strong> para fins de planejamento interno — a emissão formal de créditos exige inventário de GEE auditado por terceiros e registro junto a um padrão certificador reconhecido. A Lumos não realiza intermediação financeira de créditos de carbono; este relatório serve como insumo para a equipe de sustentabilidade/ESG da empresa avaliar a viabilidade de certificação.</p>
+    </div>
+
+    <!-- RODAPÉ / ASSINATURA -->
+    <div class="rfooter">
+      <div class="rf-row">
+        <div class="rf-sign">Responsável pela emissão — Painel Lumos Corp</div>
+        <div class="rf-note">Documento gerado automaticamente pelo painel Lumos Corp com fins de demonstração (protótipo acadêmico). Os dados apresentados são simulados e não representam medições reais de emissão certificadas.</div>
+      </div>
+      <div class="rf-brand"><span>Lumos</span></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// Dados simulados por período (alinhados à timeline do painel Corp)
+const periodos = {
+  'Junho/2026': {
+    titulo:'Junho / 2026', emitido:'24/06/2026', doc:'LM-CORP-2026-06',
+    veiculos:34, kwh:'2.847 kWh', economia:'R$ 38.420', co2mes:'1.802 kg', co2ano:'8.940 kg',
+    bars:[
+      {m:'Jan',km:36400,target:42000},{m:'Fev',km:38200,target:42000},{m:'Mar',km:41700,target:42000},
+      {m:'Abr',km:39800,target:42000},{m:'Mai',km:43100,target:42000},{m:'Jun',km:44600,target:42000}
+    ],
+    tabela:[
+      ['Jan','36.400 km','2.410 kWh','78%','22'],['Fev','38.200 km','2.510 kWh','80%','24'],
+      ['Mar','41.700 km','2.690 kWh','82%','28'],['Abr','39.800 km','2.580 kWh','84%','29'],
+      ['Mai','43.100 km','2.760 kWh','86%','31'],['Jun','44.600 km','2.847 kWh','87%','34']
+    ]
+  },
+  'Maio/2026': {
+    titulo:'Maio / 2026', emitido:'31/05/2026', doc:'LM-CORP-2026-05',
+    veiculos:31, kwh:'2.760 kWh', economia:'R$ 33.180', co2mes:'1.540 kg', co2ano:'7.610 kg',
+    bars:[
+      {m:'Dez',km:34100,target:40000},{m:'Jan',km:36400,target:40000},{m:'Fev',km:38200,target:40000},
+      {m:'Mar',km:41700,target:40000},{m:'Abr',km:39800,target:40000},{m:'Mai',km:43100,target:40000}
+    ],
+    tabela:[
+      ['Dez','34.100 km','2.260 kWh','74%','20'],['Jan','36.400 km','2.410 kWh','78%','22'],
+      ['Fev','38.200 km','2.510 kWh','80%','24'],['Mar','41.700 km','2.690 kWh','82%','28'],
+      ['Abr','39.800 km','2.580 kWh','84%','29'],['Mai','43.100 km','2.760 kWh','86%','31']
+    ]
+  },
+  'Abril/2026': {
+    titulo:'Abril / 2026', emitido:'30/04/2026', doc:'LM-CORP-2026-04',
+    veiculos:29, kwh:'2.580 kWh', economia:'R$ 29.760', co2mes:'1.310 kg', co2ano:'6.980 kg',
+    bars:[
+      {m:'Nov',km:31200,target:38000},{m:'Dez',km:34100,target:38000},{m:'Jan',km:36400,target:38000},
+      {m:'Fev',km:38200,target:38000},{m:'Mar',km:41700,target:38000},{m:'Abr',km:39800,target:38000}
+    ],
+    tabela:[
+      ['Nov','31.200 km','2.070 kWh','70%','18'],['Dez','34.100 km','2.260 kWh','74%','20'],
+      ['Jan','36.400 km','2.410 kWh','78%','22'],['Fev','38.200 km','2.510 kWh','80%','24'],
+      ['Mar','41.700 km','2.690 kWh','82%','28'],['Abr','39.800 km','2.580 kWh','84%','29']
+    ]
+  }
+};
+
+function getParam(name){
+  return new URLSearchParams(window.location.search).get(name);
+}
+
+function render(){
+  const p = getParam('periodo') || 'Junho/2026';
+  const d = periodos[p] || periodos['Junho/2026'];
+  const label = d.titulo;
+
+  document.getElementById('cv-periodo').textContent = label;
+  document.getElementById('cv-periodo2').textContent = label;
+  document.getElementById('cv-emitido').textContent = d.emitido;
+  document.getElementById('cv-doc').textContent = d.doc;
+  document.getElementById('tl-mes-atual').textContent = label;
+  document.title = `Lumos Corp — Relatório ${label}`;
+
+  document.getElementById('tx-veiculos').textContent = d.veiculos + ' veículos elétricos';
+  document.getElementById('tx-co2').textContent = d.co2ano + ' de CO₂';
+  document.getElementById('tx-economia').textContent = d.economia;
+  document.getElementById('tx-co2b').textContent = d.co2ano + ' de CO₂e';
+
+  document.getElementById('kp-veic').textContent = d.veiculos;
+  document.getElementById('kp-kwh').textContent = d.kwh;
+  document.getElementById('kp-econ').textContent = 'R$ ' + (parseInt(d.economia.replace(/\D/g,''))/1000).toFixed(1) + 'k';
+  document.getElementById('kp-co2').textContent = d.co2mes;
+
+  // tabela
+  document.getElementById('tbl-consumo').innerHTML = d.tabela.map(r =>
+    `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td></tr>`
+  ).join('');
+
+  // gráfico de barras SVG
+  buildBars(d.bars);
+}
+
+function buildBars(data){
+  const svg = document.getElementById('svg-bars');
+  const W = 640, H = 190, padB = 24, padT = 10, gap = 18;
+  const n = data.length;
+  const barW = (W - gap*(n+1)) / n;
+  const max = Math.max(...data.map(x=>x.km), ...data.map(x=>x.target));
+  let out = '';
+  data.forEach((d,i)=>{
+    const x = gap + i*(barW+gap);
+    const h = ((H-padB-padT) * d.km/max);
+    const y = H - padB - h;
+    const targetY = H - padB - ((H-padB-padT) * d.target/max);
+    const met = d.km >= d.target;
+    out += `<rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="5" fill="${met ? 'var(--verde)' : 'var(--ve)'}" opacity="${met?1:0.65}"/>`;
+    out += `<line x1="${x-2}" y1="${targetY}" x2="${x+barW+2}" y2="${targetY}" stroke="#94a3b8" stroke-width="2" stroke-dasharray="3 3"/>`;
+    out += `<text x="${x+barW/2}" y="${H-6}" text-anchor="middle" font-family="Inter" font-size="10" fill="#64748b">${d.m}</text>`;
+    out += `<text x="${x+barW/2}" y="${y-6}" text-anchor="middle" font-family="Inter" font-size="9.5" font-weight="700" fill="#1a202c">${(d.km/1000).toFixed(1)}k</text>`;
+  });
+  svg.innerHTML = out;
+}
+
+render();
+</script>
+</body>
+</html>

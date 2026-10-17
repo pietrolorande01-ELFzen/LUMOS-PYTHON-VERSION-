@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumos — Painel da Estação</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --verde:#3ecf74;--ve:#1a9e50;--vc:#d4f5e2;--vu:#f0fdf6;
+  --am:#f59e0b;--amc:#fef3c7;--vm:#ef4444;--vmc:#fee2e2;
+  --br:#fff;--cl:#f7f9f8;--ct:#4a5568;--cb:#e2e8f0;--ps:#1a202c;
+  --fd:'Inter',sans-serif;--fb:'Inter',sans-serif;--flogo:'Syne',sans-serif;--mono:'JetBrains Mono',monospace;
+  --r:14px;--rl:22px;--sc:0 2px 16px rgba(0,0,0,.07);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--fb);background:var(--cl);color:var(--ps)}
+nav#main-nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,.94);backdrop-filter:blur(18px);border-bottom:1px solid var(--cb);padding:0 5vw;display:flex;align-items:center;justify-content:space-between;height:64px;gap:1rem}
+.nav-logo{font-family:var(--flogo);font-weight:800;font-size:1.3rem;color:var(--ps);text-decoration:none}.nav-logo span{color:var(--ve)}
+.nav-links{display:flex;gap:1.6rem;list-style:none}
+.nav-links a{text-decoration:none;color:var(--ct);font-size:.9rem;font-weight:500;position:relative;padding-bottom:3px}
+.nav-links a.active{color:var(--ve)}.nav-links a.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--ve);border-radius:2px}
+.nav-links a:hover{color:var(--ve)}
+.api-status{display:flex;align-items:center;gap:7px;font-size:.78rem;font-weight:700;padding:6px 12px;border-radius:50px;background:var(--cl);border:1px solid var(--cb);color:var(--ct)}
+.api-status .d{width:8px;height:8px;border-radius:50%;background:var(--cb)}
+.api-status.on{background:var(--vc);border-color:transparent;color:var(--ve)}.api-status.on .d{background:var(--ve);box-shadow:0 0 0 3px rgba(26,158,80,.2)}
+.api-status.off{background:var(--vmc);border-color:transparent;color:#991b1b}.api-status.off .d{background:var(--vm)}
+
+.wrap{padding:96px 5vw 60px;max-width:1280px;margin:0 auto}
+.section-label{font-size:.76rem;font-weight:700;letter-spacing:.12em;color:var(--ve);text-transform:uppercase;margin-bottom:.35rem}
+h1{font-family:var(--fd);font-size:clamp(1.7rem,3vw,2.4rem);font-weight:800;line-height:1.15}
+.sub{color:var(--ct);font-size:.95rem;line-height:1.7;max-width:720px;margin-top:.5rem}
+
+/* Fluxo */
+.flow{display:flex;align-items:stretch;gap:.5rem;margin:1.6rem 0 2rem;flex-wrap:wrap}
+.flow-step{flex:1;min-width:150px;background:#fff;border:1.5px solid var(--cb);border-radius:14px;padding:.8rem 1rem;transition:all .3s}
+.flow-step .t{font-size:.7rem;font-weight:700;letter-spacing:.08em;color:var(--ct);text-transform:uppercase}
+.flow-step .v{font-size:.86rem;font-weight:700;margin-top:3px}
+.flow-step.lit{border-color:var(--ve);background:var(--vu);box-shadow:0 0 0 3px rgba(62,207,116,.15)}
+.flow-arrow{display:flex;align-items:center;color:var(--ve);font-weight:800}
+
+.grid{display:grid;gap:1.4rem}
+.g2{grid-template-columns:1fr 1fr}
+.card{background:#fff;border:1.5px solid var(--cb);border-radius:var(--rl);padding:1.5rem;box-shadow:var(--sc)}
+.card h2{font-family:var(--fd);font-size:1.05rem;font-weight:800;display:flex;align-items:center;gap:8px}
+.card .desc{font-size:.82rem;color:var(--ct);margin:.3rem 0 1.1rem;line-height:1.55}
+
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:1rem;margin-bottom:1.4rem}
+.stat{background:#fff;border:1.5px solid var(--cb);border-radius:var(--r);padding:1rem 1.1rem}
+.stat .l{font-size:.7rem;font-weight:600;color:var(--ct);text-transform:uppercase;letter-spacing:.05em}
+.stat .v{font-family:var(--fd);font-size:1.35rem;font-weight:800;color:var(--ve);margin-top:4px}
+
+.row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+input,select{padding:10px 12px;border:1.5px solid var(--cb);border-radius:10px;font-family:var(--fb);font-size:.88rem;outline:none;background:#fff}
+input:focus,select:focus{border-color:var(--ve)}
+input#busca-id{flex:1;min-width:200px;font-family:var(--mono);font-size:.84rem}
+.btn{background:var(--ve);color:#fff;border:none;padding:10px 20px;border-radius:50px;font-family:var(--fb);font-size:.86rem;font-weight:700;cursor:pointer;transition:transform .15s,background .2s}
+.btn:hover{background:var(--verde);transform:translateY(-1px)}
+.btn.ghost{background:#fff;color:var(--ve);border:1.5px solid var(--ve)}
+.btn.ghost:hover{background:var(--vc)}
+.btn.danger{background:#fff;color:var(--vm);border:1.5px solid var(--vmc)}
+.btn:disabled{opacity:.5;cursor:wait}
+
+/* Saída do Python */
+.py-out{margin-top:1rem;background:#0f172a;color:#cbd5e1;border-radius:12px;padding:1rem 1.1rem;font-family:var(--mono);font-size:.78rem;line-height:1.8;min-height:62px}
+.py-out .k{color:#94a3b8}.py-out .g{color:var(--verde)}.py-out .a{color:var(--am)}.py-out .r{color:#fca5a5}
+.found{margin-top:1rem;display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem}
+.found>div{background:var(--vu);border:1px solid var(--vc);border-radius:10px;padding:.6rem .7rem}
+.found .l{font-size:.66rem;color:var(--ct);text-transform:uppercase;letter-spacing:.05em}
+.found .v{font-size:.86rem;font-weight:700;margin-top:2px}
+
+/* Tabela */
+.table-wrap{overflow:auto;max-height:420px;border:1.5px solid var(--cb);border-radius:14px;margin-top:1rem}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{position:sticky;top:0;background:var(--cl);text-align:left;padding:9px 11px;font-size:.7rem;font-weight:700;color:var(--ct);text-transform:uppercase;letter-spacing:.04em;border-bottom:1.5px solid var(--cb);white-space:nowrap}
+td{padding:9px 11px;border-bottom:1px solid var(--cb);white-space:nowrap}
+td.mono{font-family:var(--mono);font-size:.76rem}
+td.hl{background:var(--vu);font-weight:700;color:var(--ve)}
+tr.flash td{animation:flash 1.6s ease}
+@keyframes flash{0%{background:#fef3c7}100%{background:transparent}}
+.band{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+.b-Verde{background:var(--ve)}.b-Amarela{background:var(--am)}.b-Vermelha{background:var(--vm)}
+
+/* Lab Big-O */
+.lab-table td,.lab-table th{text-align:right}.lab-table td:first-child,.lab-table th:first-child{text-align:left}
+.big{display:inline-block;font-family:var(--mono);font-size:.7rem;font-weight:600;padding:2px 7px;border-radius:6px;background:var(--vc);color:var(--ve)}
+.big.q{background:var(--vmc);color:#991b1b}.big.n{background:var(--amc);color:#92400e}
+.empty{padding:2rem;text-align:center;color:var(--ct);font-size:.88rem}
+
+@media(max-width:960px){.g2{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}.nav-links{display:none}.found{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<nav id="main-nav">
+  <a class="nav-logo" href="home.html"><span>Lumos</span></a>
+  <ul class="nav-links">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="carregamento.html">Nova recarga</a></li>
+    <li><a href="estacao.html" class="active">Estação</a></li>
+    <li><a href="consumo.html">Consumo</a></li>
+    <li><a href="sustentabilidade.html">Sustentabilidade</a></li>
+  </ul>
+  <div class="api-status" id="api-status"><span class="d"></span><span id="api-txt">Conectando...</span></div>
+</nav>
+
+<div class="wrap">
+  <div class="section-label">Sprint 4 · Backend Python</div>
+  <h1>Painel da Estação de Recarga</h1>
+  <p class="sub">Tudo nesta página é processado em Python: a interface envia um pedido para a API Flask, que chama as funções de busca, ordenação e estatística do <code>SPRINT_DSA_Completa.py</code> e devolve o resultado em JSON.</p>
+
+  <div class="flow" id="flow">
+    <div class="flow-step" id="f1"><div class="t">1 · Interface</div><div class="v" id="f1v">aguardando ação</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step" id="f2"><div class="t">2 · API Flask</div><div class="v" id="f2v">—</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step" id="f3"><div class="t">3 · Função Python</div><div class="v" id="f3v">—</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step" id="f4"><div class="t">4 · Resultado</div><div class="v" id="f4v">—</div></div>
+  </div>
+
+  <!-- ESTATÍSTICAS -->
+  <div class="stats" id="stats">
+    <div class="stat"><div class="l">Sessões</div><div class="v" id="e-total">—</div></div>
+    <div class="stat"><div class="l">Energia</div><div class="v" id="e-energia">—</div></div>
+    <div class="stat"><div class="l">Faturamento</div><div class="v" id="e-fat">—</div></div>
+    <div class="stat"><div class="l">Ticket médio</div><div class="v" id="e-ticket">—</div></div>
+    <div class="stat"><div class="l">Maior consumo</div><div class="v" id="e-maior">—</div></div>
+    <div class="stat"><div class="l">Menor consumo</div><div class="v" id="e-menor">—</div></div>
+  </div>
+
+  <div class="grid g2">
+    <!-- BUSCA -->
+    <div class="card">
+      <h2>🔎 Buscar sessão por ID</h2>
+      <p class="desc">Chave de busca: o campo <code>id</code>. A sequencial compara item a item (O(n)); a binária descarta metade da lista a cada passo (O(log n)) e exige a lista ordenada por ID.</p>
+      <div class="row">
+        <input id="busca-id" list="ids" placeholder="SESS-0001-20261007">
+        <datalist id="ids"></datalist>
+        <select id="busca-alg">
+          <option value="sequencial">Busca sequencial</option>
+          <option value="binaria">Busca binária</option>
+        </select>
+        <button class="btn" id="btn-busca" onclick="buscar()">Buscar</button>
+      </div>
+      <div class="py-out" id="busca-out"><span class="k"># o resultado do Python aparece aqui</span></div>
+      <div id="busca-sessao"></div>
+    </div>
+
+    <!-- ORDENAÇÃO -->
+    <div class="card">
+      <h2>↕️ Ordenar sessões</h2>
+      <p class="desc">Implementações próprias (sem <code>sort()</code>/<code>sorted()</code>). Bubble Sort compara vizinhos e troca (O(n²)); Merge Sort divide ao meio e intercala (O(n log n)).</p>
+      <div class="row">
+        <select id="ord-crit">
+          <option value="energia_kwh">Energia (kWh)</option>
+          <option value="valor_total">Custo total</option>
+          <option value="duracao_min">Tempo de recarga</option>
+          <option value="id">ID</option>
+        </select>
+        <select id="ord-dir"><option value="asc">Crescente</option><option value="desc">Decrescente</option></select>
+        <select id="ord-alg"><option value="bubble">Bubble Sort</option><option value="merge">Merge Sort</option></select>
+        <button class="btn" id="btn-ord" onclick="ordenar()">Ordenar</button>
+      </div>
+      <div class="py-out" id="ord-out"><span class="k"># o resultado do Python aparece aqui</span></div>
+    </div>
+  </div>
+
+  <!-- LISTAGEM -->
+  <div class="card" style="margin-top:1.4rem">
+    <div class="row" style="justify-content:space-between">
+      <div>
+        <h2>📋 Sessões armazenadas <span class="big" id="lista-titulo">lista em Python</span></h2>
+        <p class="desc" style="margin-bottom:0" id="lista-desc">Ordem de cadastro, exatamente como estão na lista <code>sessoes</code> do backend.</p>
+      </div>
+      <div class="row">
+        <button class="btn ghost" onclick="carregarTudo()">↻ Recarregar lista</button>
+        <a class="btn" href="/api/relatorio.txt" onclick="marcarFluxo('Baixar relatório','GET /api/relatorio.txt','exportar_relatorio_txt()','arquivo .txt')">⬇ Relatório final (.txt)</a>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ID</th><th>Data</th><th>Usuário</th><th>Veículo</th><th>Bandeira</th><th>Fonte</th><th id="th-energia_kwh">kWh</th><th>Tarifa</th><th id="th-duracao_min">Min</th><th id="th-valor_total">Total</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- LAB BIG-O -->
+  <div class="card" style="margin-top:1.4rem">
+    <h2>🧪 Laboratório de complexidade</h2>
+    <p class="desc">O que acontece com o número de operações quando a quantidade de sessões aumenta? Adicione sessões de teste e clique em <b>Medir</b>: o Python roda os quatro algoritmos no pior caso (busca por um ID inexistente e ordenação por energia) e conta as comparações feitas.</p>
+    <div class="row">
+      <button class="btn ghost" onclick="gerar(10)">+10 sessões</button>
+      <button class="btn ghost" onclick="gerar(100)">+100 sessões</button>
+      <button class="btn ghost" onclick="gerar(1000)">+1000 sessões</button>
+      <button class="btn" id="btn-medir" onclick="medir()">📏 Medir com n atual</button>
+      <button class="btn danger" onclick="limpar()">Zerar sessões</button>
+    </div>
+    <div class="table-wrap" style="max-height:none">
+      <table class="lab-table">
+        <thead><tr><th>n (sessões)</th><th>Busca sequencial <span class="big n">O(n)</span></th><th>Busca binária <span class="big">O(log n)</span></th><th>Bubble Sort <span class="big q">O(n²)</span></th><th>Merge Sort <span class="big">O(n log n)</span></th></tr></thead>
+        <tbody id="lab-body"><tr><td colspan="5" class="empty">Nenhuma medição ainda.</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="api.js"></script>
+<script>
+let sessoes = [];
+const BAND = {Verde:'🟢',Amarela:'🟡',Vermelha:'🔴'};
+
+function marcarFluxo(acao, rota, funcao, resultado) {
+  const vals = [acao, rota, funcao, resultado];
+  vals.forEach((v,i)=>{
+    const el = document.getElementById('f'+(i+1));
+    document.getElementById('f'+(i+1)+'v').textContent = v;
+    el.classList.remove('lit');
+    setTimeout(()=>el.classList.add('lit'), 150*i);
+  });
+}
+
+function setStatus(ok, txt) {
+  const el = document.getElementById('api-status');
+  el.className = 'api-status ' + (ok ? 'on' : 'off');
+  document.getElementById('api-txt').textContent = txt;
+}
+
+function linha(s, destaque) {
+  const hl = c => destaque === c ? ' class="hl"' : '';
+  return `<tr id="row-${s.id}">
+    <td class="mono">${s.id}</td><td>${s.data || '—'}</td><td>${s.usuario}</td><td>${s.marca_carro}</td>
+    <td><span class="band b-${s.bandeira}"></span>${s.bandeira}</td><td>${s.fonte}</td>
+    <td${hl('energia_kwh')}>${Number(s.energia_kwh).toFixed(2)}</td><td>${brl(s.tarifa)}</td>
+    <td${hl('duracao_min')}>${s.duracao_min}</td><td${hl('valor_total')}>${brl(s.valor_total)}</td></tr>`;
+}
+
+function renderTabela(lista, destaque) {
+  const tb = document.getElementById('tbody');
+  if (!lista.length) { tb.innerHTML = '<tr><td colspan="10" class="empty">Nenhuma sessão. Faça uma recarga ou gere sessões de teste.</td></tr>'; return; }
+  const max = 300;
+  tb.innerHTML = lista.slice(0, max).map(s => linha(s, destaque)).join('') +
+    (lista.length > max ? `<tr><td colspan="10" class="empty">… e mais ${lista.length - max} sessões</td></tr>` : '');
+}
+
+async function carregarEstatisticas() {
+  const e = await lumosGet('/api/estatisticas');
+  document.getElementById('e-total').textContent = e.total_sessoes;
+  document.getElementById('e-energia').textContent = e.energia_total.toFixed(1) + ' kWh';
+  document.getElementById('e-fat').textContent = brl(e.faturamento);
+  document.getElementById('e-ticket').textContent = brl(e.ticket_medio);
+  document.getElementById('e-maior').textContent = e.maior_consumo.toFixed(1) + ' kWh';
+  document.getElementById('e-menor').textContent = e.menor_consumo.toFixed(1) + ' kWh';
+}
+
+async function carregarTudo() {
+  try {
+    sessoes = await lumosGet('/api/sessoes');
+    setStatus(true, 'Backend Python online · ' + sessoes.length + ' sessões');
+    document.getElementById('ids').innerHTML = sessoes.slice(-50).map(s=>`<option value="${s.id}">`).join('');
+    if (!document.getElementById('busca-id').value && sessoes.length) document.getElementById('busca-id').value = sessoes[sessoes.length-1].id;
+    document.getElementById('lista-titulo').textContent = 'lista em Python';
+    document.getElementById('lista-desc').innerHTML = 'Ordem de cadastro, exatamente como estão na lista <code>sessoes</code> do backend.';
+    renderTabela(sessoes);
+    await carregarEstatisticas();
+    marcarFluxo('Abrir painel', 'GET /api/sessoes', 'carregar_sessoes() + calcular_estatisticas()', sessoes.length + ' sessões');
+  } catch (e) {
+    setStatus(false, 'Backend offline');
+    document.getElementById('tbody').innerHTML = `<tr><td colspan="10" class="empty">⚠️ ${e.message}</td></tr>`;
+  }
+}
+
+async function buscar() {
+  const id = document.getElementById('busca-id').value.trim();
+  const alg = document.getElementById('busca-alg').value;
+  const out = document.getElementById('busca-out');
+  const btn = document.getElementById('btn-busca'); btn.disabled = true;
+  try {
+    const r = await lumosGet(`/api/sessoes/busca?id=${encodeURIComponent(id)}&algoritmo=${alg}`);
+    const fn = alg === 'binaria' ? 'busca_binaria()' : 'busca_sequencial()';
+    marcarFluxo('Buscar ' + id, 'GET /api/sessoes/busca', fn, r.encontrada ? 'encontrada' : 'não encontrada');
+    out.innerHTML =
+      `<span class="k">algoritmo   </span> ${r.algoritmo} <span class="g">${r.complexidade}</span><br>` +
+      `<span class="k">n           </span> ${r.n} sessões<br>` +
+      `<span class="k">comparações </span> <span class="a">${r.comparacoes}</span>` +
+      (alg === 'binaria' ? ` <span class="k">(+${r.verificacoes_ordem} verificações de ordem, O(n)${r.precisou_ordenar ? ' — lista reordenada com Merge Sort' : ''})</span>` : '') + '<br>' +
+      `<span class="k">tempo       </span> ${r.tempo_ms} ms<br>` +
+      `<span class="k">resultado   </span> ${r.encontrada ? '<span class="g">✔ encontrada</span>' : '<span class="r">✘ nenhuma sessão com esse ID</span>'}`;
+    const box = document.getElementById('busca-sessao');
+    if (r.encontrada) {
+      const s = r.sessao;
+      box.innerHTML = `<div class="found">
+        <div><div class="l">Usuário</div><div class="v">${s.usuario}</div></div>
+        <div><div class="l">Veículo</div><div class="v">${s.marca_carro}</div></div>
+        <div><div class="l">Energia</div><div class="v">${s.energia_kwh} kWh</div></div>
+        <div><div class="l">Bandeira</div><div class="v">${BAND[s.bandeira]} ${s.bandeira}</div></div>
+        <div><div class="l">Tarifa</div><div class="v">${brl(s.tarifa)}/kWh</div></div>
+        <div><div class="l">Taxa fixa</div><div class="v">${brl(s.taxa_fixa)}</div></div>
+        <div><div class="l">Total</div><div class="v">${brl(s.valor_total)}</div></div>
+        <div><div class="l">Duração</div><div class="v">${s.duracao_min} min</div></div></div>`;
+      const row = document.getElementById('row-' + s.id);
+      if (row) { row.classList.remove('flash'); void row.offsetWidth; row.classList.add('flash'); }
+    } else box.innerHTML = '';
+  } catch (e) { out.innerHTML = `<span class="r">${e.message}</span>`; }
+  btn.disabled = false;
+}
+
+async function ordenar() {
+  const crit = document.getElementById('ord-crit').value;
+  const dir = document.getElementById('ord-dir').value;
+  const alg = document.getElementById('ord-alg').value;
+  const out = document.getElementById('ord-out');
+  const btn = document.getElementById('btn-ord'); btn.disabled = true;
+  try {
+    const r = await lumosGet(`/api/sessoes/ordenar?criterio=${crit}&ordem=${dir}&algoritmo=${alg}`);
+    const fn = alg === 'merge' ? 'merge_sort_sessoes()' : 'bubble_sort_sessoes()';
+    marcarFluxo('Ordenar por ' + crit, 'GET /api/sessoes/ordenar', fn, r.n + ' sessões ordenadas');
+    out.innerHTML =
+      `<span class="k">algoritmo   </span> ${r.algoritmo} <span class="g">${r.complexidade}</span><br>` +
+      `<span class="k">campo       </span> ${r.criterio} (${r.decrescente ? 'decrescente' : 'crescente'})<br>` +
+      `<span class="k">n           </span> ${r.n} sessões<br>` +
+      `<span class="k">comparações </span> <span class="a">${r.comparacoes}</span>` + (alg === 'bubble' ? ` <span class="k">· trocas</span> ${r.trocas}` : '') + '<br>' +
+      `<span class="k">tempo       </span> ${r.tempo_ms} ms`;
+    document.getElementById('lista-titulo').textContent = r.algoritmo + ' · ' + r.criterio;
+    document.getElementById('lista-desc').innerHTML = 'Resultado da ordenação feita em Python (cópia da lista; a original continua em ordem de cadastro).';
+    renderTabela(r.sessoes, crit);
+  } catch (e) { out.innerHTML = `<span class="r">${e.message}</span>`; }
+  btn.disabled = false;
+}
+
+async function gerar(q) {
+  marcarFluxo('+' + q + ' sessões', 'POST /api/sessoes/gerar', 'criar_sessao() × ' + q, '...');
+  await lumosPost('/api/sessoes/gerar', { quantidade: q });
+  await carregarTudo();
+}
+
+async function limpar() {
+  if (!confirm('Apagar todas as sessões do backend?')) return;
+  await lumosApi('/api/sessoes', { method: 'DELETE' });
+  document.getElementById('busca-id').value = '';
+  await carregarTudo();
+}
+
+const medicoes = [];
+async function medir() {
+  const btn = document.getElementById('btn-medir'); btn.disabled = true;
+  try {
+    const inexistente = 'SESS-9999-00000000';   // pior caso: o ID não existe
+    const [seq, bin, bub, mer] = await Promise.all([
+      lumosGet(`/api/sessoes/busca?id=${inexistente}&algoritmo=sequencial`),
+      lumosGet(`/api/sessoes/busca?id=${inexistente}&algoritmo=binaria`),
+      lumosGet(`/api/sessoes/ordenar?criterio=energia_kwh&algoritmo=bubble`),
+      lumosGet(`/api/sessoes/ordenar?criterio=energia_kwh&algoritmo=merge`),
+    ]);
+    marcarFluxo('Medir n=' + seq.n, '4 chamadas à API', 'busca_* e *_sort_sessoes()', 'comparações contadas');
+    medicoes.push({ n: seq.n, seq: seq.comparacoes, bin: bin.comparacoes, bub: bub.comparacoes, mer: mer.comparacoes,
+                    tb: bub.tempo_ms, tm: mer.tempo_ms });
+    document.getElementById('lab-body').innerHTML = medicoes.map(m => `<tr>
+      <td><b>${m.n.toLocaleString('pt-BR')}</b></td>
+      <td>${m.seq.toLocaleString('pt-BR')}</td><td>${m.bin.toLocaleString('pt-BR')}</td>
+      <td>${m.bub.toLocaleString('pt-BR')} <span style="color:var(--ct);font-size:.72rem">(${m.tb} ms)</span></td>
+      <td>${m.mer.toLocaleString('pt-BR')} <span style="color:var(--ct);font-size:.72rem">(${m.tm} ms)</span></td></tr>`).join('');
+  } catch (e) { alert(e.message); }
+  btn.disabled = false;
+}
+
+carregarTudo();
+</script>
+</body>
+</html>

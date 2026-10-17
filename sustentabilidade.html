@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumos — Sustentabilidade</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--verde:#3ecf74;--ve:#1a9e50;--vc:#d4f5e2;--vu:#f0fdf6;--am:#f59e0b;--amc:#fef3c7;--br:#fff;--cl:#f7f9f8;--ct:#4a5568;--cb:#e2e8f0;--ps:#1a202c;--fd:'Inter',sans-serif;--fb:'Inter',sans-serif;--flogo:'Syne',sans-serif;--r:14px;--rl:22px;--sc:0 2px 16px rgba(0,0,0,.07)}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--br);color:var(--ps);overflow-x:hidden}
+nav#main-nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,.94);backdrop-filter:blur(18px);border-bottom:1px solid var(--cb);padding:0 5vw;display:flex;align-items:center;justify-content:space-between;height:64px;gap:1rem}
+.nav-logo{font-family:var(--flogo);font-weight:800;font-size:1.3rem;color:var(--ps);text-decoration:none}.nav-logo span{color:var(--ve)}
+.nav-links{display:flex;gap:1.8rem;list-style:none}
+.nav-links a{text-decoration:none;color:var(--ct);font-size:.9rem;font-weight:500;transition:color .2s;position:relative;padding-bottom:3px}
+.nav-links a.active{color:var(--ve)}.nav-links a.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--ve);border-radius:2px}
+.nav-links a:hover{color:var(--ve)}.nav-right{display:flex;align-items:center;gap:.8rem}
+.nav-user{display:flex;align-items:center;gap:.6rem;font-size:.88rem;font-weight:500}
+.nav-avatar{width:30px;height:30px;border-radius:50%;background:var(--ve);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700}
+.nav-logout{background:transparent;border:1px solid var(--cb);padding:5px 12px;border-radius:50px;font-family:var(--fb);font-size:.8rem;cursor:pointer;color:var(--ct);transition:all .2s}
+.nav-logout:hover{border-color:#ef4444;color:#ef4444}
+.nav-corp-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(26,158,80,.1);
+  border:1.5px solid rgba(26,158,80,.3);
+  color:var(--ve);
+  padding:5px 13px;border-radius:50px;
+  font-family:var(--fb);font-size:.78rem;font-weight:700;
+  text-decoration:none;cursor:pointer;
+  transition:background .2s,border-color .2s,transform .15s;
+  letter-spacing:.02em;
+}
+.nav-corp-btn:hover{
+  background:rgba(26,158,80,.18);
+  border-color:rgba(26,158,80,.55);
+  transform:translateY(-1px);
+}
+.nav-corp-btn .corp-dot{
+  font-size:.55rem;letter-spacing:.06em;
+  background:var(--ve);color:#fff;
+  padding:1px 5px;border-radius:50px;
+  font-weight:800;
+}
+.nav-hamburger{display:none;background:none;border:none;font-size:1.4rem;cursor:pointer}
+
+/* HERO */
+.sus-hero{
+  padding:100px 5vw 70px;
+  background:linear-gradient(160deg,#0d3321 0%,#1a5c34 40%,#1a9e50 100%);
+  color:#fff;text-align:center;position:relative;overflow:hidden;
+}
+.sus-hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 60%,rgba(62,207,116,.18) 0%,transparent 70%);
+}
+.floating-leaves{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.leaf{position:absolute;font-size:1.4rem;animation:leafFloat var(--ld,8s) var(--ldel,0s) ease-in-out infinite;opacity:.35}
+@keyframes leafFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-28px) rotate(12deg)}}
+.sus-hero .label{display:inline-block;background:rgba(255,255,255,.15);color:#d4f5e2;padding:5px 16px;border-radius:50px;font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.2rem}
+.sus-hero h1{font-family:var(--fd);font-size:clamp(2.4rem,5vw,4rem);font-weight:800;line-height:1.1;margin-bottom:1rem;position:relative}
+.sus-hero p{font-size:1.1rem;color:rgba(255,255,255,.8);max-width:600px;margin:0 auto 2rem;line-height:1.7}
+.sus-hero-stats{display:flex;gap:2.5rem;justify-content:center;flex-wrap:wrap;position:relative}
+.hs{text-align:center}
+.hs .big{font-family:var(--fd);font-size:2.4rem;font-weight:800;color:#d4f5e2}
+.hs .sm{font-size:.82rem;color:rgba(255,255,255,.65);margin-top:3px}
+
+/* SECTIONS */
+section{padding:70px 5vw}
+.section-label{font-size:.78rem;font-weight:700;letter-spacing:.12em;color:var(--ve);text-transform:uppercase;margin-bottom:.4rem}
+.section-title{font-family:var(--fd);font-size:clamp(1.6rem,3vw,2.3rem);font-weight:800;line-height:1.15;margin-bottom:.7rem}
+.section-sub{color:var(--ct);font-size:.98rem;line-height:1.7;max-width:600px}
+
+/* ECO CARDS */
+.eco-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:2rem}
+.eco-card{border-radius:var(--rl);border:1.5px solid var(--cb);padding:2rem;transition:transform .25s,box-shadow .25s;background:#fff;box-shadow:var(--sc)}
+.eco-card:hover{transform:translateY(-5px);box-shadow:0 8px 28px rgba(62,207,116,.14)}
+.ec-icon{font-size:2rem;margin-bottom:.9rem;display:block;width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center}
+.ec-icon.g{background:var(--vc)}
+.ec-icon.s{background:#fef3c7}
+.ec-icon.b{background:#dbeafe}
+.eco-card h3{font-family:var(--fd);font-size:1.05rem;font-weight:700;margin-bottom:.5rem}
+.eco-card p{font-size:.88rem;color:var(--ct);line-height:1.65}
+.eco-hl{margin-top:.9rem;padding:9px 13px;border-radius:8px;font-size:.8rem;font-weight:700}
+.eco-hl.g{background:var(--vc);color:var(--ve)}
+.eco-hl.s{background:var(--amc);color:#92400e}
+.eco-hl.b{background:#dbeafe;color:#1e40af}
+
+/* TREE COUNTER */
+.tree-section{background:linear-gradient(135deg,var(--vu),#fff);padding:60px 5vw}
+.tree-counter{text-align:center}
+.tree-big{font-family:var(--fd);font-size:5rem;font-weight:800;color:var(--ve);line-height:1;margin-bottom:.5rem;animation:countUp 2s ease both}
+@keyframes countUp{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+.tree-sub{font-size:1.1rem;color:var(--ct);max-width:480px;margin:0 auto 2rem;line-height:1.6}
+.tree-row{display:flex;justify-content:center;gap:.4rem;flex-wrap:wrap;font-size:1.8rem;margin-bottom:1rem;min-height:60px}
+
+/* SOLAR EXPLAINER */
+.solar-section{background:var(--ps);color:#fff;padding:70px 5vw}
+.solar-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-top:2rem}
+.solar-diagram{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:var(--rl);padding:2rem}
+.solar-steps{display:flex;flex-direction:column;gap:1rem}
+.solar-step{display:flex;gap:1rem;align-items:flex-start;padding:1rem;background:rgba(255,255,255,.05);border-radius:12px}
+.ss-num{width:32px;height:32px;border-radius:50%;background:var(--ve);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;flex-shrink:0}
+.ss-c h5{font-weight:600;font-size:.9rem;margin-bottom:3px}
+.ss-c p{font-size:.82rem;color:rgba(255,255,255,.55);line-height:1.5}
+.solar-info h2{font-family:var(--fd);font-size:1.7rem;font-weight:800;margin-bottom:1rem;line-height:1.2}
+.solar-info p{color:rgba(255,255,255,.65);font-size:.95rem;line-height:1.7;margin-bottom:1rem}
+.solar-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(62,207,116,.15);color:#d4f5e2;border:1px solid rgba(62,207,116,.3);padding:8px 16px;border-radius:50px;font-size:.84rem;font-weight:600;margin-bottom:.7rem}
+
+/* FLAGS */
+.flags-section{padding:60px 5vw;background:var(--cl)}
+.flags-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:2rem}
+.flag-card{border-radius:var(--rl);padding:2rem;border:1.5px solid;transition:transform .25s}
+.flag-card:hover{transform:translateY(-4px)}
+.flag-card.v{background:#f0fdf4;border-color:#86efac}
+.flag-card.a{background:#fffbeb;border-color:#fde68a}
+.flag-card.r{background:#fff1f2;border-color:#fecdd3}
+.flag-icon{font-size:2.5rem;margin-bottom:.8rem;display:block}
+.flag-card h3{font-family:var(--fd);font-size:1.05rem;font-weight:700;margin-bottom:.4rem}
+.flag-card p{font-size:.86rem;color:var(--ct);line-height:1.6}
+.flag-price{margin-top:.8rem;font-family:var(--fd);font-size:1.6rem;font-weight:800}
+.flag-price.v{color:var(--ve)}
+.flag-price.a{color:#b45309}
+.flag-price.r{color:#b91c1c}
+
+/* IMPACT CALC */
+.impact-section{padding:60px 5vw;background:#fff}
+.impact-calc{background:var(--vu);border-radius:var(--rl);border:1.5px solid var(--vc);padding:2.5rem;margin-top:2rem;max-width:700px}
+.ic-slider-row{margin-bottom:1.5rem}
+.ic-slider-row label{display:flex;justify-content:space-between;font-size:.88rem;font-weight:600;margin-bottom:.6rem}
+.ic-slider-row label span{color:var(--ve);font-family:var(--fd);font-size:1rem;font-weight:800}
+input[type=range]{width:100%;accent-color:var(--ve);height:6px;cursor:pointer}
+.ic-results{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem}
+.ic-res{background:#fff;border-radius:12px;padding:1.1rem;text-align:center;border:1.5px solid var(--vc)}
+.ic-res .v{font-family:var(--fd);font-size:1.5rem;font-weight:800;color:var(--ve)}
+.ic-res .l{font-size:.74rem;color:var(--ct);margin-top:3px}
+
+.pledge-section{background:linear-gradient(135deg,var(--ve) 0%,#0d6b40 100%);color:#fff;padding:60px 5vw;text-align:center}
+.pledge-section h2{font-family:var(--fd);font-size:2rem;font-weight:800;margin-bottom:1rem}
+.pledge-section p{max-width:500px;margin:0 auto 2rem;color:rgba(255,255,255,.8);line-height:1.7}
+.pledge-btn{background:#fff;color:var(--ve);border:none;padding:14px 36px;border-radius:50px;font-family:var(--fb);font-size:1rem;font-weight:700;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:0 6px 20px rgba(0,0,0,.15)}
+.pledge-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.2)}
+.pledge-btn.pledged{background:var(--vc);color:var(--ve)}
+
+.fade-in{opacity:0;transform:translateY(22px);transition:opacity .55s ease,transform .55s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+footer{background:var(--ps);color:rgba(255,255,255,.8);padding:2rem 5vw;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+footer .logo{font-family:var(--flogo);font-size:1.1rem;font-weight:800;color:#fff}
+footer .logo span{color:var(--verde)}
+@media(max-width:860px){
+  .nav-hamburger{display:block}.nav-links{display:none}
+  .eco-grid,.flags-grid,.solar-grid,.ic-results{grid-template-columns:1fr}
+  .sus-hero-stats{gap:1.5rem}
+}
+</style>
+</head>
+<body>
+<nav id="main-nav">
+  <a class="nav-logo" href="home.html"><span>Lumos</span></a>
+  <ul class="nav-links">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="consumo.html">Consumo</a></li>
+    <li><a href="pagamento.html">Pagamento</a></li>
+    <li><a href="sustentabilidade.html" class="active">Sustentabilidade</a></li>
+    <li><a href="estacao.html">Estação</a></li>
+    <li><a href="lummi.html">Lummi IA</a></li>
+  </ul>
+  <div class="nav-right">
+    <a class="nav-corp-btn" href="corp.html"><span class="corp-dot">CORP</span> Lumos Corp</a>
+    <div class="nav-user">
+      <div class="nav-avatar" id="nav-av">?</div>
+      <span id="nav-nome">Usuário</span>
+      <button class="nav-logout" onclick="sair()">Sair</button>
+    </div>
+  </div>
+  <button class="nav-hamburger" onclick="document.getElementById('main-nav').classList.toggle('open')">☰</button>
+</nav>
+
+<!-- HERO -->
+<div class="sus-hero">
+  <div class="floating-leaves" id="leaves"></div>
+  <div class="label">Sustentabilidade</div>
+  <h1>O planeta agradece<br>cada kWh limpo.</h1>
+  <p>Cada vez que você escolhe recarregar com energia solar, você vota por um futuro mais verde. Veja o impacto coletivo que estamos construindo juntos.</p>
+  <div class="sus-hero-stats">
+    <div class="hs"><div class="big">4,2 t</div><div class="sm">CO₂ evitado este mês</div></div>
+    <div class="hs"><div class="big">312</div><div class="sm">Árvores equivalentes</div></div>
+    <div class="hs"><div class="big">87%</div><div class="sm">Energia solar utilizada</div></div>
+    <div class="hs"><div class="big">2.847</div><div class="sm">Sessões verdes realizadas</div></div>
+  </div>
+</div>
+
+<!-- ECO CARDS -->
+<section>
+  <div class="section-label">Por que importa</div>
+  <div class="section-title">Mobilidade elétrica e o planeta</div>
+  <p class="section-sub">Entenda o impacto real de cada escolha que você faz ao escolher um veículo elétrico.</p>
+  <div class="eco-grid fade-in">
+    <div class="eco-card">
+      <div class="ec-icon g" style="font-size:1.4rem">⚡</div>
+      <h3>Carros elétricos transformam cidades</h3>
+      <p>Um veículo elétrico emite até 70% menos CO₂ ao longo de sua vida útil. Sem escapamento, ele também elimina poluentes locais como NOx e partículas finas — direto no ar que respiramos.</p>
+      <div class="eco-hl g">🌍 −70% emissões vs combustão</div>
+    </div>
+    <div class="eco-card">
+      <div class="ec-icon s" style="font-size:1.4rem">☀️</div>
+      <h3>O sol como fonte de energia</h3>
+      <p>A energia solar fotovoltaica tem custo zero de combustível e zero de emissões na geração. O Brasil recebe uma das maiores irradiações do mundo — é uma fonte inesgotável, gratuita e limpa.</p>
+      <div class="eco-hl s">☀️ Brasil: 1.500–2.200 kWh/m²/ano</div>
+    </div>
+    <div class="eco-card">
+      <div class="ec-icon g" style="font-size:1.4rem">🌳</div>
+      <h3>Cada kWh planta uma floresta</h3>
+      <p>Uma árvore adulta absorve cerca de 22 kg de CO₂ por ano. Cada kWh solar que você usa evita ~210g de CO₂. Isso significa que a cada 105 kWh, você "planta" o equivalente a uma árvore.</p>
+      <div class="eco-hl g">🌳 1 árvore = ~105 kWh solar</div>
+    </div>
+    <div class="eco-card">
+      <div class="ec-icon g" style="font-size:1.4rem">🔋</div>
+      <h3>Bateria Lynx: nada se perde</h3>
+      <p>O excedente solar é armazenado nas baterias Lynx de lítio ferro-fosfato (LFP), com mais de 3.500 ciclos de vida. Energia que seria desperdiçada se torna combustível para o próximo carro.</p>
+      <div class="eco-hl g">⚡ 200 kWh de capacidade por totem</div>
+    </div>
+    <div class="eco-card">
+      <div class="ec-icon b" style="font-size:1.4rem">💧</div>
+      <h3>Água e ar mais limpos</h3>
+      <p>Motores a combustão liberam benzeno, tolueno e material particulado fino (PM2.5) — ligados a doenças respiratórias. Um ônibus elétrico equivale a tirar 40 carros das ruas em termos de poluição.</p>
+      <div class="eco-hl b">🫁 −90% poluentes locais</div>
+    </div>
+    <div class="eco-card">
+      <div class="ec-icon s" style="font-size:1.4rem">🌐</div>
+      <h3>Metas climáticas do Brasil</h3>
+      <p>O Brasil se comprometeu a zerar as emissões líquidas até 2050 (Acordo de Paris). A eletrificação dos transportes é um dos principais vetores — responsável por 18% das emissões nacionais hoje.</p>
+      <div class="eco-hl s">🤝 NDC Brasil: zero líquido em 2050</div>
+    </div>
+  </div>
+</section>
+
+<!-- TREE COUNTER -->
+<div class="tree-section">
+  <div class="section-label">Contador de impacto</div>
+  <div class="section-title" style="text-align:center">Árvores salvas pela rede Lumos</div>
+  <div class="tree-counter">
+    <div class="tree-big" id="tree-count">312</div>
+    <p class="tree-sub">Equivalente em absorção de carbono das recargas realizadas este mês, considerando 22 kg CO₂/árvore/ano.</p>
+    <div class="tree-row" id="tree-row"></div>
+    <p style="font-size:.78rem;color:var(--ct)">Cada 🌳 representa 4,8 kg de CO₂ evitado</p>
+  </div>
+</div>
+
+<!-- SOLAR EXPLAINER -->
+<div class="solar-section">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="section-label" style="color:var(--verde)">Como funciona</div>
+    <div class="section-title" style="color:#fff">O sistema solar + Lynx</div>
+    <div class="solar-grid fade-in">
+      <div class="solar-diagram">
+        <div class="solar-steps">
+          <div class="solar-step"><div class="ss-num">1</div><div class="ss-c"><h5>Captação solar</h5><p>Painéis fotovoltaicos nos totens e telhados captam energia durante o dia (6h–18h)</p></div></div>
+          <div class="solar-step"><div class="ss-num">2</div><div class="ss-c"><h5>Conversão CC → CA</h5><p>Inversor GoodWe converte a energia DC dos painéis em AC com eficiência de 98,4%</p></div></div>
+          <div class="solar-step"><div class="ss-num">3</div><div class="ss-c"><h5>Armazenamento Lynx</h5><p>Excedente vai para baterias LFP de 200 kWh. Disponível 24h, mesmo sem sol</p></div></div>
+          <div class="solar-step"><div class="ss-num">4</div><div class="ss-c"><h5>Recarga do EV</h5><p>Energia flui para o conector do veículo via OCPP 2.0. Monitorada em tempo real</p></div></div>
+          <div class="solar-step"><div class="ss-num">5</div><div class="ss-c"><h5>Rede de apoio</h5><p>Quando Lynx < 40% e não há sol, a rede elétrica entra com prioridade para renovável</p></div></div>
+        </div>
+      </div>
+      <div class="solar-info">
+        <span class="solar-badge">☀️ Tecnologia GoodWe × Lynx</span>
+        <h2>Energia limpa disponível a qualquer hora</h2>
+        <p>O sistema híbrido solar + bateria da Lumos foi desenhado para maximizar o uso de energia renovável em qualquer condição climática.</p>
+        <p>Com a bateria Lynx carregada acima de 70%, a tarifa cai para R$ 0,85/kWh — o menor preço possível. Isso não é apenas mais barato: é energia que veio diretamente do sol.</p>
+        <p>A bandeira tarifária reflete o estado da rede em tempo real. Na Bandeira Verde, praticamente toda a energia é renovável — do sol ou de hidrelétricas.</p>
+        <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:1.5rem">
+          <div><div style="font-family:var(--fd);font-size:1.6rem;font-weight:800;color:var(--verde)">98,4%</div><div style="font-size:.78rem;color:rgba(255,255,255,.5)">Eficiência inversor</div></div>
+          <div><div style="font-family:var(--fd);font-size:1.6rem;font-weight:800;color:var(--verde)">3.500+</div><div style="font-size:.78rem;color:rgba(255,255,255,.5)">Ciclos bateria LFP</div></div>
+          <div><div style="font-family:var(--fd);font-size:1.6rem;font-weight:800;color:var(--verde)">200 kWh</div><div style="font-size:.78rem;color:rgba(255,255,255,.5)">Capacidade por totem</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FLAGS -->
+<section class="flags-section">
+  <div class="section-label">Bandeiras tarifárias</div>
+  <div class="section-title">O que cada cor significa</div>
+  <p class="section-sub">As bandeiras refletem a disponibilidade de energia renovável na rede e na bateria Lynx em tempo real.</p>
+  <div class="flags-grid fade-in">
+    <div class="flag-card v">
+      <span class="flag-icon">🟢</span>
+      <h3>Bandeira Verde</h3>
+      <p>Alta geração solar e bateria Lynx acima de 70%. Toda a energia vem de fonte renovável. O melhor momento para recarregar — tanto para o bolso quanto para o planeta.</p>
+      <div class="flag-price v">R$ 0,85/kWh</div>
+    </div>
+    <div class="flag-card a">
+      <span class="flag-icon">🟡</span>
+      <h3>Bandeira Amarela</h3>
+      <p>Geração solar moderada. Bateria Lynx entre 40–70%. Mix de solar, Lynx e alguma rede convencional. Ainda uma boa escolha — predominantemente limpa.</p>
+      <div class="flag-price a">R$ 1,20/kWh</div>
+    </div>
+    <div class="flag-card r">
+      <span class="flag-icon">🔴</span>
+      <h3>Bandeira Vermelha</h3>
+      <p>Pouca geração solar ou bateria abaixo de 40%. Rede de apoio em uso. Ainda mais limpa que combustíveis fósseis, mas o custo sobe para refletir o custo de pico.</p>
+      <div class="flag-price r">R$ 1,60/kWh</div>
+    </div>
+  </div>
+  <div style="margin-top:1.5rem;padding:1.2rem 1.5rem;background:#fff;border-radius:12px;border:1px solid var(--cb);font-size:.84rem;color:var(--ct)">
+    💡 <strong>Dica:</strong> Programe recargas para 00h–06h e aproveite desconto adicional de R$ 0,20/kWh sobre qualquer bandeira. Energia noturna = excedente solar armazenado durante o dia.
+  </div>
+</section>
+
+<!-- CALCULADORA -->
+<section class="impact-section">
+  <div class="section-label">Calculadora de impacto</div>
+  <div class="section-title">Quanto você vai contribuir?</div>
+  <p class="section-sub">Simule seu impacto ambiental ao trocar o carro a gasolina por um elétrico carregado na Lumos.</p>
+  <div class="impact-calc fade-in">
+    <div class="ic-slider-row">
+      <label>km rodados por mês <span id="km-val">1.000 km</span></label>
+      <input type="range" id="sl-km" min="200" max="5000" value="1000" step="100" oninput="calcImpact()">
+    </div>
+    <div class="ic-slider-row">
+      <label>Consumo do carro gasolina <span id="cons-val">12 km/L</span></label>
+      <input type="range" id="sl-cons" min="6" max="20" value="12" step="1" oninput="calcImpact()">
+    </div>
+    <div class="ic-slider-row">
+      <label>Preço da gasolina <span id="gas-val">R$ 5,89/L</span></label>
+      <input type="range" id="sl-gas" min="4.50" max="8.00" value="5.89" step="0.10" oninput="calcImpact()">
+    </div>
+    <div class="ic-results">
+      <div class="ic-res"><div class="v" id="r-co2">0 kg</div><div class="l">CO₂ evitado/mês</div></div>
+      <div class="ic-res"><div class="v" id="r-econ">R$ 0</div><div class="l">Economia/mês</div></div>
+      <div class="ic-res"><div class="v" id="r-tree">0</div><div class="l">Árvores equivalentes/ano</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PLEDGE -->
+<div class="pledge-section">
+  <h2>Faça parte do movimento</h2>
+  <p>Cada recarga na Lumos é mais do que carregar um carro. É uma declaração de que o futuro que queremos é limpo, silencioso e solar.</p>
+  <button class="pledge-btn" id="pledge-btn" onclick="doPledge()">🌱 Quero fazer parte</button>
+</div>
+
+<footer>
+  <div class="logo"><span>Lumos</span></div>
+  <p style="font-size:.78rem;color:rgba(255,255,255,.35)">© 2026 Lumos · FIAP / GoodWe</p>
+  <div style="font-size:.8rem;color:var(--verde)">🌿 O futuro é elétrico e solar</div>
+</footer>
+
+<script>
+// Global functions accessible from HTML attributes
+function calcImpact() {
+  const km=parseFloat(document.getElementById('sl-km').value);
+  const cons=parseFloat(document.getElementById('sl-cons').value);
+  const gas=parseFloat(document.getElementById('sl-gas').value);
+  document.getElementById('km-val').textContent=km.toLocaleString('pt-BR')+' km';
+  document.getElementById('cons-val').textContent=cons+' km/L';
+  document.getElementById('gas-val').textContent='R$ '+gas.toFixed(2)+'/L';
+  // CO2: gasolina ~2.3 kg CO2/L; elétrico solar ~0.04 kg CO2/kWh * 0.2 kWh/km
+  const litros=km/cons;
+  const co2Gas=litros*2.3;
+  const co2Elet=(km*0.2*0.04);
+  const co2Saved=(co2Gas-co2Elet).toFixed(1);
+  const costGas=litros*gas;
+  const costElet=km*0.2*0.85;
+  const econ=(costGas-costElet).toFixed(2);
+  const trees=Math.round((parseFloat(co2Saved)*12)/22);
+  document.getElementById('r-co2').textContent=co2Saved+' kg';
+  document.getElementById('r-econ').textContent='R$ '+parseFloat(econ).toLocaleString('pt-BR',{minimumFractionDigits:2});
+  document.getElementById('r-tree').textContent=trees;
+  // Animate result values
+  document.querySelectorAll('.ic-res .v').forEach(el=>{
+    el.style.transform='scale(1.1)';el.style.transition='transform .2s ease';
+    setTimeout(()=>el.style.transform='scale(1)',200);
+  });
+}
+
+let pledged = false;
+function doPledge(){
+  if(!pledged){
+    pledged=true;localStorage.setItem('lm_pledged','1');
+    const pb=document.getElementById('pledge-btn');
+    pb.textContent='✅ Você já faz parte!';pb.classList.add('pledged');
+    for(let i=0;i<50;i++){const d=document.createElement('div');d.style.cssText=`position:fixed;left:${Math.random()*100}%;top:20%;width:8px;height:8px;background:${['#3ecf74','#d4f5e2','#fbbf24','#fff'][Math.floor(Math.random()*4)]};border-radius:${Math.random()>0.5?'50%':'2px'};z-index:9999;pointer-events:none;animation:confFall 2s ${Math.random()*0.8}s ease both`;document.body.appendChild(d);setTimeout(()=>d.remove(),3000);}
+  }
+}
+
+function sair() {
+  localStorage.removeItem('lm_user');
+  localStorage.removeItem('lm_credits');
+  localStorage.removeItem('lm_sessions');
+  localStorage.removeItem('lm_pledged');
+  window.location.href='index.html';
+}
+
+(function() {
+var user;
+try { user = JSON.parse(localStorage.getItem('lm_user')); } catch(e) { user = null; }
+if (!user || !user.nome) { window.location.href='index.html'; return; }
+document.getElementById('nav-av').textContent=user.initials||'?';
+document.getElementById('nav-nome').textContent=user.nome.split(' ')[0];
+
+// Floating leaves
+const lc=document.getElementById('leaves');
+const leafEmojis=['🌿','🍃','🌱','🍀','🌾'];
+for(let i=0;i<16;i++){
+  const l=document.createElement('div');l.className='leaf';
+  l.textContent=leafEmojis[Math.floor(Math.random()*leafEmojis.length)];
+  l.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;--ld:${6+Math.random()*6}s;--ldel:${Math.random()*5}s;font-size:${1+Math.random()*1.2}rem`;
+  lc.appendChild(l);
+}
+
+// Tree row
+const treeRow=document.getElementById('tree-row');
+for(let i=0;i<Math.min(64,312);i++){
+  const t=document.createElement('span');t.textContent='🌳';t.style.animationDelay=(i*0.02)+'s';treeRow.appendChild(t);
+}
+
+// Init calculator
+calcImpact();
+
+// Pledge state
+pledged=localStorage.getItem('lm_pledged')==='1';
+const pb=document.getElementById('pledge-btn');
+if(pledged){pb.textContent='✅ Você já faz parte!';pb.classList.add('pledged');}
+
+// Also attach input listeners directly for reliability
+['sl-km','sl-cons','sl-gas'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) el.addEventListener('input', calcImpact);
+});
+
+const obs=new IntersectionObserver(e=>e.forEach(ei=>{if(ei.isIntersecting)ei.target.classList.add('visible');}),{threshold:.08});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+})(); // end IIFE
+</script>
+<style>
+@keyframes confFall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(500px) rotate(720deg);opacity:0}}
+</style>
+</body>
+</html>

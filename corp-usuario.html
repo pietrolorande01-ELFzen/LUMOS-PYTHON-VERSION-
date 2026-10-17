@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumos Corp — Minha Conta</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --verde:#3ecf74;--ve:#1a9e50;--vc:#d4f5e2;--vu:#f0fdf6;
+  --am:#f59e0b;--amc:#fef3c7;--vm:#ef4444;--vmc:#fee2e2;
+  --corp:#0f172a;--corp2:#1e293b;--corp3:#334155;
+  --br:#fff;--cl:#f7f9f8;--ct:#4a5568;--cb:#e2e8f0;--ps:#1a202c;
+  --fd:'Inter',sans-serif;--fb:'Inter',sans-serif;--flogo:'Syne',sans-serif;
+  --r:14px;--rl:22px;--sc:0 2px 16px rgba(0,0,0,.07);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--corp);color:#fff;min-height:100vh}
+
+/* ===== NAV ===== */
+.corp-nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:rgba(15,23,42,.94);backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(255,255,255,.07);
+  padding:0 5vw;height:64px;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+}
+.corp-nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.corp-nav-logo .main{font-family:var(--flogo);font-size:1.25rem;font-weight:800;color:#fff}
+.corp-nav-logo .main .l{color:var(--verde)}
+.corp-tag-pill{
+  background:rgba(62,207,116,.12);border:1px solid rgba(62,207,116,.25);
+  color:var(--verde);font-size:.68rem;font-weight:700;letter-spacing:.1em;
+  padding:2px 9px;border-radius:50px;text-transform:uppercase;
+}
+.corp-nav-right{display:flex;align-items:center;gap:1rem}
+.company-chip{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+  padding:6px 14px;border-radius:50px;
+}
+.company-chip .icon{font-size:1rem}
+.company-chip .name{font-size:.82rem;font-weight:600;color:rgba(255,255,255,.85)}
+.company-chip .plan{font-size:.7rem;color:var(--verde);font-weight:700}
+.btn-logout-corp{
+  background:transparent;border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.5);padding:6px 14px;border-radius:50px;
+  font-family:var(--fb);font-size:.78rem;cursor:pointer;transition:all .2s;
+}
+.btn-logout-corp:hover{border-color:var(--vm);color:var(--vm)}
+.btn-voltar-lumos{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(62,207,116,.1);border:1px solid rgba(62,207,116,.25);
+  color:var(--verde);padding:6px 14px;border-radius:50px;
+  font-family:var(--fb);font-size:.78rem;font-weight:600;
+  text-decoration:none;cursor:pointer;transition:all .2s;
+}
+.btn-voltar-lumos:hover{background:rgba(62,207,116,.18);border-color:rgba(62,207,116,.45)}
+
+/* ===== MAIN ===== */
+.corp-main{padding-top:64px;min-height:100vh;background:var(--corp)}
+
+.corp-header{
+  background:linear-gradient(135deg,var(--corp2) 0%,rgba(26,158,80,.08) 100%);
+  padding:2.5rem 5vw;border-bottom:1px solid rgba(255,255,255,.06);
+  position:relative;overflow:hidden;
+}
+.corp-header-bg{
+  position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 80% 50%,rgba(62,207,116,.07) 0%,transparent 60%);
+}
+.corp-header-inner{position:relative;z-index:1;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1.5rem}
+.corp-header-text .eyebrow{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(62,207,116,.1);border:1px solid rgba(62,207,116,.2);
+  color:var(--verde);font-size:.72rem;font-weight:700;letter-spacing:.1em;
+  padding:4px 12px;border-radius:50px;text-transform:uppercase;margin-bottom:.8rem;
+}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--verde);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.5)}}
+.corp-header-text h1{font-family:var(--fd);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;line-height:1.15}
+.corp-header-text h1 span{color:var(--verde)}
+.corp-header-text p{color:rgba(255,255,255,.5);font-size:.92rem;margin-top:.4rem}
+.corp-header-meta{display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
+.meta-chip{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+  padding:8px 16px;border-radius:12px;text-align:center;
+}
+.meta-chip .mc-val{font-family:var(--fd);font-size:1.1rem;font-weight:800;color:#fff}
+.meta-chip .mc-lab{font-size:.7rem;color:rgba(255,255,255,.4);margin-top:1px}
+
+.corp-content{padding:2rem 5vw 4rem}
+.section-row{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+.section-row.thirds{grid-template-columns:2fr 1fr}
+.section-row.full{grid-template-columns:1fr}
+
+.panel{
+  background:var(--corp2);border:1px solid rgba(255,255,255,.07);
+  border-radius:20px;overflow:hidden;
+}
+.panel-header{
+  padding:1.2rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+}
+.panel-title{display:flex;align-items:center;gap:8px}
+.panel-title .icon{font-size:1rem}
+.panel-title h3{font-family:var(--fd);font-size:.95rem;font-weight:700;color:#fff}
+.panel-title p{font-size:.75rem;color:rgba(255,255,255,.35);margin-top:1px}
+.panel-badge{
+  background:rgba(62,207,116,.1);border:1px solid rgba(62,207,116,.2);
+  color:var(--verde);font-size:.7rem;font-weight:700;
+  padding:3px 9px;border-radius:50px;
+}
+.panel-body{padding:1.5rem}
+
+/* Car card */
+.car-hero{
+  display:flex;align-items:center;gap:1.2rem;
+  background:linear-gradient(135deg,rgba(26,158,80,.15) 0%,rgba(62,207,116,.05) 100%);
+  border:1px solid rgba(62,207,116,.2);border-radius:16px;padding:1.4rem;margin-bottom:1rem;
+}
+.car-hero-icon{font-size:2.6rem}
+.car-hero-info .car-name{font-family:var(--fd);font-size:1.15rem;font-weight:800}
+.car-hero-info .car-plate{font-size:.78rem;color:rgba(255,255,255,.45);margin-top:2px}
+.car-hero-status{margin-left:auto;text-align:right}
+.car-hero-status .st-dot{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;font-weight:700;color:var(--verde)}
+.sdot{width:8px;height:8px;border-radius:50%;background:var(--verde);box-shadow:0 0 6px var(--verde)}
+.car-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem}
+.car-stat{
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+  border-radius:12px;padding:.9rem 1rem;
+}
+.car-stat .cs-lab{font-size:.7rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.car-stat .cs-val{font-family:var(--fd);font-size:1.15rem;font-weight:800}
+.battery-track{height:8px;background:rgba(255,255,255,.08);border-radius:50px;overflow:hidden;margin-top:.6rem}
+.battery-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--ve),var(--verde))}
+
+/* Charging points list */
+.point-card{
+  display:flex;align-items:center;gap:.9rem;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+  border-radius:14px;padding:.9rem 1.1rem;margin-bottom:.7rem;
+}
+.point-card:last-child{margin-bottom:0}
+.point-icon{
+  width:38px;height:38px;border-radius:12px;flex-shrink:0;
+  background:rgba(62,207,116,.1);display:flex;align-items:center;justify-content:center;font-size:1rem;
+}
+.point-info{flex:1;min-width:0}
+.point-info .p-name{font-size:.85rem;font-weight:600}
+.point-info .p-sub{font-size:.73rem;color:rgba(255,255,255,.4);margin-top:2px}
+.point-right{text-align:right;flex-shrink:0}
+.point-right .p-dist{font-family:var(--fd);font-size:.92rem;font-weight:700;color:var(--verde)}
+.point-right .p-stat{font-size:.7rem;margin-top:2px}
+.point-right .p-stat.livre{color:var(--verde)}
+.point-right .p-stat.ocupado{color:var(--am)}
+
+/* Cadastro */
+.cad-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.85rem 0;border-bottom:1px solid rgba(255,255,255,.05);
+}
+.cad-row:last-child{border-bottom:none}
+.cad-row .cad-lab{font-size:.78rem;color:rgba(255,255,255,.4)}
+.cad-row .cad-val{font-size:.85rem;font-weight:600;color:#fff;text-align:right}
+.avatar-big{
+  width:56px;height:56px;border-radius:50%;
+  background:rgba(62,207,116,.18);color:var(--verde);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fd);font-size:1.2rem;font-weight:800;flex-shrink:0;
+}
+.cad-head{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem}
+.cad-head .ch-name{font-family:var(--fd);font-size:1.05rem;font-weight:800}
+.cad-head .ch-cargo{font-size:.78rem;color:var(--verde);margin-top:2px}
+
+/* Finanças */
+.fin-compare{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:1rem}
+.fin-box{
+  border-radius:14px;padding:1.1rem;
+}
+.fin-box.eco{background:rgba(62,207,116,.08);border:1px solid rgba(62,207,116,.2)}
+.fin-box.desp{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07)}
+.fin-box .fb-lab{font-size:.7rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem}
+.fin-box .fb-val{font-family:var(--fd);font-size:1.35rem;font-weight:800}
+.fin-box.eco .fb-val{color:var(--verde)}
+.fin-box .fb-delta{font-size:.72rem;margin-top:.35rem;font-weight:600}
+.fin-box .fb-delta.up{color:var(--verde)}
+.fin-box .fb-delta.down{color:var(--am)}
+.fin-list{display:flex;flex-direction:column;gap:.5rem}
+.fin-list-item{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.65rem .8rem;background:rgba(255,255,255,.03);border-radius:10px;
+  border:1px solid rgba(255,255,255,.05);font-size:.78rem;
+}
+.fin-list-item .fli-lab{color:rgba(255,255,255,.55)}
+.fin-list-item .fli-val{font-weight:600}
+
+/* Botão carregar */
+.btn-carregar-user{
+  width:100%;margin-top:1rem;padding:11px;
+  background:rgba(62,207,116,.1);border:1px solid rgba(62,207,116,.25);
+  color:var(--verde);border-radius:12px;
+  font-family:var(--fb);font-size:.85rem;font-weight:600;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s;
+}
+.btn-carregar-user:hover{background:rgba(62,207,116,.18);border-color:rgba(62,207,116,.45)}
+.car-location{
+  margin-top:.9rem;display:flex;align-items:center;gap:8px;
+  font-size:.8rem;color:rgba(255,255,255,.55);
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+  border-radius:10px;padding:.6rem .9rem;
+}
+
+/* ===== MAPA SÃO PAULO ===== */
+.sp-map-wrap{position:relative;border-radius:0 0 20px 20px;overflow:hidden;background:rgba(255,255,255,.015)}
+.sp-map-wrap.compact{border-radius:16px;max-width:300px;margin:0 auto 1.2rem;border:1px solid rgba(255,255,255,.07)}
+.sp-map-svg{width:100%;height:auto;display:block}
+.map-region{fill:rgba(62,207,116,.06);stroke:rgba(62,207,116,.28);stroke-width:2}
+.map-pin-dot{fill:var(--verde)}
+.map-pin-ring{fill:none;stroke:var(--verde);opacity:.55;animation:pinPulse 2.2s ease-out infinite}
+.map-pin.active .map-pin-dot{fill:var(--am)}
+.map-pin.active .map-pin-ring{stroke:var(--am)}
+@keyframes pinPulse{0%{r:6px;opacity:.7}100%{r:20px;opacity:0}}
+.map-pin-label{font-family:var(--fb);font-size:10px;fill:rgba(255,255,255,.8);font-weight:600}
+.map-legend{display:flex;gap:1.2rem;flex-wrap:wrap;padding:1rem 1.4rem;border-top:1px solid rgba(255,255,255,.06)}
+.map-legend-item{display:flex;align-items:center;gap:6px;font-size:.75rem;color:rgba(255,255,255,.5)}
+.map-legend-dot{width:8px;height:8px;border-radius:50%}
+
+/* ===== CHARGE OVERLAY ===== */
+.charge-overlay{display:none;position:fixed;inset:0;z-index:5000;background:var(--corp);overflow-y:auto}
+.charge-overlay.open{display:block}
+.co-topbar{
+  position:fixed;top:0;left:0;right:0;z-index:10;
+  background:rgba(15,23,42,.95);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(255,255,255,.07);
+  padding:0 5vw;height:64px;display:flex;align-items:center;justify-content:space-between;
+}
+.co-title{font-family:var(--fd);font-size:1.05rem;font-weight:800}
+.co-title span{color:var(--verde)}
+.co-close{
+  background:rgba(255,255,255,.06);border:none;color:rgba(255,255,255,.6);
+  width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:1rem;transition:all .2s;
+}
+.co-close:hover{background:rgba(239,68,68,.15);color:var(--vm)}
+.co-inner{min-height:100vh;padding:80px 5vw 60px;display:flex;flex-direction:column;align-items:center}
+.co-stepbar{display:flex;align-items:center;gap:.4rem;margin:1.6rem 0 2.2rem}
+.cosd{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:rgba(255,255,255,.3);transition:all .3s}
+.cosd.done{background:var(--ve);border-color:var(--ve);color:#fff}
+.cosd.active{border-color:var(--verde);color:var(--verde)}
+.cosl{width:32px;height:2px;background:rgba(255,255,255,.1);border-radius:2px}
+.co-screen{display:none;width:100%;max-width:640px;flex-direction:column;align-items:center;text-align:center}
+.co-screen.active{display:flex;animation:coIn .4s ease}
+@keyframes coIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.co-screen h2{font-family:var(--fd);font-size:1.6rem;font-weight:800;margin-bottom:.4rem}
+.co-sub{color:rgba(255,255,255,.5);font-size:.92rem;margin-bottom:1.8rem;max-width:440px}
+
+.co-pay-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;width:100%;margin-bottom:1.6rem}
+.co-pay-card{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.1);border-radius:16px;padding:1.3rem 1rem;cursor:pointer;transition:all .25s}
+.co-pay-card:hover{border-color:var(--verde);background:rgba(62,207,116,.08);transform:translateY(-3px)}
+.co-pay-card.selected{border-color:var(--verde);background:rgba(62,207,116,.1)}
+.co-pay-card .pi{font-size:1.8rem;display:block;margin-bottom:.5rem}
+.co-pay-card h4{font-family:var(--fd);font-size:.86rem;font-weight:700;margin-bottom:.2rem}
+.co-pay-card p{font-size:.7rem;color:rgba(255,255,255,.45)}
+.co-btn-go{background:var(--ve);color:#fff;border:none;padding:14px 44px;border-radius:50px;font-family:var(--fb);font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 6px 24px rgba(26,158,80,.3)}
+.co-btn-go:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(26,158,80,.4);background:var(--verde)}
+.co-btn-go:disabled{background:#2d3d2d;color:rgba(255,255,255,.25);box-shadow:none;cursor:not-allowed;transform:none}
+
+.co-spinner{width:52px;height:52px;border-radius:50%;border:4px solid rgba(62,207,116,.2);border-top-color:var(--ve);animation:coSpin 1s linear infinite;margin-bottom:1.4rem}
+@keyframes coSpin{to{transform:rotate(360deg)}}
+.co-proc-title{font-family:var(--fd);font-size:1.3rem;font-weight:800;margin-bottom:1.2rem}
+.co-pbar-track{width:300px;height:5px;background:rgba(255,255,255,.1);border-radius:50px;overflow:hidden;margin-bottom:1.4rem}
+.co-pbar-fill{height:100%;background:linear-gradient(90deg,var(--ve),var(--verde));border-radius:50px;width:0}
+.co-proc-steps{display:flex;flex-direction:column;gap:.55rem;text-align:left;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:1rem 1.4rem;max-width:320px;width:100%}
+.co-ps-row{display:flex;align-items:center;gap:.65rem;font-size:.83rem;color:rgba(255,255,255,.35);transition:color .3s}
+.co-ps-row.done{color:rgba(255,255,255,.85)}
+.co-ps-row.cur{color:#fff}
+.co-ps-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.15);flex-shrink:0;transition:background .3s}
+.co-ps-row.done .co-ps-dot{background:var(--verde)}
+.co-ps-row.cur .co-ps-dot{background:var(--am);animation:coBlink 1s infinite}
+@keyframes coBlink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* Holograma do carro */
+.holo-scene{position:relative;width:240px;height:150px;margin:0 auto 1rem;display:flex;align-items:flex-end;justify-content:center}
+.holo-scene.mini{width:170px;height:110px}
+.holo-glow{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:190px;height:60px;background:radial-gradient(ellipse,rgba(62,207,116,.35) 0%,transparent 70%);filter:blur(6px);animation:holoPulse 2s ease-in-out infinite}
+@keyframes holoPulse{0%,100%{opacity:.5;transform:translateX(-50%) scale(1)}50%{opacity:.9;transform:translateX(-50%) scale(1.08)}}
+.holo-car{position:relative;z-index:2;filter:drop-shadow(0 0 10px rgba(62,207,116,.6))}
+.holo-scan{position:absolute;left:14%;right:14%;bottom:22px;height:2px;background:linear-gradient(90deg,transparent,var(--verde),transparent);animation:holoScan 2.2s ease-in-out infinite;opacity:.7}
+@keyframes holoScan{0%{bottom:22px;opacity:0}12%{opacity:.8}88%{opacity:.8}100%{bottom:92px;opacity:0}}
+.energy-particles{position:absolute;inset:0;pointer-events:none}
+.ep{position:absolute;bottom:6px;width:6px;height:6px;border-radius:50%;background:var(--verde);box-shadow:0 0 8px var(--verde);animation:epRise var(--d,1.5s) var(--del,0s) ease-in infinite}
+@keyframes epRise{0%{transform:translateY(0) scale(.5);opacity:0}20%{opacity:1}88%{opacity:.9}100%{transform:translateY(-90px) scale(.3);opacity:0}}
+
+.co-location{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(62,207,116,.1);border:1px solid rgba(62,207,116,.25);
+  color:var(--verde);padding:7px 16px;border-radius:50px;
+  font-size:.82rem;font-weight:600;margin-bottom:1.2rem;
+}
+.co-conn-badge{display:flex;align-items:center;gap:9px;padding:9px 20px;border-radius:50px;font-size:.88rem;font-weight:600;border:1px solid rgba(245,158,11,.35);background:rgba(245,158,11,.08);color:var(--am);margin:.2rem 0 1.2rem}
+.co-conn-badge.ok{border-color:rgba(62,207,116,.35);background:rgba(62,207,116,.08);color:var(--verde)}
+.co-badge-dot{width:9px;height:9px;border-radius:50%;background:var(--am);animation:coBlink 1.2s infinite}
+.co-conn-badge.ok .co-badge-dot{background:var(--verde);animation:none}
+.co-btn-sim{background:transparent;border:1.5px solid rgba(255,255,255,.18);color:rgba(255,255,255,.55);padding:10px 24px;border-radius:50px;font-family:var(--fb);font-size:.88rem;cursor:pointer;transition:all .2s}
+.co-btn-sim:hover{border-color:var(--verde);color:var(--verde)}
+
+.co-charge-body{display:grid;grid-template-columns:1fr 1fr;gap:2rem;width:100%;max-width:600px;text-align:left;margin-top:.5rem}
+.co-gauge-area{display:flex;flex-direction:column;align-items:center;gap:.7rem}
+.co-gauge-wrap{position:relative;width:180px;height:180px}
+svg.co-gauge-svg{transform:rotate(-90deg)}
+.co-g-bg{fill:none;stroke:rgba(255,255,255,.07);stroke-width:12}
+.co-g-fill{fill:none;stroke-width:12;stroke-linecap:round;stroke:var(--verde);transition:stroke-dashoffset .9s ease;filter:drop-shadow(0 0 8px rgba(62,207,116,.5))}
+.co-gauge-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.co-g-pct{font-family:var(--fd);font-size:2.1rem;font-weight:800}
+.co-g-label{font-size:.7rem;color:rgba(255,255,255,.45)}
+.co-g-kwh{font-family:var(--fd);font-size:.9rem;font-weight:700;color:var(--verde)}
+.co-timer{font-family:var(--fd);font-size:1.5rem;font-weight:800;color:var(--am)}
+.co-timer-lbl{font-size:.7rem;color:rgba(255,255,255,.35)}
+.co-spec-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:1.2rem}
+.co-spec-r{display:flex;justify-content:space-between;align-items:center;padding:.55rem 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:.8rem}
+.co-spec-r:last-child{border-bottom:none}
+.co-spec-r .sk{color:rgba(255,255,255,.4)}
+.co-spec-r .sv{font-weight:600}
+.co-spec-r .sv.green{color:var(--verde)}
+.co-spec-r .sv.amber{color:var(--am)}
+
+.co-done-circle{width:84px;height:84px;border-radius:50%;background:var(--ve);display:flex;align-items:center;justify-content:center;animation:coDonePop .55s cubic-bezier(.34,1.56,.64,1);margin-bottom:1rem}
+@keyframes coDonePop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.co-done-title{font-family:var(--fd);font-size:1.9rem;font-weight:800;margin-bottom:.4rem}
+.co-done-msg{color:rgba(255,255,255,.5);max-width:400px;line-height:1.6;font-size:.9rem;margin-bottom:1.4rem}
+.co-done-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:1.2rem;width:100%;margin-bottom:1.4rem}
+.co-dg-item{text-align:center}
+.co-dg-v{font-family:var(--fd);font-size:1.1rem;font-weight:800;color:var(--verde)}
+.co-dg-l{font-size:.66rem;color:rgba(255,255,255,.35);margin-top:2px}
+.co-btn-done-close{background:var(--ve);color:#fff;border:none;padding:12px 30px;border-radius:50px;font-family:var(--fb);font-size:.9rem;font-weight:700;cursor:pointer}
+
+@media(max-width:760px){
+  .co-pay-grid{grid-template-columns:1fr}
+  .co-charge-body{grid-template-columns:1fr}
+  .co-done-grid{grid-template-columns:1fr 1fr}
+}
+
+@media(max-width:900px){
+  .section-row,.section-row.thirds{grid-template-columns:1fr}
+  .car-grid{grid-template-columns:1fr 1fr}
+  .fin-compare{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .corp-header-inner{flex-direction:column}
+}
+
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="corp-nav">
+  <a class="corp-nav-logo" href="corp.html">
+    <span class="main"><span class="l">Lumos</span></span>
+    <div class="corp-tag-pill">Corp · Usuário</div>
+  </a>
+  <div class="corp-nav-right">
+    <div class="company-chip">
+      <span class="icon">🏢</span>
+      <div>
+        <div class="name" id="nav-empresa">Empresa</div>
+        <div class="plan">Conta de colaborador</div>
+      </div>
+    </div>
+    <a class="btn-voltar-lumos" href="home.html">← Voltar ao Lumos</a>
+    <button class="btn-logout-corp" onclick="doUserLogout()">Sair</button>
+  </div>
+</nav>
+
+<main class="corp-main">
+
+  <!-- HEADER -->
+  <div class="corp-header">
+    <div class="corp-header-bg"></div>
+    <div class="corp-header-inner">
+      <div class="corp-header-text">
+        <div class="eyebrow"><span class="live-dot"></span> Região Metropolitana de São Paulo</div>
+        <h1>Olá, <span id="header-nome">Colaborador(a)</span></h1>
+        <p id="header-sub">Acompanhe seu veículo, pontos de recarga próximos e seus benefícios Lumos.</p>
+      </div>
+      <div class="corp-header-meta">
+        <div class="meta-chip">
+          <div class="mc-val">🟢 Ativo</div>
+          <div class="mc-lab">Status da conta</div>
+        </div>
+        <div class="meta-chip">
+          <div class="mc-val" id="header-cargo">—</div>
+          <div class="mc-lab">Cargo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="corp-content">
+
+    <!-- ROW 1: Carro + Pontos de recarga -->
+    <div class="section-row">
+
+      <!-- CONDIÇÕES DO CARRO -->
+      <div class="panel fade-in">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span class="icon">🚗</span>
+            <div>
+              <h3>Meu veículo</h3>
+              <p>Condições do carro da empresa</p>
+            </div>
+          </div>
+          <div class="panel-badge">Em ordem</div>
+        </div>
+        <div class="panel-body">
+          <div class="car-hero">
+            <div class="car-hero-icon">🚙</div>
+            <div class="car-hero-info">
+              <div class="car-name">BYD Dolphin</div>
+              <div class="car-plate">Placa QLM-4F21 · Frota Lumos Fleet</div>
+            </div>
+            <div class="car-hero-status">
+              <div class="st-dot"><span class="sdot"></span> Disponível</div>
+            </div>
+          </div>
+          <div class="car-grid">
+            <div class="car-stat">
+              <div class="cs-lab">Autonomia atual</div>
+              <div class="cs-val">312 km</div>
+              <div class="battery-track"><div class="battery-fill" style="width:82%"></div></div>
+            </div>
+            <div class="car-stat">
+              <div class="cs-lab">Bateria</div>
+              <div class="cs-val">82%</div>
+              <div class="battery-track"><div class="battery-fill" style="width:82%"></div></div>
+            </div>
+            <div class="car-stat">
+              <div class="cs-lab">Km rodados (mês)</div>
+              <div class="cs-val">1.190 km</div>
+            </div>
+            <div class="car-stat">
+              <div class="cs-lab">Próxima revisão</div>
+              <div class="cs-val" style="font-size:.95rem">08/09/2026</div>
+            </div>
+          </div>
+          <div class="car-location">
+            <span>📍</span> <span id="car-loc-text">Última recarga: Totem Lumos · Pinheiros — hoje às 07:40</span>
+          </div>
+          <button class="btn-carregar-user" onclick="openCharge()">⚡ Carregar meu veículo agora</button>
+        </div>
+      </div>
+
+      <!-- PONTOS DE CARREGAMENTO -->
+      <div class="panel fade-in">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span class="icon">📍</span>
+            <div>
+              <h3>Pontos de recarga perto de você</h3>
+              <p>Região Metropolitana de São Paulo</p>
+            </div>
+          </div>
+          <div class="panel-badge">5 próximos</div>
+        </div>
+        <div class="panel-body" style="padding-top:1.2rem">
+          <div class="point-card">
+            <div class="point-icon">⚡</div>
+            <div class="point-info">
+              <div class="p-name">Totem Lumos · Pinheiros</div>
+              <div class="p-sub">Av. Faria Lima, 1.800</div>
+            </div>
+            <div class="point-right">
+              <div class="p-dist">1,4 km</div>
+              <div class="p-stat livre">● Livre</div>
+            </div>
+          </div>
+          <div class="point-card">
+            <div class="point-icon">⚡</div>
+            <div class="point-info">
+              <div class="p-name">Totem Lumos · Moema</div>
+              <div class="p-sub">Av. Ibirapuera, 950</div>
+            </div>
+            <div class="point-right">
+              <div class="p-dist">3,1 km</div>
+              <div class="p-stat ocupado">● Ocupado</div>
+            </div>
+          </div>
+          <div class="point-card">
+            <div class="point-icon">⚡</div>
+            <div class="point-info">
+              <div class="p-name">Totem Lumos · Santo André</div>
+              <div class="p-sub">Av. Industrial, 420</div>
+            </div>
+            <div class="point-right">
+              <div class="p-dist">14,6 km</div>
+              <div class="p-stat livre">● Livre</div>
+            </div>
+          </div>
+          <div class="point-card">
+            <div class="point-icon">⚡</div>
+            <div class="point-info">
+              <div class="p-name">Totem Lumos · Ipiranga</div>
+              <div class="p-sub">Av. Nazaré, 210</div>
+            </div>
+            <div class="point-right">
+              <div class="p-dist">8,2 km</div>
+              <div class="p-stat livre">● Livre</div>
+            </div>
+          </div>
+          <div class="point-card">
+            <div class="point-icon">⚡</div>
+            <div class="point-info">
+              <div class="p-name">Totem Lumos · Guarulhos</div>
+              <div class="p-sub">Av. Salgado Filho, 3.400</div>
+            </div>
+            <div class="point-right">
+              <div class="p-dist">19,8 km</div>
+              <div class="p-stat ocupado">● Ocupado</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- MAPA DE SÃO PAULO -->
+    <div class="section-row full">
+      <div class="panel fade-in">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span class="icon">🗺️</span>
+            <div>
+              <h3>Mapa de recarga · Região Metropolitana de SP</h3>
+              <p>Totens Lumos mais próximos da sua localização</p>
+            </div>
+          </div>
+          <div class="panel-badge">📍 Você está em Pinheiros</div>
+        </div>
+        <div class="sp-map-wrap">
+          <svg class="sp-map-svg" viewBox="0 0 400 260" id="map-main"></svg>
+          <div class="map-legend">
+            <div class="map-legend-item"><span class="map-legend-dot" style="background:var(--verde)"></span> Ponto disponível</div>
+            <div class="map-legend-item"><span class="map-legend-dot" style="background:var(--am)"></span> Carregando agora</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 2: Cadastro + Finanças -->
+    <div class="section-row">
+
+      <!-- CADASTRO -->
+      <div class="panel fade-in">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span class="icon">👤</span>
+            <div>
+              <h3>Meu cadastro</h3>
+              <p>Dados vinculados à sua conta corporativa</p>
+            </div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="cad-head">
+            <div class="avatar-big" id="cad-avatar">--</div>
+            <div>
+              <div class="ch-name" id="cad-nome-head">—</div>
+              <div class="ch-cargo" id="cad-cargo-head">—</div>
+            </div>
+          </div>
+          <div class="cad-row">
+            <span class="cad-lab">Nome completo</span>
+            <span class="cad-val" id="cad-nome">—</span>
+          </div>
+          <div class="cad-row">
+            <span class="cad-lab">Empresa</span>
+            <span class="cad-val" id="cad-empresa">—</span>
+          </div>
+          <div class="cad-row">
+            <span class="cad-lab">Cargo</span>
+            <span class="cad-val" id="cad-cargo">—</span>
+          </div>
+          <div class="cad-row">
+            <span class="cad-lab">E-mail</span>
+            <span class="cad-val" id="cad-email">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FINANÇAS -->
+      <div class="panel fade-in">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span class="icon">💰</span>
+            <div>
+              <h3>Minhas finanças</h3>
+              <p>Economia e despesas vs. mês passado</p>
+            </div>
+          </div>
+          <div class="panel-badge">Julho → Agosto</div>
+        </div>
+        <div class="panel-body">
+          <div class="fin-compare">
+            <div class="fin-box eco">
+              <div class="fb-lab">Economia (Ago)</div>
+              <div class="fb-val">R$ 612</div>
+              <div class="fb-delta up">↑ 9% vs. julho</div>
+            </div>
+            <div class="fin-box desp">
+              <div class="fb-lab">Gasto com recarga</div>
+              <div class="fb-val">R$ 148</div>
+              <div class="fb-delta down">↓ 6% vs. julho</div>
+            </div>
+          </div>
+          <div class="fin-list">
+            <div class="fin-list-item">
+              <span class="fli-lab">🟢 Economia vs. gasolina (Ago)</span>
+              <span class="fli-val" style="color:var(--verde)">R$ 612</span>
+            </div>
+            <div class="fin-list-item">
+              <span class="fli-lab">🟢 Economia vs. gasolina (Jul)</span>
+              <span class="fli-val">R$ 561</span>
+            </div>
+            <div class="fin-list-item">
+              <span class="fli-lab">⚡ Gasto com recarga (Ago)</span>
+              <span class="fli-val">R$ 148</span>
+            </div>
+            <div class="fin-list-item">
+              <span class="fli-lab">⚡ Gasto com recarga (Jul)</span>
+              <span class="fli-val">R$ 158</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+<!-- ===== CHARGE OVERLAY ===== -->
+<div class="charge-overlay" id="charge-overlay">
+  <div class="co-topbar">
+    <div class="co-title">⚡ Carregar veículo · <span>Lumos Corp</span></div>
+    <button class="co-close" onclick="closeCharge()">✕</button>
+  </div>
+  <div class="co-inner">
+    <div class="co-stepbar">
+      <div class="cosd active" id="cosd1">1</div><div class="cosl"></div>
+      <div class="cosd" id="cosd2">2</div><div class="cosl"></div>
+      <div class="cosd" id="cosd3">3</div><div class="cosl"></div>
+      <div class="cosd" id="cosd4">4</div>
+    </div>
+
+    <!-- SCREEN 1: PAGAMENTO -->
+    <div class="co-screen active" id="co-sc1">
+      <h2>Escolha o método</h2>
+      <p class="co-sub">Selecione como o custo desta recarga será debitado do plano corporativo.</p>
+      <div class="co-pay-grid">
+        <div class="co-pay-card" onclick="coSelectPay('credito',this)"><span class="pi">💼</span><h4>Crédito Corporativo</h4><p>Saldo: R$ 12.450,00</p></div>
+        <div class="co-pay-card" onclick="coSelectPay('cartao',this)"><span class="pi">💳</span><h4>Cartão da Empresa</h4><p>~4 segundos</p></div>
+        <div class="co-pay-card" onclick="coSelectPay('boleto',this)"><span class="pi">🧾</span><h4>Boleto Empresarial</h4><p>~7 segundos</p></div>
+      </div>
+      <button class="co-btn-go" id="co-btn-continuar" disabled onclick="coStartProcessing()">Continuar →</button>
+    </div>
+
+    <!-- SCREEN 2: PROCESSANDO -->
+    <div class="co-screen" id="co-sc2">
+      <div class="co-spinner"></div>
+      <div class="co-proc-title" id="co-proc-title">Processando...</div>
+      <div class="co-pbar-track"><div class="co-pbar-fill" id="co-pbar"></div></div>
+      <div class="co-proc-steps" id="co-proc-steps"></div>
+    </div>
+
+    <!-- SCREEN 3: CONECTAR + HOLOGRAMA -->
+    <div class="co-screen" id="co-sc3">
+      <div class="holo-scene">
+        <div class="holo-glow"></div>
+        <svg class="holo-car" width="220" height="120" viewBox="0 0 220 120">
+          <defs>
+            <filter id="holoGlow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="3" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <path d="M20 82 Q20 58 44 52 L70 52 Q84 32 110 32 L148 32 Q168 32 178 52 L194 55 Q206 58 206 72 L206 82 Q206 92 196 92 L184 92 Q184 102 174 102 Q164 102 164 92 L66 92 Q66 102 56 102 Q46 102 46 92 L26 92 Q20 92 20 82 Z"
+            fill="rgba(62,207,116,.1)" stroke="var(--verde)" stroke-width="2" filter="url(#holoGlow)"/>
+          <circle cx="56" cy="92" r="12" fill="none" stroke="var(--verde)" stroke-width="2"/>
+          <circle cx="174" cy="92" r="12" fill="none" stroke="var(--verde)" stroke-width="2"/>
+          <line x1="70" y1="52" x2="82" y2="34" stroke="var(--verde)" stroke-width="1.5" opacity=".6"/>
+          <line x1="148" y1="32" x2="160" y2="52" stroke="var(--verde)" stroke-width="1.5" opacity=".6"/>
+        </svg>
+        <div class="holo-scan"></div>
+        <div class="energy-particles">
+          <span class="ep" style="left:32%;--d:1.4s;--del:0s"></span>
+          <span class="ep" style="left:44%;--d:1.6s;--del:.3s"></span>
+          <span class="ep" style="left:56%;--d:1.3s;--del:.6s"></span>
+          <span class="ep" style="left:66%;--d:1.5s;--del:.9s"></span>
+          <span class="ep" style="left:50%;--d:1.7s;--del:.2s"></span>
+        </div>
+      </div>
+      <div class="co-location">📍 <span id="co-loc-text3">Totem Lumos · Pinheiros — Av. Faria Lima, 1.800</span></div>
+      <div class="sp-map-wrap compact">
+        <svg class="sp-map-svg" viewBox="0 0 400 260" id="map-mini"></svg>
+      </div>
+      <h2>Conecte seu veículo</h2>
+      <p class="co-sub" id="co-conn-msg">O carregador está pronto. Conecte o cabo ao veículo para iniciar a recarga.</p>
+      <div class="co-conn-badge" id="co-conn-badge"><div class="co-badge-dot"></div>Aguardando conexão...</div>
+      <button class="co-btn-sim" onclick="coSimulateConnect()">Simular conexão do veículo</button>
+    </div>
+
+    <!-- SCREEN 4: CARREGANDO -->
+    <div class="co-screen" id="co-sc4">
+      <div class="holo-scene mini">
+        <div class="holo-glow"></div>
+        <svg class="holo-car" width="150" height="82" viewBox="0 0 220 120">
+          <path d="M20 82 Q20 58 44 52 L70 52 Q84 32 110 32 L148 32 Q168 32 178 52 L194 55 Q206 58 206 72 L206 82 Q206 92 196 92 L184 92 Q184 102 174 102 Q164 102 164 92 L66 92 Q66 102 56 102 Q46 102 46 92 L26 92 Q20 92 20 82 Z"
+            fill="rgba(62,207,116,.1)" stroke="var(--verde)" stroke-width="2"/>
+          <circle cx="56" cy="92" r="12" fill="none" stroke="var(--verde)" stroke-width="2"/>
+          <circle cx="174" cy="92" r="12" fill="none" stroke="var(--verde)" stroke-width="2"/>
+        </svg>
+        <div class="energy-particles">
+          <span class="ep" style="left:36%;--d:1.2s;--del:0s"></span>
+          <span class="ep" style="left:50%;--d:1.4s;--del:.35s"></span>
+          <span class="ep" style="left:62%;--d:1.15s;--del:.6s"></span>
+        </div>
+      </div>
+      <div class="co-location">📍 <span id="co-loc-text4">Totem Lumos · Pinheiros — Av. Faria Lima, 1.800</span></div>
+      <div class="co-charge-body">
+        <div class="co-gauge-area">
+          <div class="co-gauge-wrap">
+            <svg class="co-gauge-svg" width="180" height="180" viewBox="0 0 180 180">
+              <circle class="co-g-bg" cx="90" cy="90" r="76"/>
+              <circle class="co-g-fill" id="co-g-fill" cx="90" cy="90" r="76" stroke-dasharray="478" stroke-dashoffset="478"/>
+            </svg>
+            <div class="co-gauge-center">
+              <div class="co-g-pct" id="co-g-pct">0%</div>
+              <div class="co-g-label">bateria</div>
+            </div>
+          </div>
+          <div class="co-g-kwh" id="co-g-kwh">0.0 kWh adicionados</div>
+          <div class="co-timer-lbl">Tempo restante</div>
+          <div class="co-timer" id="co-g-timer">--:--</div>
+        </div>
+        <div class="co-spec-box">
+          <div class="co-spec-r"><span class="sk">Veículo</span><span class="sv">BYD Dolphin</span></div>
+          <div class="co-spec-r"><span class="sk">Potência</span><span class="sv green">11 kW (AC)</span></div>
+          <div class="co-spec-r"><span class="sk">Fonte</span><span class="sv green">Solar + Lynx</span></div>
+          <div class="co-spec-r"><span class="sk">Tarifa corporativa</span><span class="sv">R$ 0,72/kWh</span></div>
+          <div class="co-spec-r"><span class="sk">Custo atual</span><span class="sv amber" id="co-sp-custo">R$ 0,00</span></div>
+          <div class="co-spec-r"><span class="sk">CO₂ evitado</span><span class="sv green" id="co-sp-co2">0,00 kg</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 5: CONCLUÍDO -->
+    <div class="co-screen" id="co-sc5">
+      <div class="co-done-circle">
+        <svg width="42" height="42" viewBox="0 0 48 48" fill="none">
+          <path d="M10 24l10 10 18-18" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="co-done-title">Recarga concluída!</div>
+      <p class="co-done-msg">O veículo foi recarregado no <strong id="co-done-loc">Totem Lumos · Pinheiros</strong>. Custo debitado do plano corporativo. ⚡🌱</p>
+      <div class="co-done-grid">
+        <div class="co-dg-item"><div class="co-dg-v" id="co-ds-kwh">—</div><div class="co-dg-l">kWh adicionados</div></div>
+        <div class="co-dg-item"><div class="co-dg-v" id="co-ds-time">—</div><div class="co-dg-l">Duração</div></div>
+        <div class="co-dg-item"><div class="co-dg-v" id="co-ds-custo">—</div><div class="co-dg-l">Valor debitado</div></div>
+        <div class="co-dg-item"><div class="co-dg-v" id="co-ds-co2">—</div><div class="co-dg-l">CO₂ evitado</div></div>
+      </div>
+      <button class="co-btn-done-close" onclick="closeCharge()">Voltar à minha conta</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function loadUser() {
+  let user;
+  try { user = JSON.parse(localStorage.getItem('lm_corp_user')); } catch (e) { user = null; }
+  if (!user) {
+    // Dados de exemplo caso a página seja acessada diretamente
+    user = { nome: 'Colaborador(a) Lumos', email: 'colaborador@empresa.com', cargo: 'Motorista', empresa: 'Dash Entregas', initials: 'CL' };
+  }
+  document.getElementById('nav-empresa').textContent = user.empresa || 'Empresa';
+  document.getElementById('header-nome').textContent = (user.nome || 'Colaborador(a)').split(' ')[0];
+  document.getElementById('header-cargo').textContent = user.cargo || '—';
+  document.getElementById('header-sub').textContent = `Acompanhe seu veículo, pontos de recarga próximos e seus benefícios Lumos na ${user.empresa || 'sua empresa'}.`;
+  document.getElementById('cad-avatar').textContent = user.initials || '--';
+  document.getElementById('cad-nome-head').textContent = user.nome || '—';
+  document.getElementById('cad-cargo-head').textContent = user.cargo || '—';
+  document.getElementById('cad-nome').textContent = user.nome || '—';
+  document.getElementById('cad-empresa').textContent = user.empresa || '—';
+  document.getElementById('cad-cargo').textContent = user.cargo || '—';
+  document.getElementById('cad-email').textContent = user.email || '—';
+}
+
+function doUserLogout() {
+  localStorage.removeItem('lm_corp_user');
+  window.location.href = 'corp.html';
+}
+
+loadUser();
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// ===== MAPA DE SÃO PAULO =====
+const MAP_MARKERS = [
+  { id:'pinheiros',   name:'Pinheiros',    x:118, y:128 },
+  { id:'moema',       name:'Moema',        x:190, y:168 },
+  { id:'ipiranga',    name:'Ipiranga',     x:205, y:208 },
+  { id:'santoandre',  name:'Santo André',  x:292, y:212 },
+  { id:'guarulhos',   name:'Guarulhos',    x:298, y:58  },
+];
+const ACTIVE_LOCATION = 'pinheiros';
+
+function renderMap(svgId) {
+  const svg = document.getElementById(svgId);
+  if (!svg) return;
+  let html = '<path class="map-region" d="M40 70 Q15 130 55 190 Q35 245 115 255 Q195 270 270 235 Q355 210 375 140 Q390 75 320 40 Q245 5 165 25 Q90 15 40 70Z"/>';
+  MAP_MARKERS.forEach(m => {
+    const active = m.id === ACTIVE_LOCATION;
+    html += `<g class="map-pin${active ? ' active' : ''}" transform="translate(${m.x},${m.y})">
+      <circle class="map-pin-ring" r="9"/>
+      <circle class="map-pin-dot" r="6"/>
+      <text class="map-pin-label" x="0" y="-14" text-anchor="middle">${m.name}</text>
+    </g>`;
+  });
+  svg.innerHTML = html;
+}
+renderMap('map-main');
+
+// ===== SISTEMA DE CARREGAMENTO (mesmo fluxo do Lumos, cores Corp) =====
+const CO_SCREENS = ['co-sc1','co-sc2','co-sc3','co-sc4','co-sc5'];
+const CO_LOCATION = 'Totem Lumos · Pinheiros — Av. Faria Lima, 1.800';
+let coPayMethod = null;
+let coChargeKwh = 0, coChargeSec = 0, coChargeInterval = null;
+let coBatIni = 82, coTotalKwh = 22;
+
+function openCharge() {
+  document.getElementById('charge-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  renderMap('map-mini');
+  coShowScreen('co-sc1');
+  document.getElementById('car-loc-text').textContent = 'Carregando agora em: ' + CO_LOCATION;
+}
+
+function closeCharge() {
+  document.getElementById('charge-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  clearInterval(coChargeInterval);
+  coPayMethod = null;
+  document.querySelectorAll('.co-pay-card').forEach(c => c.classList.remove('selected'));
+  const btn = document.getElementById('co-btn-continuar');
+  if (btn) btn.disabled = true;
+  coShowScreen('co-sc1');
+}
+
+function coShowScreen(id) {
+  CO_SCREENS.forEach(s => document.getElementById(s).classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const idx = CO_SCREENS.indexOf(id);
+  for (let i = 1; i <= 4; i++) {
+    const dot = document.getElementById('cosd' + i);
+    if (!dot) continue;
+    dot.classList.remove('active', 'done');
+    if (i < idx + 1) dot.classList.add('done');
+    else if (i === idx + 1) dot.classList.add('active');
+  }
+}
+
+function coSelectPay(method, el) {
+  document.querySelectorAll('.co-pay-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  coPayMethod = method;
+  document.getElementById('co-btn-continuar').disabled = false;
+}
+
+const CO_PAY_META = {
+  credito: { title: 'Verificando crédito corporativo...', dur: 1200, steps: ['Verificar saldo do plano', 'Debitar crédito', 'Confirmado!'] },
+  cartao:  { title: 'Processando cartão da empresa...',   dur: 2600, steps: ['Comunicar operadora', 'Autorizar transação', 'Aprovado!'] },
+  boleto:  { title: 'Gerando boleto empresarial...',      dur: 3400, steps: ['Gerar código', 'Enviar para o financeiro', 'Confirmado!'] }
+};
+
+function coStartProcessing() {
+  if (!coPayMethod) return;
+  coShowScreen('co-sc2');
+  const meta = CO_PAY_META[coPayMethod];
+  document.getElementById('co-proc-title').textContent = meta.title;
+
+  const stepsEl = document.getElementById('co-proc-steps');
+  stepsEl.innerHTML = meta.steps.map((s, i) =>
+    `<div class="co-ps-row ${i === 0 ? 'cur' : ''}" id="cops${i}"><div class="co-ps-dot"></div>${s}</div>`
+  ).join('');
+
+  const pbar = document.getElementById('co-pbar');
+  pbar.style.transition = 'none'; pbar.style.width = '0%';
+  setTimeout(() => { pbar.style.transition = `width ${meta.dur}ms linear`; pbar.style.width = '100%'; }, 60);
+
+  const total = meta.steps.length;
+  const interval = meta.dur / total;
+  let cur = 0;
+  const iv = setInterval(() => {
+    const prev = document.getElementById('cops' + cur);
+    if (prev) { prev.classList.remove('cur'); prev.classList.add('done'); }
+    cur++;
+    if (cur < total) {
+      const next = document.getElementById('cops' + cur);
+      if (next) next.classList.add('cur');
+    } else {
+      clearInterval(iv);
+    }
+  }, interval);
+
+  setTimeout(() => coShowScreen('co-sc3'), meta.dur + 400);
+}
+
+function coSimulateConnect() {
+  const badge = document.getElementById('co-conn-badge');
+  badge.innerHTML = '<div class="co-badge-dot"></div>Conectando...';
+  setTimeout(() => {
+    badge.className = 'co-conn-badge ok';
+    badge.innerHTML = '<div class="co-badge-dot"></div>Veículo conectado!';
+    document.getElementById('co-conn-msg').textContent = 'Veículo detectado com sucesso. Iniciando sessão de recarga...';
+    setTimeout(coStartCharge, 1300);
+  }, 1800);
+}
+
+function coStartCharge() {
+  coShowScreen('co-sc4');
+  coChargeKwh = 0; coChargeSec = 0;
+  const totalSecs = coTotalKwh * 6;
+  const CIRC = 478;
+
+  coChargeInterval = setInterval(() => {
+    coChargeSec++;
+    coChargeKwh = Math.min(coTotalKwh, coChargeSec * (coTotalKwh / totalSecs));
+    const batCur = Math.min(100, coBatIni + (coChargeKwh / coTotalKwh) * (100 - coBatIni));
+    const remaining = Math.max(0, Math.round((totalSecs - coChargeSec) / 5));
+    const secs = Math.max(0, totalSecs - coChargeSec) % 60;
+    const pctBar = coChargeKwh / coTotalKwh;
+
+    document.getElementById('co-g-fill').style.strokeDashoffset = CIRC - (CIRC * pctBar);
+    document.getElementById('co-g-pct').textContent = Math.round(batCur) + '%';
+    document.getElementById('co-g-kwh').textContent = coChargeKwh.toFixed(1) + ' kWh adicionados';
+    document.getElementById('co-g-timer').textContent = String(remaining).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+    document.getElementById('co-sp-custo').textContent = 'R$ ' + (coChargeKwh * 0.72).toFixed(2);
+    document.getElementById('co-sp-co2').textContent = (coChargeKwh * 0.21).toFixed(2) + ' kg';
+
+    if (coChargeKwh >= coTotalKwh) {
+      clearInterval(coChargeInterval);
+      setTimeout(coFinishCharge, 800);
+    }
+  }, 180);
+}
+
+function coFinishCharge() {
+  const dur = Math.round(coChargeSec / 5);
+  const custo = (coChargeKwh * 0.72).toFixed(2);
+  const co2 = (coChargeKwh * 0.21).toFixed(2);
+  document.getElementById('co-ds-kwh').textContent = coChargeKwh.toFixed(1);
+  document.getElementById('co-ds-time').textContent = dur + ' min';
+  document.getElementById('co-ds-custo').textContent = 'R$ ' + custo;
+  document.getElementById('co-ds-co2').textContent = co2 + ' kg';
+  coShowScreen('co-sc5');
+
+  document.getElementById('car-loc-text').textContent = 'Última recarga: ' + CO_LOCATION + ' — agora mesmo';
+  const newBat = Math.min(100, Math.round(coBatIni + (coChargeKwh / coTotalKwh) * (100 - coBatIni)));
+  document.querySelectorAll('.battery-fill').forEach(el => el.style.width = newBat + '%');
+  const batValEls = document.querySelectorAll('.car-stat .cs-val');
+  if (batValEls[1]) batValEls[1].textContent = newBat + '%';
+  coBatIni = newBat;
+}
+</script>
+</body>
+</html>

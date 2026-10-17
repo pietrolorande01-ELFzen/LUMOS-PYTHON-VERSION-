@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumos Corp — Dash Entregas</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --verde:#3ecf74;--ve:#1a9e50;--vc:#d4f5e2;--vu:#f0fdf6;
+  --am:#f59e0b;--amc:#fef3c7;--vm:#ef4444;--vmc:#fee2e2;
+  --corp:#0f172a;--corp2:#1e293b;--corp3:#334155;
+  --accent:#3ecf74;--accent2:#1a9e50;
+  --br:#fff;--cl:#f7f9f8;--ct:#4a5568;--cb:#e2e8f0;--ps:#1a202c;
+  --fd:'Inter',sans-serif;--fb:'Inter',sans-serif;--flogo:'Syne',sans-serif;
+  --r:14px;--rl:22px;--sc:0 2px 16px rgba(0,0,0,.07);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--corp);color:#fff;min-height:100vh}
+
+/* ===== LOGIN SCREEN ===== */
+#corp-login{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--corp);
+  display:flex;align-items:center;justify-content:center;
+  padding:2rem;
+}
+#corp-login.hidden{display:none}
+.login-back{
+  position:absolute;top:1.6rem;left:1.6rem;z-index:3;
+  display:flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.6);padding:7px 15px;border-radius:50px;
+  font-family:var(--fb);font-size:.8rem;font-weight:600;
+  text-decoration:none;transition:all .2s;
+}
+.login-back:hover{border-color:var(--verde);color:var(--verde);background:rgba(62,207,116,.08)}
+
+.login-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.login-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(62,207,116,.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(62,207,116,.06) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+.login-glow{
+  position:absolute;top:20%;left:50%;transform:translateX(-50%);
+  width:700px;height:400px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(26,158,80,.15) 0%,transparent 65%);
+  animation:glowPulse 5s ease-in-out infinite;
+}
+@keyframes glowPulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.08)}}
+
+.corp-login-card{
+  position:relative;z-index:2;
+  width:100%;max-width:460px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:28px;padding:2.8rem;
+  backdrop-filter:blur(16px);
+  box-shadow:0 32px 80px rgba(0,0,0,.4);
+}
+.corp-brand{display:flex;align-items:center;gap:10px;margin-bottom:2rem}
+.corp-brand-logo{font-family:var(--flogo);font-size:1.6rem;font-weight:800;line-height:1}
+.corp-brand-logo .l{color:var(--verde)}
+.corp-badge{
+  background:rgba(62,207,116,.15);border:1px solid rgba(62,207,116,.3);
+  color:var(--verde);font-size:.7rem;font-weight:700;letter-spacing:.1em;
+  padding:3px 10px;border-radius:50px;text-transform:uppercase;
+}
+.corp-login-card h2{font-family:var(--fd);font-size:1.4rem;font-weight:800;margin-bottom:.4rem}
+.corp-login-card .sub{color:rgba(255,255,255,.45);font-size:.88rem;margin-bottom:1.8rem;line-height:1.6}
+
+.fg{margin-bottom:1.1rem}
+.fg label{display:block;font-size:.78rem;font-weight:600;margin-bottom:5px;color:rgba(255,255,255,.6);letter-spacing:.04em;text-transform:uppercase}
+.fg input{
+  width:100%;padding:12px 15px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:12px;font-family:var(--fb);font-size:.93rem;
+  color:#fff;outline:none;transition:border-color .2s,background .2s;
+}
+.fg input::placeholder{color:rgba(255,255,255,.25)}
+.fg input:focus{border-color:var(--ve);background:rgba(26,158,80,.08)}
+
+.btn-corp-enter{
+  width:100%;padding:14px;
+  background:linear-gradient(135deg,var(--ve),var(--verde));
+  color:#fff;border:none;border-radius:50px;
+  font-family:var(--fb);font-size:1rem;font-weight:700;cursor:pointer;
+  transition:transform .2s,box-shadow .2s;
+  box-shadow:0 8px 28px rgba(26,158,80,.35);margin-top:.5rem;
+  position:relative;overflow:hidden;
+}
+.btn-corp-enter:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(26,158,80,.45)}
+.btn-corp-enter:active{transform:scale(.97)}
+.shine{
+  position:absolute;top:0;left:-80%;width:50%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
+  transform:skewX(-20deg);transition:left .5s;pointer-events:none;
+}
+.btn-corp-enter:hover .shine{left:130%}
+.login-note{text-align:center;margin-top:1rem;font-size:.78rem;color:rgba(255,255,255,.3)}
+
+/* Type toggle (Empresa / Usuário) */
+.type-toggle{
+  display:flex;gap:6px;margin-bottom:1.5rem;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;padding:5px;
+}
+.type-btn{
+  flex:1;padding:10px 8px;background:transparent;border:none;border-radius:10px;
+  color:rgba(255,255,255,.5);font-family:var(--fb);font-size:.85rem;font-weight:600;
+  cursor:pointer;transition:all .2s;
+}
+.type-btn:hover{color:rgba(255,255,255,.8)}
+.type-btn.active{
+  background:linear-gradient(135deg,var(--ve),var(--verde));color:#fff;
+  box-shadow:0 4px 16px rgba(26,158,80,.35);
+}
+#fields-usuario{display:none}
+
+/* Loading overlay */
+#corp-loading{
+  display:none;position:fixed;inset:0;z-index:99999;
+  background:var(--corp);flex-direction:column;align-items:center;justify-content:center;gap:1.4rem;
+}
+#corp-loading.show{display:flex}
+.ll-logo{font-family:var(--flogo);font-size:1.9rem;font-weight:800}
+.ll-logo .l{color:var(--verde)}
+.ll-logo .corp-tag{font-size:.9rem;color:rgba(255,255,255,.4);font-weight:400;margin-left:4px}
+.ll-bar{width:260px;height:4px;background:rgba(255,255,255,.08);border-radius:50px;overflow:hidden}
+.ll-fill{height:100%;background:linear-gradient(90deg,var(--ve),var(--verde));border-radius:50px;width:0;animation:llFill 2s ease forwards}
+@keyframes llFill{to{width:100%}}
+.ll-msg{font-size:.82rem;color:rgba(255,255,255,.4)}
+
+/* ===== DASHBOARD ===== */
+#corp-app{display:none}
+#corp-app.show{display:block}
+
+/* TOP NAV */
+.corp-nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:rgba(15,23,42,.94);backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(255,255,255,.07);
+  padding:0 5vw;height:64px;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+}
+.corp-nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.corp-nav-logo .main{font-family:var(--flogo);font-size:1.25rem;font-weight:800;color:#fff}
+.corp-nav-logo .main .l{color:var(--verde)}
+.corp-tag-pill{
+  background:rgba(62,207,116,.12);border:1px solid rgba(62,207,116,.25);
+  color:var(--verde);font-size:.68rem;font-weight:700;letter-spacing:.1em;
+  padding:2px 9px;border-radius:50px;text-transform:uppercase;
+}
+.corp-nav-right{display:flex;align-items:center;gap:1rem}
+.company-chip{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+  padding:6px 14px;border-radius:50px;
+}
+.company-chip .icon{font-size:1rem}
+.company-chip .name{font-size:.82rem;font-weight:600;color:rgba(255,255,255,.85)}
+.company-chip .plan{font-size:.7rem;color:var(--verde);font-weight:700}
+.btn-logout-corp{
+  background:transparent;border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.5);padding:6px 14px;border-radius:50px;
+  font-family:var(--fb);font-size:.78rem;cursor:pointer;transition:all .2s;
+}
+.btn-logout-corp:hover{border-color:var(--vm);color:var(--vm)}
+.btn-voltar-lumos{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(62,207,116,.1);border:1px solid rgba(62,207,116,.25);
+  color:var(--verde);padding:6px 14px;border-radius:50px;
+  font-family:var(--fb);font-size:.78rem;font-weight:600;
+  text-decoration:none;cursor:pointer;transition:all .2s;
+}
+.btn-voltar-lumos:hover{background:rgba(62,207,116,.18);border-color:rgba(62,207,116,.45)}
+
+/* MAIN LAYOUT */
+.corp-main{padding-top:64px;min-height:100vh;background:var(--corp)}
+
+/* HEADER BAND */
+.corp-header{
+  background:linear-gradient(135deg,var(--corp2) 0%,rgba(26,158,80,.08) 100%);
+  padding:2.5rem 5vw;border-bottom:1px solid rgba(255,255,255,.06);
+  position:relative;overflow:hidden;
+}
+.corp-header-bg{
+  position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 80% 50%,rgba(62,207,116,.07) 0%,transparent 60%);
+}
+.corp-header-inner{position:relative;z-index:1;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1.5rem}
+.corp-header-text .eyebrow{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(62,207,116,.1);border:1px solid rgba(62,207,116,.2);
+  color:var(--verde);font-size:.72rem;font-weight:700;letter-spacing:.1em;
+  padding:4px 12px;border-radius:50px;text-transform:uppercase;margin-bottom:.8rem;
+}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--verde);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.5)}}
+.corp-header-text h1{font-family:var(--fd);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;line-height:1.15}
+.corp-header-text h1 span{color:var(--verde)}
+.corp-header-text p{color:rgba(255,255,255,.5);font-size:.92rem;margin-top:.4rem}
+.corp-header-meta{display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
+.meta-chip{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+  padding:8px 16px;border-radius:12px;text-align:center;
+}
+.meta-chip .mc-val{font-family:var(--fd);font-size:1.1rem;font-weight:800;color:#fff}
+.meta-chip .mc-lab{font-size:.7rem;color:rgba(255,255,255,.4);margin-top:1px}
+
+/* KPI STRIP */
+.kpi-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:rgba(255,255,255,.06);
+  border-top:1px solid rgba(255,255,255,.06);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.kpi-item{
+  background:var(--corp2);padding:1.5rem 2rem;
+  transition:background .2s;
+}
+.kpi-item:hover{background:rgba(62,207,116,.04)}
+.kpi-item .kpi-icon{font-size:1.3rem;margin-bottom:.5rem}
+.kpi-item .kpi-val{font-family:var(--fd);font-size:1.9rem;font-weight:800;line-height:1;margin-bottom:.25rem}
+.kpi-item .kpi-val.green{color:var(--verde)}
+.kpi-item .kpi-val.yellow{color:var(--am)}
+.kpi-item .kpi-val.white{color:#fff}
+.kpi-item .kpi-lab{font-size:.78rem;color:rgba(255,255,255,.45)}
+.kpi-item .kpi-delta{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:.72rem;font-weight:700;margin-top:.4rem;
+  padding:2px 8px;border-radius:50px;
+}
+.kpi-delta.up{background:rgba(62,207,116,.12);color:var(--verde)}
+.kpi-delta.down{background:rgba(245,158,11,.12);color:var(--am)}
+
+/* CONTENT AREA */
+.corp-content{padding:2rem 5vw 4rem}
+.section-row{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+.section-row.thirds{grid-template-columns:2fr 1fr}
+.section-row.full{grid-template-columns:1fr}
+
+/* Panel */
+.panel{
+  background:var(--corp2);border:1px solid rgba(255,255,255,.07);
+  border-radius:20px;overflow:hidden;
+}
+.panel-header{
+  padding:1.2rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+}
+.panel-title{display:flex;align-items:center;gap:8px}
+.panel-title .icon{font-size:1rem}
+.panel-title h3{font-family:var(--fd);font-size:.95rem;font-weight:700;color:#fff}
+.panel-title p{font-size:.75rem;color:rgba(255,255,255,.35);margin-top:1px}
+.panel-badge{
+  background:rgba(62,207,116,.1);border:1px solid rgba(62,207,116,.2);
+  color:var(--verde);font-size:.7rem;font-weight:700;
+  padding:3px 9px;border-radius:50px;
+}
+.panel-body{padding:1.5rem}
+
+/* Mini chart bars - km usage */
+.chart-bars{display:flex;align-items:flex-end;gap:6px;height:100px;margin-bottom:.8rem}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar{
+  width:100%;border-radius:6px 6px 0 0;
+  background:linear-gradient(180deg,var(--verde) 0%,var(--ve) 100%);
+  transition:height .8s cubic-bezier(.25,.8,.25,1);
+  min-height:4px;opacity:.85;
+  cursor:pointer;position:relative;
+}
+.bar:hover{opacity:1;transform:scaleY(1.03);transform-origin:bottom}
+.bar-tooltip{
+  display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+  background:var(--corp);border:1px solid rgba(255,255,255,.12);
+  color:#fff;font-size:.7rem;padding:4px 8px;border-radius:8px;white-space:nowrap;z-index:10;
+}
+.bar:hover .bar-tooltip{display:block}
+.bar.inactive{background:rgba(255,255,255,.08)}
+.bar-label{font-size:.65rem;color:rgba(255,255,255,.4)}
+.chart-legend{display:flex;gap:1rem;flex-wrap:wrap}
+.chart-legend-item{display:flex;align-items:center;gap:5px;font-size:.73rem;color:rgba(255,255,255,.5)}
+.chart-legend-dot{width:8px;height:8px;border-radius:50%}
+
+/* CO2 chart - donut style via SVG */
+.co2-donut{display:flex;align-items:center;gap:1.5rem;padding:.5rem 0}
+.donut-svg{flex-shrink:0}
+.donut-info{flex:1}
+.donut-info .big{font-family:var(--fd);font-size:2rem;font-weight:800;color:var(--verde);line-height:1}
+.donut-info .unit{font-size:.75rem;color:rgba(255,255,255,.4);margin-top:2px}
+.donut-info .label{font-size:.82rem;color:rgba(255,255,255,.6);margin-top:.4rem}
+.co2-breakdown{display:flex;flex-direction:column;gap:.5rem;margin-top:.8rem}
+.co2-row{display:flex;justify-content:space-between;align-items:center;font-size:.78rem}
+.co2-row .lbl{color:rgba(255,255,255,.5);display:flex;align-items:center;gap:6px}
+.co2-row .val{font-weight:600;color:#fff}
+.co2-dot{width:8px;height:8px;border-radius:50%}
+
+/* Fleet table */
+.fleet-table-wrap{overflow-x:auto}
+.fleet-table{width:100%;border-collapse:collapse}
+.fleet-table th{
+  padding:10px 14px;text-align:left;
+  font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:rgba(255,255,255,.35);border-bottom:1px solid rgba(255,255,255,.07);
+}
+.fleet-table td{
+  padding:13px 14px;font-size:.83rem;
+  border-bottom:1px solid rgba(255,255,255,.04);
+  color:rgba(255,255,255,.8);
+}
+.fleet-table tr:last-child td{border-bottom:none}
+.fleet-table tr:hover td{background:rgba(255,255,255,.02)}
+.status-dot{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;font-weight:600}
+.sdot{width:8px;height:8px;border-radius:50%}
+.sdot.on{background:var(--verde);box-shadow:0 0 6px var(--verde)}
+.sdot.charge{background:var(--am);box-shadow:0 0 6px var(--am)}
+.sdot.idle{background:rgba(255,255,255,.25)}
+.driver-cell{display:flex;align-items:center;gap:8px}
+.driver-av{
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(62,207,116,.2);color:var(--verde);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;font-weight:700;flex-shrink:0;
+}
+.km-bar-inline{
+  display:flex;align-items:center;gap:8px;
+}
+.km-track{flex:1;height:4px;background:rgba(255,255,255,.08);border-radius:50px;overflow:hidden;min-width:60px}
+.km-fill{height:100%;background:linear-gradient(90deg,var(--ve),var(--verde));border-radius:50px}
+
+/* Saldo panel */
+.saldo-card{
+  background:linear-gradient(135deg,rgba(26,158,80,.15) 0%,rgba(62,207,116,.05) 100%);
+  border:1px solid rgba(62,207,116,.2);border-radius:16px;
+  padding:1.5rem;margin-bottom:1rem;
+}
+.saldo-label{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.3rem}
+.saldo-val{font-family:var(--fd);font-size:2.5rem;font-weight:800;color:#fff;line-height:1}
+.saldo-val .cur{font-size:1.1rem;color:rgba(255,255,255,.5);font-weight:400;margin-right:4px}
+.saldo-meta{display:flex;gap:1rem;margin-top:.8rem;flex-wrap:wrap}
+.saldo-meta-item{font-size:.75rem;color:rgba(255,255,255,.45)}
+.saldo-meta-item strong{color:var(--verde)}
+.saldo-progress{margin-top:1rem}
+.saldo-progress-label{display:flex;justify-content:space-between;font-size:.72rem;color:rgba(255,255,255,.4);margin-bottom:6px}
+.saldo-track{height:6px;background:rgba(255,255,255,.08);border-radius:50px;overflow:hidden}
+.saldo-fill{height:100%;background:linear-gradient(90deg,var(--ve),var(--verde));border-radius:50px;width:63%}
+
+.btn-ver-carregamentos{
+  width:100%;padding:11px;
+  background:rgba(62,207,116,.1);border:1px solid rgba(62,207,116,.2);
+  color:var(--verde);border-radius:12px;
+  font-family:var(--fb);font-size:.85rem;font-weight:600;cursor:pointer;
+  transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.btn-ver-carregamentos:hover{background:rgba(62,207,116,.18);border-color:rgba(62,207,116,.4)}
+
+/* Regio info */
+.region-card{
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+  border-radius:14px;padding:1rem 1.2rem;
+  display:flex;align-items:center;gap:.8rem;margin-bottom:.8rem;
+}
+.region-icon{font-size:1.4rem}
+.region-info .title{font-size:.82rem;font-weight:600;color:#fff}
+.region-info .sub{font-size:.73rem;color:rgba(255,255,255,.4);margin-top:2px}
+.region-pct{font-family:var(--fd);font-size:1rem;font-weight:700;color:var(--verde);margin-left:auto}
+
+/* Últimos carregamentos modal */
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:9000;
+  background:rgba(0,0,0,.7);backdrop-filter:blur(4px);
+  align-items:center;justify-content:center;padding:1rem;
+}
+.modal-overlay.open{display:flex}
+.modal-box{
+  background:var(--corp2);border:1px solid rgba(255,255,255,.1);
+  border-radius:24px;width:100%;max-width:640px;
+  box-shadow:0 40px 80px rgba(0,0,0,.5);
+  max-height:90vh;overflow:hidden;display:flex;flex-direction:column;
+}
+.modal-head{
+  padding:1.5rem;border-bottom:1px solid rgba(255,255,255,.07);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.modal-head h3{font-family:var(--fd);font-size:1.05rem;font-weight:700}
+.modal-close{
+  background:rgba(255,255,255,.06);border:none;color:rgba(255,255,255,.5);
+  width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1rem;
+  transition:background .2s;
+}
+.modal-close:hover{background:rgba(239,68,68,.15);color:var(--vm)}
+.modal-body{padding:1.5rem;overflow-y:auto;flex:1}
+.charge-item{
+  display:flex;align-items:center;gap:12px;
+  padding:.9rem 0;border-bottom:1px solid rgba(255,255,255,.05);
+}
+.charge-item:last-child{border-bottom:none}
+.charge-item-icon{
+  width:38px;height:38px;border-radius:12px;
+  background:rgba(62,207,116,.1);
+  display:flex;align-items:center;justify-content:center;font-size:1rem;
+  flex-shrink:0;
+}
+.charge-item-info{flex:1}
+.charge-item-info .ci-top{font-size:.83rem;font-weight:600;color:#fff}
+.charge-item-info .ci-bot{font-size:.72rem;color:rgba(255,255,255,.4);margin-top:2px}
+.charge-item-right{text-align:right}
+.charge-item-right .ci-kwh{font-family:var(--fd);font-size:.9rem;font-weight:700;color:var(--verde)}
+.charge-item-right .ci-val{font-size:.72rem;color:rgba(255,255,255,.4);margin-top:2px}
+
+/* Economy card */
+.economy-card{
+  background:linear-gradient(135deg,rgba(245,158,11,.1) 0%,rgba(245,158,11,.03) 100%);
+  border:1px solid rgba(245,158,11,.2);border-radius:16px;padding:1.4rem;
+}
+.economy-card .eco-label{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.3rem}
+.economy-card .eco-val{font-family:var(--fd);font-size:2rem;font-weight:800;color:var(--am);line-height:1;margin-bottom:.3rem}
+.economy-card .eco-note{font-size:.75rem;color:rgba(255,255,255,.45);line-height:1.5}
+
+/* Relatórios timeline */
+.reports-panel .panel-body{padding:1.5rem}
+.reports-intro{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.6rem}
+.reports-intro p{font-size:.82rem;color:rgba(255,255,255,.45);max-width:560px;line-height:1.6}
+.btn-extrair{
+  display:flex;align-items:center;gap:8px;white-space:nowrap;
+  background:linear-gradient(135deg,var(--ve),var(--verde));
+  color:#fff;border:none;padding:12px 22px;border-radius:50px;
+  font-family:var(--fb);font-size:.88rem;font-weight:700;cursor:pointer;
+  box-shadow:0 8px 24px rgba(26,158,80,.35);transition:transform .2s,box-shadow .2s;
+  text-decoration:none;
+}
+.btn-extrair:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(26,158,80,.45)}
+
+.report-timeline{position:relative;padding-left:6px}
+.report-timeline::before{
+  content:'';position:absolute;left:19px;top:8px;bottom:8px;width:2px;
+  background:linear-gradient(180deg,var(--verde),rgba(255,255,255,.06));
+}
+.rt-item{position:relative;padding:0 0 1.3rem 46px}
+.rt-item:last-child{padding-bottom:0}
+.rt-dot{
+  position:absolute;left:11px;top:2px;width:18px;height:18px;border-radius:50%;
+  background:var(--corp2);border:2px solid var(--verde);
+  display:flex;align-items:center;justify-content:center;font-size:.6rem;z-index:1;
+}
+.rt-item.locked .rt-dot{border-color:rgba(255,255,255,.18)}
+.rt-card{
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;padding:.9rem 1.1rem;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+  transition:border-color .2s,background .2s;
+}
+.rt-item:not(.locked) .rt-card:hover{border-color:rgba(62,207,116,.35);background:rgba(62,207,116,.04)}
+.rt-card .rt-info .rt-title{font-size:.88rem;font-weight:700;color:#fff}
+.rt-card .rt-info .rt-sub{font-size:.74rem;color:rgba(255,255,255,.4);margin-top:2px}
+.rt-tag{
+  font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  padding:3px 10px;border-radius:50px;
+}
+.rt-tag.ready{background:rgba(62,207,116,.12);color:var(--verde);border:1px solid rgba(62,207,116,.25)}
+.rt-tag.locked{background:rgba(255,255,255,.05);color:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.08)}
+.rt-actions{display:flex;align-items:center;gap:.6rem}
+.btn-rt-ver{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.75);padding:7px 14px;border-radius:50px;
+  font-family:var(--fb);font-size:.76rem;font-weight:600;cursor:pointer;transition:all .2s;
+  text-decoration:none;
+}
+.rt-item:not(.locked) .btn-rt-ver:hover{border-color:var(--verde);color:var(--verde);background:rgba(62,207,116,.08)}
+.rt-item.locked .btn-rt-ver{cursor:not-allowed;opacity:.5}
+
+/* Créditos de carbono panel */
+.credits-hero{
+  display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin-bottom:1.4rem;
+}
+.credit-stat{
+  background:linear-gradient(135deg,rgba(62,207,116,.12) 0%,rgba(62,207,116,.02) 100%);
+  border:1px solid rgba(62,207,116,.22);border-radius:16px;padding:1.3rem 1.4rem;
+}
+.credit-stat .cs-lab{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.35rem}
+.credit-stat .cs-val{font-family:var(--fd);font-size:1.7rem;font-weight:800;color:var(--verde);line-height:1}
+.credit-stat .cs-note{font-size:.74rem;color:rgba(255,255,255,.45);margin-top:.4rem;line-height:1.5}
+.credits-body p{font-size:.85rem;color:rgba(255,255,255,.6);line-height:1.75;margin-bottom:1rem}
+.credits-body strong{color:#fff}
+.credits-steps{display:flex;flex-direction:column;gap:.7rem;margin-top:.3rem}
+.credit-step{
+  display:flex;gap:.9rem;align-items:flex-start;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+  border-radius:14px;padding:.9rem 1.1rem;
+}
+.credit-step .num{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;
+  background:rgba(62,207,116,.15);color:var(--verde);
+  display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;
+}
+.credit-step .txt .t-title{font-size:.83rem;font-weight:700;color:#fff;margin-bottom:2px}
+.credit-step .txt .t-sub{font-size:.76rem;color:rgba(255,255,255,.45);line-height:1.55}
+.credits-source{font-size:.7rem;color:rgba(255,255,255,.3);margin-top:1.2rem;line-height:1.6;border-top:1px solid rgba(255,255,255,.06);padding-top:.9rem}
+
+@media(max-width:700px){
+  .credits-hero{grid-template-columns:1fr}
+  .rt-card{flex-direction:column;align-items:flex-start}
+}
+
+/* Responsive */
+@media(max-width:900px){
+  .kpi-strip{grid-template-columns:1fr 1fr}
+  .section-row,.section-row.thirds{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .kpi-strip{grid-template-columns:1fr 1fr}
+  .corp-header-inner{flex-direction:column}
+}
+
+/* Fade animations */
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- ===== LOADING ===== -->
+<div id="corp-loading">
+  <div class="ll-logo"><span class="l">Lumos</span> <span class="corp-tag">Corp</span></div>
+  <p class="ll-msg" id="ll-msg-corp">Autenticando empresa...</p>
+  <div class="ll-bar"><div class="ll-fill" id="ll-fill-corp"></div></div>
+</div>
+
+<!-- ===== LOGIN ===== -->
+<div id="corp-login">
+  <a class="login-back" href="home.html">← Voltar ao Lumos</a>
+  <div class="login-bg">
+    <div class="login-grid"></div>
+    <div class="login-glow"></div>
+  </div>
+
+  <div class="corp-login-card">
+    <div class="corp-brand">
+      <div class="corp-brand-logo"><span class="l">Lumos</span></div>
+      <div class="corp-badge">Corp</div>
+    </div>
+    <h2 id="login-title">Acesso Corporativo</h2>
+    <p class="sub" id="login-sub">Painel de gestão de frotas elétricas. Insira as credenciais da sua empresa para continuar.</p>
+
+    <div class="type-toggle">
+      <button type="button" class="type-btn active" id="btn-type-empresa" onclick="setLoginType('empresa')">🏢 Sou Empresa</button>
+      <button type="button" class="type-btn" id="btn-type-usuario" onclick="setLoginType('usuario')">👤 Sou Usuário</button>
+    </div>
+
+    <!-- FIELDS: EMPRESA -->
+    <div id="fields-empresa">
+      <div class="fg">
+        <label>Nome da empresa</label>
+        <input type="text" id="corp-nome" placeholder="Ex: Dash Entregas LTDA">
+      </div>
+      <div class="fg">
+        <label>Token corporativo (6 dígitos)</label>
+        <input type="text" id="corp-token" maxlength="6" placeholder="000000" oninput="this.value=this.value.replace(/\D/g,'')">
+      </div>
+    </div>
+
+    <!-- FIELDS: USUÁRIO -->
+    <div id="fields-usuario">
+      <div class="fg">
+        <label>Nome completo</label>
+        <input type="text" id="user-nome" placeholder="Ex: João Pereira">
+      </div>
+      <div class="fg">
+        <label>E-mail corporativo</label>
+        <input type="email" id="user-email" placeholder="joao@empresa.com">
+      </div>
+      <div class="fg">
+        <label>Cargo</label>
+        <select id="user-cargo">
+          <option>Motorista</option>
+          <option>Analista</option>
+          <option>Coordenador(a)</option>
+          <option>Gerente</option>
+          <option>Estagiário(a)</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Código empresarial (6 dígitos)</label>
+        <input type="text" id="user-codigo" maxlength="6" placeholder="000000" oninput="this.value=this.value.replace(/\D/g,'')">
+      </div>
+      <div class="fg">
+        <label>Nome da empresa</label>
+        <input type="text" id="user-empresa" placeholder="Ex: Dash Entregas LTDA">
+      </div>
+    </div>
+
+    <button class="btn-corp-enter" onclick="doCorpLogin()">
+      <div class="shine"></div>
+      <span id="btn-corp-submit-text">Acessar painel corporativo →</span>
+    </button>
+    <p class="login-note">Credenciais fornecidas pela equipe Lumos · Uso exclusivo B2B</p>
+  </div>
+</div>
+
+<!-- ===== DASHBOARD ===== -->
+<div id="corp-app">
+
+  <!-- NAV -->
+  <nav class="corp-nav">
+    <a class="corp-nav-logo" href="#">
+      <span class="main"><span class="l">Lumos</span></span>
+      <div class="corp-tag-pill">Corp</div>
+    </a>
+    <div class="corp-nav-right">
+      <div class="company-chip">
+        <span class="icon">🚚</span>
+        <div>
+          <div class="name">Dash Entregas</div>
+          <div class="plan">Plano Corporativo</div>
+        </div>
+      </div>
+      <a class="btn-voltar-lumos" href="home.html">← Voltar ao Lumos</a>
+      <button class="btn-logout-corp" onclick="doCorpLogout()">Sair</button>
+    </div>
+  </nav>
+
+  <main class="corp-main">
+
+    <!-- HEADER BAND -->
+    <div class="corp-header">
+      <div class="corp-header-bg"></div>
+      <div class="corp-header-inner">
+        <div class="corp-header-text">
+          <div class="eyebrow"><span class="live-dot"></span> Dados em tempo real · Junho 2026</div>
+          <h1>Olá, <span>Dash Entregas</span></h1>
+          <p>CNPJ 42.981.705/0001-33 · Região principal: Grande São Paulo · Frota Lumos Fleet</p>
+        </div>
+        <div class="corp-header-meta">
+          <div class="meta-chip">
+            <div class="mc-val">🟢 Ativa</div>
+            <div class="mc-lab">Status da conta</div>
+          </div>
+          <div class="meta-chip">
+            <div class="mc-val">Plano Corp</div>
+            <div class="mc-lab">Até 50 EVs</div>
+          </div>
+          <div class="meta-chip">
+            <div class="mc-val">R$ 890<span style="font-size:.8rem;font-weight:400;color:rgba(255,255,255,.4)">/mês</span></div>
+            <div class="mc-lab">Assinatura</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI STRIP -->
+    <div class="kpi-strip">
+      <div class="kpi-item fade-in">
+        <div class="kpi-icon">🚗</div>
+        <div class="kpi-val white" id="kpi-circulando">34</div>
+        <div class="kpi-lab">Veículos em circulação</div>
+        <div class="kpi-delta up">↑ 6 desde ontem</div>
+      </div>
+      <div class="kpi-item fade-in">
+        <div class="kpi-icon">⚡</div>
+        <div class="kpi-val green">2.847 kWh</div>
+        <div class="kpi-lab">Consumo médio mensal</div>
+        <div class="kpi-delta up">↑ 12% vs. mai</div>
+      </div>
+      <div class="kpi-item fade-in">
+        <div class="kpi-icon">💰</div>
+        <div class="kpi-val" style="color:var(--am)">R$ 38.420</div>
+        <div class="kpi-lab">Economia vs. gasolina</div>
+        <div class="kpi-delta up">🌿 Anual: R$ 461k</div>
+      </div>
+      <div class="kpi-item fade-in">
+        <div class="kpi-icon">🌍</div>
+        <div class="kpi-val green">1.802 kg</div>
+        <div class="kpi-lab">CO₂ evitado no mês</div>
+        <div class="kpi-delta up">≈ 164 árvores</div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="corp-content">
+
+      <!-- ROW 1: km chart + co2 donut -->
+      <div class="section-row">
+
+        <!-- KM USAGE CHART -->
+        <div class="panel fade-in">
+          <div class="panel-header">
+            <div class="panel-title">
+              <span class="icon">📈</span>
+              <div>
+                <h3>Uso de km por mês</h3>
+                <p>Frota completa · últimos 6 meses</p>
+              </div>
+            </div>
+            <div class="panel-badge">2026</div>
+          </div>
+          <div class="panel-body">
+            <div class="chart-bars" id="km-bars">
+              <!-- Rendered by JS -->
+            </div>
+            <div class="chart-legend">
+              <div class="chart-legend-item">
+                <div class="chart-legend-dot" style="background:var(--verde)"></div>
+                km percorridos
+              </div>
+              <div class="chart-legend-item">
+                <div class="chart-legend-dot" style="background:rgba(255,255,255,.15)"></div>
+                meta mensal (42.000 km)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CO2 DONUT -->
+        <div class="panel fade-in">
+          <div class="panel-header">
+            <div class="panel-title">
+              <span class="icon">🌿</span>
+              <div>
+                <h3>Impacto de CO₂</h3>
+                <p>Emissões vs. economia · acumulado 2026</p>
+              </div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="co2-donut">
+              <svg class="donut-svg" width="110" height="110" viewBox="0 0 110 110">
+                <circle cx="55" cy="55" r="42" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="14"/>
+                <!-- evitado: 8.940 kg dos 11.200 total = 79.8% -->
+                <circle cx="55" cy="55" r="42" fill="none" stroke="var(--verde)" stroke-width="14"
+                  stroke-dasharray="210 264" stroke-dashoffset="66"
+                  stroke-linecap="round" style="transition:stroke-dasharray 1.5s ease"/>
+                <!-- Restante: 20.2% -->
+                <circle cx="55" cy="55" r="42" fill="none" stroke="rgba(239,68,68,.4)" stroke-width="14"
+                  stroke-dasharray="54 264" stroke-dashoffset="-144"
+                  stroke-linecap="round"/>
+                <text x="55" y="52" text-anchor="middle" fill="#fff" font-family="'Inter',sans-serif" font-size="13" font-weight="800">80%</text>
+                <text x="55" y="65" text-anchor="middle" fill="rgba(255,255,255,.4)" font-family="'Inter',sans-serif" font-size="8.5">economia</text>
+              </svg>
+              <div class="donut-info">
+                <div class="big">8.940 kg</div>
+                <div class="unit">CO₂ evitado em 2026</div>
+                <div class="label">Frota elétrica vs. combustão equivalente</div>
+              </div>
+            </div>
+            <div class="co2-breakdown">
+              <div class="co2-row">
+                <span class="lbl"><span class="co2-dot" style="background:var(--verde)"></span>CO₂ evitado</span>
+                <span class="val">8.940 kg</span>
+              </div>
+              <div class="co2-row">
+                <span class="lbl"><span class="co2-dot" style="background:rgba(239,68,68,.6)"></span>CO₂ emitido (rede)</span>
+                <span class="val">2.260 kg</span>
+              </div>
+              <div class="co2-row">
+                <span class="lbl"><span class="co2-dot" style="background:var(--am)"></span>Saldo líquido</span>
+                <span class="val" style="color:var(--verde)">+6.680 kg</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ROW 2: Fleet table + side panels -->
+      <div class="section-row thirds">
+
+        <!-- FLEET TABLE -->
+        <div class="panel fade-in">
+          <div class="panel-header">
+            <div class="panel-title">
+              <span class="icon">🚚</span>
+              <div>
+                <h3>Frota ativa</h3>
+                <p>34 veículos em operação agora</p>
+              </div>
+            </div>
+            <div class="panel-badge" id="fleet-live-count">34 / 40</div>
+          </div>
+          <div class="panel-body" style="padding:0">
+            <div class="fleet-table-wrap">
+              <table class="fleet-table">
+                <thead>
+                  <tr>
+                    <th>Motorista</th>
+                    <th>Veículo</th>
+                    <th>Status</th>
+                    <th>km / mês</th>
+                    <th>Região</th>
+                  </tr>
+                </thead>
+                <tbody id="fleet-tbody">
+                  <!-- Rendered by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIDE: Saldo + Economia + Regiões -->
+        <div style="display:flex;flex-direction:column;gap:1.5rem">
+
+          <!-- SALDO -->
+          <div class="panel fade-in">
+            <div class="panel-header">
+              <div class="panel-title">
+                <span class="icon">💳</span>
+                <div><h3>Saldo corporativo</h3><p>Créditos disponíveis · Junho</p></div>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="saldo-card">
+                <div class="saldo-label">Disponível este mês</div>
+                <div class="saldo-val"><span class="cur">R$</span>12.450,00</div>
+                <div class="saldo-meta">
+                  <div class="saldo-meta-item">Usado: <strong>R$ 7.550</strong></div>
+                  <div class="saldo-meta-item">Limite: <strong>R$ 20.000</strong></div>
+                </div>
+                <div class="saldo-progress">
+                  <div class="saldo-progress-label">
+                    <span>Utilização do mês</span>
+                    <span>62% usado</span>
+                  </div>
+                  <div class="saldo-track">
+                    <div class="saldo-fill" style="width:62%"></div>
+                  </div>
+                </div>
+              </div>
+              <button class="btn-ver-carregamentos" onclick="openChargingModal()">
+                ⚡ Ver últimos carregamentos
+              </button>
+            </div>
+          </div>
+
+          <!-- ECONOMIA -->
+          <div class="panel fade-in">
+            <div class="panel-header">
+              <div class="panel-title">
+                <span class="icon">💰</span>
+                <div><h3>Economia mensal</h3><p>EV vs. gasolina equivalente</p></div>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="economy-card">
+                <div class="eco-label">Economia em Junho</div>
+                <div class="eco-val">R$ 38.420</div>
+                <div class="eco-note">
+                  Frota a gasolina custaria ~R$ 43.010/mês.<br>
+                  Com Lumos Fleet (bandeira verde), apenas R$ 4.590.
+                </div>
+              </div>
+              <div style="margin-top:1rem;display:flex;flex-direction:column;gap:.5rem">
+                <div style="display:flex;justify-content:space-between;font-size:.78rem;padding:.7rem;background:rgba(255,255,255,.03);border-radius:10px;border:1px solid rgba(255,255,255,.05)">
+                  <span style="color:rgba(255,255,255,.5)">🔴 Gasolina (est.)</span>
+                  <span style="font-weight:600">R$ 43.010</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:.78rem;padding:.7rem;background:rgba(62,207,116,.06);border-radius:10px;border:1px solid rgba(62,207,116,.15)">
+                  <span style="color:rgba(255,255,255,.5)">🟢 Elétrico (Lumos)</span>
+                  <span style="font-weight:600;color:var(--verde)">R$ 4.590</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- REGIÕES -->
+          <div class="panel fade-in">
+            <div class="panel-header">
+              <div class="panel-title">
+                <span class="icon">📍</span>
+                <div><h3>Regiões de atuação</h3><p>Distribuição da frota</p></div>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="region-card">
+                <div class="region-icon">🏙️</div>
+                <div class="region-info">
+                  <div class="title">Grande São Paulo</div>
+                  <div class="sub">Principal hub de operações</div>
+                </div>
+                <div class="region-pct">48%</div>
+              </div>
+              <div class="region-card">
+                <div class="region-icon">🌆</div>
+                <div class="region-info">
+                  <div class="title">ABC Paulista</div>
+                  <div class="sub">Santo André · SBC · São Caetano</div>
+                </div>
+                <div class="region-pct">27%</div>
+              </div>
+              <div class="region-card">
+                <div class="region-icon">🏘️</div>
+                <div class="region-info">
+                  <div class="title">Baixada Santista</div>
+                  <div class="sub">Santos · Guarujá · Cubatão</div>
+                </div>
+                <div class="region-pct">15%</div>
+              </div>
+              <div class="region-card">
+                <div class="region-icon">🌄</div>
+                <div class="region-info">
+                  <div class="title">Interior SP</div>
+                  <div class="sub">Campinas · Sorocaba · Jundiaí</div>
+                </div>
+                <div class="region-pct">10%</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ROW 3: Central de Relatórios -->
+      <div class="section-row full">
+        <div class="panel fade-in reports-panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <span class="icon">🗂️</span>
+              <div>
+                <h3>Central de Relatórios</h3>
+                <p>Exporte relatórios de desempenho, consumo e ESG para prestação de contas</p>
+              </div>
+            </div>
+            <div class="panel-badge">Acesso do gestor</div>
+          </div>
+          <div class="panel-body">
+            <div class="reports-intro">
+              <p>Gere um relatório completo com o consumo da frota, economia gerada, impacto ambiental e créditos de carbono acumulados no período — pronto para auditorias, ESG e prestação de contas a diretoria.</p>
+              <a class="btn-extrair" href="relatorio.html?periodo=Junho%2F2026" target="_blank" rel="noopener">📄 Extrair Relatório</a>
+            </div>
+
+            <div class="report-timeline">
+              <div class="rt-item">
+                <div class="rt-dot">⚡</div>
+                <div class="rt-card">
+                  <div class="rt-info">
+                    <div class="rt-title">Relatório de Junho / 2026</div>
+                    <div class="rt-sub">Gerado em 24/06/2026 · 34 veículos · 8.940 kg CO₂ evitado</div>
+                  </div>
+                  <div class="rt-actions">
+                    <span class="rt-tag ready">Disponível</span>
+                    <a class="btn-rt-ver" href="relatorio.html?periodo=Junho%2F2026" target="_blank" rel="noopener">Ver relatório →</a>
+                  </div>
+                </div>
+              </div>
+              <div class="rt-item">
+                <div class="rt-dot">⚡</div>
+                <div class="rt-card">
+                  <div class="rt-info">
+                    <div class="rt-title">Relatório de Maio / 2026</div>
+                    <div class="rt-sub">Gerado em 31/05/2026 · 31 veículos · 7.610 kg CO₂ evitado</div>
+                  </div>
+                  <div class="rt-actions">
+                    <span class="rt-tag ready">Disponível</span>
+                    <a class="btn-rt-ver" href="relatorio.html?periodo=Maio%2F2026" target="_blank" rel="noopener">Ver relatório →</a>
+                  </div>
+                </div>
+              </div>
+              <div class="rt-item">
+                <div class="rt-dot">⚡</div>
+                <div class="rt-card">
+                  <div class="rt-info">
+                    <div class="rt-title">Relatório de Abril / 2026</div>
+                    <div class="rt-sub">Gerado em 30/04/2026 · 29 veículos · 6.980 kg CO₂ evitado</div>
+                  </div>
+                  <div class="rt-actions">
+                    <span class="rt-tag ready">Disponível</span>
+                    <a class="btn-rt-ver" href="relatorio.html?periodo=Abril%2F2026" target="_blank" rel="noopener">Ver relatório →</a>
+                  </div>
+                </div>
+              </div>
+              <div class="rt-item locked">
+                <div class="rt-dot">🔒</div>
+                <div class="rt-card">
+                  <div class="rt-info">
+                    <div class="rt-title">Relatório de Março / 2026</div>
+                    <div class="rt-sub">Fora do período de retenção do plano Corp atual</div>
+                  </div>
+                  <div class="rt-actions">
+                    <span class="rt-tag locked">Plano Enterprise</span>
+                    <span class="btn-rt-ver">Bloqueado</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW 4: Créditos de Carbono -->
+      <div class="section-row full">
+        <div class="panel fade-in">
+          <div class="panel-header">
+            <div class="panel-title">
+              <span class="icon">🌱</span>
+              <div>
+                <h3>Créditos de carbono — o que são e como sua empresa ganha</h3>
+                <p>Guia rápido para gestores sobre o mercado de carbono no Brasil</p>
+              </div>
+            </div>
+          </div>
+          <div class="panel-body credits-body">
+            <div class="credits-hero">
+              <div class="credit-stat">
+                <div class="cs-lab">Sua frota já evitou</div>
+                <div class="cs-val">8,94 tCO₂e</div>
+                <div class="cs-note">Equivalente estimado em toneladas de CO₂ que deixaram de ser emitidas em 2026, com base na substituição de veículos a combustão por elétricos carregados via Lumos.</div>
+              </div>
+              <div class="credit-stat">
+                <div class="cs-lab">Referência de mercado (voluntário)</div>
+                <div class="cs-val">~US$ 5–20 <span style="font-size:.95rem;color:rgba(255,255,255,.4);font-weight:600">/ tCO₂e</span></div>
+                <div class="cs-note">Faixa de preço praticada em créditos voluntários (Verra/VCS, Gold Standard), variando conforme o tipo de projeto e a "safra" (vintage). Valores de mercado, sujeitos a variação — não é uma cotação garantida da Lumos.</div>
+              </div>
+            </div>
+
+            <p><strong>Crédito de carbono</strong> é um título que representa 1 tonelada de CO₂ (ou equivalente) que deixou de ser emitida, foi reduzida ou removida da atmosfera. Empresas que reduzem suas emissões abaixo do que seria "normal" para sua operação podem transformar essa redução em créditos — e vendê-los a outras empresas que ainda precisam compensar as suas.</p>
+
+            <p>No Brasil, a <strong>Lei 15.042/2024</strong> criou o <strong>SBCE (Sistema Brasileiro de Comércio de Emissões)</strong>, o futuro mercado regulado nacional de carbono. Ele ainda está em fase de implementação (regulamentação de MRV, credenciamento de verificadores e primeiro Plano Nacional de Alocação), com previsão de plena entrada em vigor ao longo dos próximos anos. Enquanto isso, empresas brasileiras já participam do <strong>mercado voluntário</strong>, negociando créditos certificados por padrões internacionais como Verra (VCS) e Gold Standard, ou instrumentos setoriais já existentes, como o CBio do RenovaBio (biocombustíveis), negociado na B3.</p>
+
+            <div class="credits-steps">
+              <div class="credit-step">
+                <div class="num">1</div>
+                <div class="txt">
+                  <div class="t-title">Meça suas emissões evitadas</div>
+                  <div class="t-sub">O painel Lumos Corp já calcula, mês a mês, quanto CO₂ sua frota deixa de emitir ao rodar elétrico com energia solar (dados GoodWe SEMS + ChargeGrid OCPP), a base de qualquer certificação.</div>
+                </div>
+              </div>
+              <div class="credit-step">
+                <div class="num">2</div>
+                <div class="txt">
+                  <div class="t-title">Consolide um inventário de GEE</div>
+                  <div class="t-sub">Reúna o histórico de recargas, km rodados e substituição de frota a combustão em um inventário de Gases de Efeito Estufa, seguindo metodologias como o GHG Protocol.</div>
+                </div>
+              </div>
+              <div class="credit-step">
+                <div class="num">3</div>
+                <div class="txt">
+                  <div class="t-title">Submeta a um padrão certificador</div>
+                  <div class="t-sub">Projetos de mobilidade elétrica/energia limpa podem ser registrados junto a Verra, Gold Standard ou, futuramente, ao SBCE, para verificação por terceiros e emissão formal dos créditos.</div>
+                </div>
+              </div>
+              <div class="credit-step">
+                <div class="num">4</div>
+                <div class="txt">
+                  <div class="t-title">Use ou negocie os créditos</div>
+                  <div class="t-sub">Os créditos emitidos podem compensar as próprias emissões residuais da empresa (frota, operações) ou ser vendidos a terceiros no mercado voluntário.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="credits-source">
+              Fontes: Lei 15.042/2024 (institui o SBCE) · KPMG ESG Insights, "Regulação do mercado de carbono" (2025) · McKinsey, "Mercado voluntário de carbono tem potencial gigantesco no Brasil". Os valores de mercado citados são referenciais e podem variar; a Lumos não realiza intermediação financeira de créditos de carbono.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /corp-content -->
+  </main>
+</div><!-- /corp-app -->
+
+<!-- ===== MODAL: ÚLTIMOS CARREGAMENTOS ===== -->
+<div class="modal-overlay" id="charging-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>⚡ Últimos carregamentos da frota</h3>
+      <button class="modal-close" onclick="closeChargingModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-charges-list">
+      <!-- rendered by JS -->
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== LOGIN TYPE TOGGLE =====
+let loginType = 'empresa';
+function setLoginType(type) {
+  loginType = type;
+  document.getElementById('btn-type-empresa').classList.toggle('active', type === 'empresa');
+  document.getElementById('btn-type-usuario').classList.toggle('active', type === 'usuario');
+  document.getElementById('fields-empresa').style.display = type === 'empresa' ? 'block' : 'none';
+  document.getElementById('fields-usuario').style.display = type === 'usuario' ? 'block' : 'none';
+  document.getElementById('login-title').textContent = type === 'empresa'
+    ? 'Acesso Corporativo' : 'Acesso do Colaborador';
+  document.getElementById('login-sub').textContent = type === 'empresa'
+    ? 'Painel de gestão de frotas elétricas. Insira as credenciais da sua empresa para continuar.'
+    : 'Veja os dados do seu veículo, pontos de recarga próximos e seus benefícios Lumos.';
+  document.getElementById('btn-corp-submit-text').textContent = type === 'empresa'
+    ? 'Acessar painel corporativo →' : 'Acessar minha conta →';
+}
+
+// ===== AUTH =====
+function doCorpLogin() {
+  if (loginType === 'usuario') return doUserLogin();
+
+  const nome  = document.getElementById('corp-nome').value.trim();
+  const token = document.getElementById('corp-token').value.trim();
+  if (!nome)             { shake(); return alert('Informe o nome da empresa.'); }
+  if (token.length !== 6){ shake(); return alert('Token deve ter exatamente 6 dígitos.'); }
+
+  const loading = document.getElementById('corp-loading');
+  document.getElementById('corp-login').classList.add('hidden');
+  loading.classList.add('show');
+
+  const msgs = ['Autenticando empresa...','Carregando dados da frota...','Sincronizando saldo...','Bem-vinda, Dash Entregas! 🚚'];
+  let i = 0;
+  const iv = setInterval(() => {
+    i++;
+    if (i < msgs.length) document.getElementById('ll-msg-corp').textContent = msgs[i];
+  }, 500);
+
+  setTimeout(() => {
+    clearInterval(iv);
+    loading.classList.remove('show');
+    document.getElementById('corp-app').classList.add('show');
+    initDashboard();
+  }, 2200);
+}
+
+function doUserLogin() {
+  const nome    = document.getElementById('user-nome').value.trim();
+  const email   = document.getElementById('user-email').value.trim();
+  const cargo   = document.getElementById('user-cargo').value;
+  const codigo  = document.getElementById('user-codigo').value.trim();
+  const empresa = document.getElementById('user-empresa').value.trim();
+  if (!nome)                          { shake(); return alert('Informe seu nome completo.'); }
+  if (!email || !email.includes('@')) { shake(); return alert('E-mail inválido.'); }
+  if (codigo.length !== 6)            { shake(); return alert('Código empresarial deve ter exatamente 6 dígitos.'); }
+  if (!empresa)                       { shake(); return alert('Informe o nome da empresa.'); }
+
+  const parts = nome.trim().split(' ');
+  const initials = ((parts[0]||'?')[0] + ((parts[1]||'?')[0]||'')).toUpperCase();
+  const userData = { nome, email, cargo, codigo, empresa, initials };
+  localStorage.setItem('lm_corp_user', JSON.stringify(userData));
+
+  const loading = document.getElementById('corp-loading');
+  document.getElementById('corp-login').classList.add('hidden');
+  loading.classList.add('show');
+
+  const msgs = ['Autenticando colaborador...','Carregando seu veículo...','Buscando pontos de recarga...',`Bem-vindo(a), ${parts[0]}! ⚡`];
+  let i = 0;
+  const iv = setInterval(() => {
+    i++;
+    if (i < msgs.length) document.getElementById('ll-msg-corp').textContent = msgs[i];
+  }, 500);
+
+  setTimeout(() => {
+    clearInterval(iv);
+    window.location.href = 'corp-usuario.html';
+  }, 2200);
+}
+
+function shake() {
+  const card = document.querySelector('.corp-login-card');
+  card.style.animation = 'shake .4s ease';
+  setTimeout(() => card.style.animation = '', 400);
+}
+
+function doCorpLogout() {
+  document.getElementById('corp-app').classList.remove('show');
+  document.getElementById('corp-login').classList.remove('hidden');
+  document.getElementById('corp-nome').value = '';
+  document.getElementById('corp-token').value = '';
+}
+
+// ===== KM CHART =====
+const kmData = [
+  { month: 'Jan', km: 36400, target: 42000 },
+  { month: 'Fev', km: 38200, target: 42000 },
+  { month: 'Mar', km: 41700, target: 42000 },
+  { month: 'Abr', km: 39800, target: 42000 },
+  { month: 'Mai', km: 43100, target: 42000 },
+  { month: 'Jun', km: 44600, target: 42000 },
+];
+
+function buildKmChart() {
+  const container = document.getElementById('km-bars');
+  if (!container) return;
+  const max = Math.max(...kmData.map(d => d.km), ...kmData.map(d => d.target));
+  container.innerHTML = '';
+  kmData.forEach(d => {
+    const pct = Math.round((d.km / max) * 100);
+    const wrap = document.createElement('div');
+    wrap.className = 'bar-wrap';
+    wrap.innerHTML = `
+      <div class="bar ${d.km >= d.target ? '' : 'inactive'}" style="height:${pct}%">
+        <div class="bar-tooltip">${d.month}: ${(d.km/1000).toFixed(1)}k km</div>
+      </div>
+      <div class="bar-label">${d.month}</div>
+    `;
+    // Override inactive style: all bars colored, just target line
+    wrap.querySelector('.bar').classList.remove('inactive');
+    // Slightly dim bars below target
+    if (d.km < d.target) wrap.querySelector('.bar').style.opacity = '0.55';
+    container.appendChild(wrap);
+  });
+}
+
+// ===== FLEET TABLE =====
+const fleetData = [
+  { driver: 'André Costa',      initials: 'AC', car: 'BYD Dolphin',     plate: 'ABC-1E23', status: 'on',     km: 1420, region: 'São Paulo' },
+  { driver: 'Fernanda Lima',    initials: 'FL', car: 'Renault Kwid E',  plate: 'DEF-4E56', status: 'on',     km: 1190, region: 'ABC Paulista' },
+  { driver: 'Marcos Souza',     initials: 'MS', car: 'BYD Dolphin',     plate: 'GHI-7E89', status: 'charge', km: 980,  region: 'Santos' },
+  { driver: 'Juliana Ferreira', initials: 'JF', car: 'Volvo XC40 R.',   plate: 'JKL-2E01', status: 'on',     km: 1650, region: 'São Paulo' },
+  { driver: 'Ricardo Alves',    initials: 'RA', car: 'BYD Dolphin',     plate: 'MNO-5E34', status: 'idle',   km: 720,  region: 'Campinas' },
+  { driver: 'Camila Nunes',     initials: 'CN', car: 'BMW iX3',          plate: 'PQR-8E67', status: 'on',     km: 1380, region: 'São Paulo' },
+  { driver: 'Lucas Martins',    initials: 'LM', car: 'Renault Kwid E',  plate: 'STU-1E90', status: 'on',     km: 1100, region: 'ABC Paulista' },
+  { driver: 'Patricia Gomes',   initials: 'PG', car: 'BYD Dolphin',     plate: 'VWX-3E12', status: 'charge', km: 860,  region: 'Santos' },
+];
+
+const statusLabel = { on: 'Em rota', charge: 'Carregando', idle: 'Disponível' };
+const statusClass = { on: 'on', charge: 'charge', idle: 'idle' };
+
+function buildFleetTable() {
+  const tbody = document.getElementById('fleet-tbody');
+  if (!tbody) return;
+  const maxKm = Math.max(...fleetData.map(d => d.km));
+  tbody.innerHTML = fleetData.map(d => {
+    const pct = Math.round((d.km / maxKm) * 100);
+    return `
+      <tr>
+        <td>
+          <div class="driver-cell">
+            <div class="driver-av">${d.initials}</div>
+            <div>
+              <div style="font-size:.82rem;font-weight:600">${d.driver}</div>
+              <div style="font-size:.7rem;color:rgba(255,255,255,.35)">${d.plate}</div>
+            </div>
+          </div>
+        </td>
+        <td style="font-size:.8rem">${d.car}</td>
+        <td>
+          <div class="status-dot">
+            <div class="sdot ${statusClass[d.status]}"></div>
+            ${statusLabel[d.status]}
+          </div>
+        </td>
+        <td>
+          <div class="km-bar-inline">
+            <span style="font-size:.8rem;font-weight:600;min-width:40px">${(d.km/1000).toFixed(1)}k</span>
+            <div class="km-track"><div class="km-fill" style="width:${pct}%"></div></div>
+          </div>
+        </td>
+        <td style="font-size:.78rem;color:rgba(255,255,255,.5)">${d.region}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// ===== CHARGES MODAL =====
+const recentCharges = [
+  { driver: 'André Costa',       initials: 'AC', local: 'Totem Lumos · Pinheiros',       date: '11/06/2026 · 09:12', kwh: 32.4, valor: 'R$ 27,54' },
+  { driver: 'Juliana Ferreira',  initials: 'JF', local: 'Totem Lumos · Moema',            date: '11/06/2026 · 08:55', kwh: 28.1, valor: 'R$ 23,89' },
+  { driver: 'Lucas Martins',     initials: 'LM', local: 'Totem Lumos · Santo André',      date: '10/06/2026 · 22:30', kwh: 40.0, valor: 'R$ 34,00' },
+  { driver: 'Fernanda Lima',     initials: 'FL', local: 'Totem Lumos · Ipiranga',         date: '10/06/2026 · 19:15', kwh: 25.6, valor: 'R$ 21,76' },
+  { driver: 'Camila Nunes',      initials: 'CN', local: 'Totem Lumos · Pinheiros',        date: '10/06/2026 · 18:44', kwh: 50.0, valor: 'R$ 42,50' },
+  { driver: 'Marcos Souza',      initials: 'MS', local: 'Totem Lumos · Santos Centro',    date: '10/06/2026 · 17:20', kwh: 22.3, valor: 'R$ 18,96' },
+  { driver: 'Patricia Gomes',    initials: 'PG', local: 'Totem Lumos · São Bernardo',     date: '09/06/2026 · 21:08', kwh: 37.5, valor: 'R$ 31,88' },
+  { driver: 'Ricardo Alves',     initials: 'RA', local: 'Totem Lumos · Campinas Norte',   date: '09/06/2026 · 15:33', kwh: 18.8, valor: 'R$ 15,98' },
+];
+
+function openChargingModal() {
+  const list = document.getElementById('modal-charges-list');
+  list.innerHTML = recentCharges.map(c => `
+    <div class="charge-item">
+      <div class="charge-item-icon">⚡</div>
+      <div class="charge-item-info">
+        <div class="ci-top">${c.driver}</div>
+        <div class="ci-bot">${c.local} · ${c.date}</div>
+      </div>
+      <div class="charge-item-right">
+        <div class="ci-kwh">${c.kwh} kWh</div>
+        <div class="ci-val">${c.valor}</div>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('charging-modal').classList.add('open');
+}
+
+function closeChargingModal() {
+  document.getElementById('charging-modal').classList.remove('open');
+}
+
+// Close modal on overlay click
+document.getElementById('charging-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeChargingModal();
+});
+
+// ===== INIT =====
+function initDashboard() {
+  buildKmChart();
+  buildFleetTable();
+
+  // Fade-in animation observer
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+}
+
+// Shake animation
+const styleEl = document.createElement('style');
+styleEl.textContent = `@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}`;
+document.head.appendChild(styleEl);
+</script>
+</body>
+</html>
